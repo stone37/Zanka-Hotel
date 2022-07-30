@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\Favorite;
+use App\Entity\User;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @extends ServiceEntityRepository<Favorite>
+ *
+ * @method Favorite|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Favorite|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Favorite[]    findAll()
+ * @method Favorite[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class FavoriteRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Favorite::class);
+    }
+
+    public function add(Favorite $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->persist($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function remove(Favorite $entity, bool $flush = false): void
+    {
+        $this->getEntityManager()->remove($entity);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+    }
+
+    public function getByUser(User $user)
+    {
+        $qb = $this->createQueryBuilder('f')
+            ->leftJoin('f.hostel', 'hostel')
+            ->addSelect('hostel')
+            ->where('f.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('f.createdAt', 'desc');
+
+        return $qb->getQuery()->getResult();
+    }
+}
