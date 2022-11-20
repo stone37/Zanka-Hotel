@@ -2,15 +2,18 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TimestampableTrait;
 use App\Repository\NewsletterDataRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: NewsletterDataRepository::class)]
 class NewsletterData
 {
+    use TimestampableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column()]
+    #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]

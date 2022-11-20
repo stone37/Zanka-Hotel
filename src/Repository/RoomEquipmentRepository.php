@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\RoomEquipment;
+use App\Model\Admin\EquipmentSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -44,5 +46,23 @@ class RoomEquipmentRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
+    public function getAdmins(EquipmentSearch $search): ?QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->orderBy('e.position', 'asc');
 
+        if ($search->getName())
+            $qb->andWhere('e.name LIKE :name')->setParameter('name', '%'.$search->getName().'%');
+
+        return $qb;
+    }
+
+
+    public function getData(): ?QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('e')
+            ->orderBy('e.position', 'asc');
+
+        return $qb;
+    }
 }

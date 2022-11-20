@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+#[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: SettingsRepository::class)]
 class Settings
 {
@@ -67,16 +68,7 @@ class Settings
     private ?string $linkedinAddress = null;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $activeCredit = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?bool $activeCardPayment = null;
-
-    #[ORM\Column(nullable: true)]
     private ?bool $activePub = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?bool $activeParrainage = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $numberHostelPerPage = null;
@@ -85,28 +77,7 @@ class Settings
     private ?int $numberRoomPerPage = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $numberUserRoomPerPage = null;
-
-    #[ORM\Column(nullable: true)]
     private ?int $numberUserHostelFavoritePerPage = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $parrainCreditOffer = null;
-
-    #[ORM\Column]
-    private ?int $fioleCreditOffer = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?bool $activeRegisterDrift = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $registerDriftCreditOffer = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $parrainageNumberBookingRequired = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $registerDriftNumberBookingRequired = null;
 
     #[Vich\UploadableField(
         mapping: 'settings',
@@ -115,7 +86,15 @@ class Settings
         mimeType: 'fileMimeType',
         originalName: 'fileOriginalName'
     )]
-    private ?File $file;
+    private ?File $file = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Currency $baseCurrency = null;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Locale $defaultLocale = null;
 
     public function getId(): ?int
     {
@@ -278,30 +257,6 @@ class Settings
         return $this;
     }
 
-    public function setActiveAdFavorite(?bool $activeAdFavorite): self
-    {
-        $this->activeAdFavorite = $activeAdFavorite;
-
-        return $this;
-    }
-
-    public function isActiveCredit(): ?bool
-    {
-        return $this->activeCredit;
-    }
-
-    public function setActiveCredit(?bool $activeCredit): self
-    {
-        $this->activeCredit = $activeCredit;
-
-        return $this;
-    }
-
-    public function isActiveCardPayment(): ?bool
-    {
-        return $this->activeCardPayment;
-    }
-
     public function setActiveCardPayment(?bool $activeCardPayment): self
     {
         $this->activeCardPayment = $activeCardPayment;
@@ -317,18 +272,6 @@ class Settings
     public function setActivePub(?bool $activePub): self
     {
         $this->activePub = $activePub;
-
-        return $this;
-    }
-
-    public function isActiveParrainage(): ?bool
-    {
-        return $this->activeParrainage;
-    }
-
-    public function setActiveParrainage(?bool $activeParrainage): self
-    {
-        $this->activeParrainage = $activeParrainage;
 
         return $this;
     }
@@ -357,18 +300,6 @@ class Settings
         return $this;
     }
 
-    public function getNumberUserRoomPerPage(): ?int
-    {
-        return $this->numberUserRoomPerPage;
-    }
-
-    public function setNumberUserRoomPerPage(?int $numberUserRoomPerPage): self
-    {
-        $this->numberUserRoomPerPage = $numberUserRoomPerPage;
-
-        return $this;
-    }
-
     public function getNumberUserHostelFavoritePerPage(): ?int
     {
         return $this->numberUserHostelFavoritePerPage;
@@ -377,78 +308,6 @@ class Settings
     public function setNumberUserHostelFavoritePerPage(?int $numberUserHostelFavoritePerPage): self
     {
         $this->numberUserHostelFavoritePerPage = $numberUserHostelFavoritePerPage;
-
-        return $this;
-    }
-
-    public function getParrainCreditOffer(): ?int
-    {
-        return $this->parrainCreditOffer;
-    }
-
-    public function setParrainCreditOffer(?int $parrainCreditOffer): self
-    {
-        $this->parrainCreditOffer = $parrainCreditOffer;
-
-        return $this;
-    }
-
-    public function getFioleCreditOffer(): ?int
-    {
-        return $this->fioleCreditOffer;
-    }
-
-    public function setFioleCreditOffer(int $fioleCreditOffer): self
-    {
-        $this->fioleCreditOffer = $fioleCreditOffer;
-
-        return $this;
-    }
-
-    public function isActiveRegisterDrift(): ?bool
-    {
-        return $this->activeRegisterDrift;
-    }
-
-    public function setActiveRegisterDrift(?bool $activeRegisterDrift): self
-    {
-        $this->activeRegisterDrift = $activeRegisterDrift;
-
-        return $this;
-    }
-
-    public function getRegisterDriftCreditOffer(): ?int
-    {
-        return $this->registerDriftCreditOffer;
-    }
-
-    public function setRegisterDriftCreditOffer(?int $registerDriftCreditOffer): self
-    {
-        $this->registerDriftCreditOffer = $registerDriftCreditOffer;
-
-        return $this;
-    }
-
-    public function getParrainageNumberBookingRequired(): ?int
-    {
-        return $this->parrainageNumberBookingRequired;
-    }
-
-    public function setParrainageNumberBookingRequired(?int $parrainageNumberBookingRequired): self
-    {
-        $this->parrainageNumbreBookingRequiere = $parrainageNumberBookingRequired;
-
-        return $this;
-    }
-
-    public function getRegisterDriftNumberBookingRequired(): ?int
-    {
-        return $this->registerDriftNumberBookingRequired;
-    }
-
-    public function setRegisterDriftNumberBookingRequired(?int $registerDriftNumberBookingRequired): self
-    {
-        $this->registerDriftNumberBookingRequired = $registerDriftNumberBookingRequired;
 
         return $this;
     }
@@ -472,5 +331,29 @@ class Settings
     public function __toString(): string
     {
         return (string) $this->name;
+    }
+
+    public function getBaseCurrency(): ?Currency
+    {
+        return $this->baseCurrency;
+    }
+
+    public function setBaseCurrency(Currency $baseCurrency): self
+    {
+        $this->baseCurrency = $baseCurrency;
+
+        return $this;
+    }
+
+    public function getDefaultLocale(): ?Locale
+    {
+        return $this->defaultLocale;
+    }
+
+    public function setDefaultLocale(Locale $defaultLocale): self
+    {
+        $this->defaultLocale = $defaultLocale;
+
+        return $this;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\PositionTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\EquipmentGroupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: EquipmentGroupRepository::class)]
 class EquipmentGroup
 {
+    use PositionTrait;
     use TimestampableTrait;
 
     #[ORM\Id]
@@ -28,19 +30,12 @@ class EquipmentGroup
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne]
-    private ?User $owner = null;
-
     #[ORM\OneToMany(mappedBy: 'equipmentGroup', targetEntity: Equipment::class, orphanRemoval: true)]
     private Collection $equipments;
-
-    #[ORM\ManyToMany(targetEntity: Hostel::class, mappedBy: 'equipments')]
-    private Collection $hostels;
 
     public function __construct()
     {
         $this->equipments = new ArrayCollection();
-        $this->hostels = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -72,18 +67,6 @@ class EquipmentGroup
         return $this;
     }
 
-    public function getOwner(): ?User
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(?User $owner): self
-    {
-        $this->owner = $owner;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Equipment>
      */
@@ -109,33 +92,6 @@ class EquipmentGroup
             if ($equipment->getEquipmentGroup() === $this) {
                 $equipment->setEquipmentGroup(null);
             }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Hostel>
-     */
-    public function getHostels(): Collection
-    {
-        return $this->hostels;
-    }
-
-    public function addHostel(Hostel $hostel): self
-    {
-        if (!$this->hostels->contains($hostel)) {
-            $this->hostels[] = $hostel;
-            $hostel->addEquipment($this);
-        }
-
-        return $this;
-    }
-
-    public function removeHostel(Hostel $hostel): self
-    {
-        if ($this->hostels->removeElement($hostel)) {
-            $hostel->removeEquipment($this);
         }
 
         return $this;

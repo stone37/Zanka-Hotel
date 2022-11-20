@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\EnabledTrait;
 use App\Entity\Traits\MediaTrait;
 use App\Entity\Traits\PositionTrait;
 use App\Entity\Traits\TimestampableTrait;
@@ -22,6 +23,7 @@ class Category
 {
     use PositionTrait;
     use TimestampableTrait;
+    use EnabledTrait;
     use MediaTrait;
 
     #[ORM\Id]

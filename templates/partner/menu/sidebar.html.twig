@@ -1,0 +1,294 @@
+<div id="slide-out" class="side-nav sn-bg-4 fixed">
+    <ul class="custom-scrollbar">
+
+        <li class="logo-sn waves-effect py-3">
+            <div class="text-center">
+                <a href="{{ path('app_partner_index') }}" class="pl-0">
+                    <img src="" style="width: 180px !important;" alt="Logo du site" />
+                </a>
+            </div>
+        </li>
+
+        {% set dashboard = isActive('app_partner_index') %}
+
+        {# hostel #}
+        {% set hostel_index = isActive('app_partner_hostel_index') %}
+        {% set hostel_new  = isActive('app_partner_hostel_create') %}
+        {% set hostel_edit = isActive('app_partner_hostel_edit') %}
+        {% set hostel_show = isActive('app_partner_hostel_show') %}
+        {% set hostel_equipment = isActive('app_partner_hostel_equipment') %}
+        {# hostel #}
+
+        {# gallery #}
+        {% set gallery_index = isActive('app_partner_hostel_gallery_index') %}
+        {% set gallery_add  = isActive('app_partner_hostel_gallery_add') %}
+        {# gallery #}
+
+        {# room #}
+        {% set room_index = isActive('app_partner_room_index') %}
+        {% set room_edit = isActive('app_partner_room_edit') %}
+        {% set room_new = isActive('app_partner_room_create') %}
+        {% set room_show  = isActive('app_partner_room_show') %}
+        {% set room_equipment  = isActive('app_partner_room_equipment') %}
+        {% set room_supplement  = isActive('app_partner_room_supplement') %}
+        {# room #}
+
+        {# room gallery #}
+        {% set room_gallery_index = isActive('app_partner_room_gallery_index') %}
+        {% set room_gallery_add  = isActive('app_partner_room_gallery_add') %}
+        {# room gallery #}
+
+        {# booking #}
+        {% set booking_index = isActive('app_partner_booking_index') %}
+        {% set booking_confirmed  = isActive('app_partner_booking_confirmed_index') %}
+        {% set booking_cancel = isActive('app_partner_booking_cancel_index') %}
+        {% set booking_archive = isActive('app_partner_booking_archive_index') %}
+        {% set booking_show = isActive('app_partner_booking_show') %}
+        {% set booking_room = isActive('app_partner_booking_room') %}
+        {# booking #}
+
+        {# commande #}
+        {% set commande_index = isActive('app_partner_commande_index') %}
+        {% set commande_show  = isActive('app_partner_commande_show') %}
+        {% set commande_hostel = isActive('app_partner_commande_hostel') %}
+        {# commande #}
+
+        {# promotion #}
+        {% set promotion_index = isActive('app_partner_promotion_index') %}
+        {% set promotion_edit = isActive('app_partner_promotion_edit') %}
+        {% set promotion_new = isActive('app_partner_promotion_create') %}
+        {% set promotion_show  = isActive('app_partner_promotion_show') %}
+        {# promotion #}
+
+        {# supplement #}
+        {% set supplement_index = isActive('app_partner_supplement_index') %}
+        {% set supplement_edit  = isActive('app_partner_supplement_edit') %}
+        {% set supplement_new = isActive('app_partner_supplement_create') %}
+        {# supplement #}
+
+        {# review #}
+        {% set review_index = isActive('app_partner_review_index') %}
+        {% set review_show = isActive('app_partner_review_show') %}
+        {# review #}
+
+        {# taxe #}
+        {% set taxe_index = isActive('app_partner_taxe_index') %}
+        {% set taxe_new   = isActive('app_partner_taxe_create') %}
+        {% set taxe_edit  = isActive('app_partner_taxe_edit') %}
+        {# taxe #}
+
+        {# account #}
+        {% set account_edit = isActive('app_partner_profil_edit') %}
+        {% set account_delete = isActive('app_partner_delete') %}
+        {# account #}
+
+        {# payout #}
+        {% set payout_index = isActive('app_partner_payout_index') %}
+        {% set payout_report   = isActive('app_partner_payout_report') %}
+        {# payout #}
+
+        <li>
+            <ul class="collapsible collapsible-accordion">
+                <li>
+                    <a href="{{ path('app_partner_index') }}" class="waves-effect {% if dashboard %}active{% endif %} mb-2">
+                        <i class="sv-slim-icon fas fa-th-large"></i>
+                        Tableau de bord
+                    </a>
+                </li>
+
+                <li>
+                    <a class="collapsible-header waves-effect arrow-r
+                        {% if hostel_index or hostel_new or hostel_edit or hostel_show or
+                              gallery_index or gallery_add or commande_hostel or hostel_equipment %}active{% endif %}">
+                        <i class="sv-slim-icon fas fa-hotel"></i> Établissements
+                        <i class="fas fa-angle-down rotate-icon"></i>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="{{ path('app_partner_hostel_index') }}" class="waves-effect
+                                     {% if hostel_index or hostel_new or hostel_edit or hostel_show or
+                                           gallery_index or gallery_add or commande_hostel or hostel_equipment %}active{% endif %}">
+                                    <span class="sv-normal">Tous les établissements</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="collapsible-header waves-effect arrow-r
+                        {% if room_index or room_show  or room_new or room_edit or
+                              room_gallery_index or room_gallery_add or supplement_index or
+                              supplement_edit or supplement_new or room_equipment or room_supplement %}active{% endif %}">
+                        <i class="sv-slim-icon fas fa-bed"></i> Hébergements
+                        <i class="fas fa-angle-down rotate-icon"></i>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="{{ path('app_partner_room_index') }}" class="waves-effect
+                                     {% if room_index or room_show  or room_new or room_edit or
+                                           room_gallery_index or room_gallery_add or room_equipment or room_supplement %}active{% endif %}">
+                                    <span class="sv-normal">Tous les hébergements</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('app_partner_supplement_index') }}" class="waves-effect
+                                    {% if supplement_index or supplement_edit or supplement_new %}active{% endif %}">
+                                    <span class="sv-normal">Tous les suppléments</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="collapsible-header waves-effect arrow-r
+                        {% if booking_index or booking_confirmed or booking_cancel or
+                        booking_archive or booking_room or booking_show %}active{% endif %}">
+                        <i class="sv-slim-icon fas fa-ticket-alt"></i> Reservations
+                        <i class="fas fa-angle-down rotate-icon"></i>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="{{ path('app_partner_booking_index') }}" class="waves-effect
+                                     {% if booking_index %}active{% endif %}">
+                                    <span class="sv-normal">Nouvelles reservations</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('app_partner_booking_confirmed_index') }}" class="waves-effect
+                                     {% if booking_confirmed %}active{% endif %}">
+                                    <span class="sv-normal">Reservations confirmer</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('app_partner_booking_cancel_index') }}" class="waves-effect
+                                     {% if booking_cancel %}active{% endif %}">
+                                    <span class="sv-normal">Reservations annuler</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('app_partner_booking_archive_index') }}" class="waves-effect
+                                     {% if booking_archive %}active{% endif %}">
+                                    <span class="sv-normal">Ancienne reservations</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="collapsible-header waves-effect arrow-r
+                        {% if promotion_index or promotion_show or promotion_new or promotion_edit %}active{% endif %}">
+                        <i class="sv-slim-icon fas fa-bullhorn"></i> Promotions
+                        <i class="fas fa-angle-down rotate-icon"></i>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="{{ path('app_partner_promotion_index') }}" class="waves-effect
+                                    {% if promotion_index or promotion_show or promotion_new or promotion_edit %}active{% endif %}">
+                                    <span class="sv-normal">Tous les promotions</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="collapsible-header waves-effect arrow-r
+                        {% if commande_index or commande_show %}active{% endif %}">
+                        <i class="sv-slim-icon fas fa-shopping-cart"></i> Commandes
+                        <i class="fas fa-angle-down rotate-icon"></i>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="{{ path('app_partner_commande_index') }}" class="waves-effect
+                                    {% if commande_index or commande_show  %}active{% endif %}">
+                                    <span class="sv-normal">Tous les commandes</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="collapsible-header waves-effect arrow-r
+                        {% if review_index or review_show %}active{% endif %}">
+                        <i class="sv-slim-icon fas fa-comments"></i> Avis clients
+                        <i class="fas fa-angle-down rotate-icon"></i>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="{{ path('app_partner_review_index') }}" class="waves-effect
+                                    {% if review_index or review_show %}active{% endif %}">
+                                    <span class="sv-normal">Tous les avis</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a class="collapsible-header waves-effect arrow-r
+                        {% if payout_index or payout_report %}active{% endif %}">
+                        <i class="sv-slim-icon fas fa-credit-card"></i> Paiements
+                        <i class="fas fa-angle-down rotate-icon"></i>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="{{ path('app_partner_payout_index') }}" class="waves-effect
+                                    {% if payout_index %}active{% endif %}">
+                                    <span class="sv-normal">Soldes</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('app_partner_payout_report') }}" class="waves-effect
+                                    {% if payout_report %}active{% endif %}">
+                                    <span class="sv-normal">Rapport financier</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="mb-3">
+                    <a class="collapsible-header waves-effect arrow-r
+                        {% if taxe_index or taxe_new or taxe_edit or account_edit or account_delete %}active{% endif %}">
+                        <i class="sv-slim-icon fas fa-cogs"></i> Configurations
+                        <i class="fas fa-angle-down rotate-icon"></i>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="{{ path('app_partner_taxe_index') }}" class="waves-effect
+                                    {% if taxe_index or taxe_new or taxe_edit %}active{% endif %}">
+                                    <span class="sv-normal">Taux de taxe</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('app_partner_profil_edit') }}" class="waves-effect
+                                    {% if account_edit %}active{% endif %}">
+                                    <span class="sv-normal">Modifier le profil</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('app_partner_delete') }}" class="waves-effect
+                                    {% if account_delete %}active{% endif %}">
+                                    <span class="sv-normal">Fermeture du compte</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <div class="sidenav-bg mask-strong"></div>
+</div>
+
+
+
+
+
+

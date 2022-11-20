@@ -1,0 +1,300 @@
+<div class="section card mb-3">
+    <div class="card-body">
+        <div class="form-row">
+            <div class="col-12">
+                <h5 class="h5-responsive font-weight-stone-500">Informations de base</h5>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-center justify-content-md-start">
+            <div class="col-12 col-md-4">
+                {{ form_widget(form.category) }}
+            </div>
+            <div class="col-12 col-md-4">
+                {{ form_row(form.name) }}
+            </div>
+            <div class="col-12 col-md-4">
+                {{ form_row(form.email) }}
+            </div>
+            <div class="col-12 col-md-4">
+                {{ form_row(form.phone) }}
+            </div>
+            <div class="col-12 col-md-4">
+                {{ form_widget(form.starNumber) }}
+            </div>
+            <div class="col-12 col-md-4">
+                {{ form_widget(form.spokenLanguages) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section card mb-3">
+    <div class="card-body">
+        <div class="form-row">
+            <div class="col-12">
+                <h5 class="h5-responsive font-weight-stone-500">Localisation</h5>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-center justify-content-md-start">
+            <div class="col-12 col-md-4">
+                {{ form_widget(form.location.city) }}
+            </div>
+            <div class="col-12 col-md-4">
+                {{ form_row(form.location.town) }}
+            </div>
+            <div class="col-12 col-md-4">
+                {{ form_row(form.location.detail) }}
+            </div>
+            <div class="col-12 col-md-4">
+                {{ form_row(form.location.longitude) }}
+            </div>
+            <div class="col-12 col-md-4">
+                {{ form_row(form.location.latitude) }}
+            </div>
+            <div class="col-12 col-md-4">
+                {{ form_row(form.address) }}
+            </div>
+            <div class="col-12 col-md-4">
+                {{ form_row(form.codePostal) }}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section card mb-3">
+    <div class="card-body">
+        <div class="form-row">
+            <div class="col-12">
+                <h5 class="h5-responsive font-weight-stone-500">Annulations</h5>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-center justify-content-md-start">
+            <div class="col-12 col-md-5">
+                <div class="mt-1 title" style="margin-bottom: -20px !important;">Combien de jours à l’avance les clients peuvent-ils annuler sans frais ?</div>
+                {{ form_widget(form.cancellationPolicy.state) }}
+            </div>
+            <div class="col-12 col-md-5">
+                <div class="mt-1 title" style="margin-bottom: -20px !important;">ou les clients paieront 100 %</div>
+                {{ form_widget(form.cancellationPolicy.result) }}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section card mb-3">
+    <div class="card-body">
+        <div class="form-row">
+            <div class="col-12">
+                <h5 class="h5-responsive font-weight-stone-500">Horaires d'arrivée et de départ</h5>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-center justify-content-md-start mb-3">
+            <div class="col-12 title" style="margin-bottom: -12px !important">
+                {{ form.checkinTime.vars.label }}
+            </div>
+            <div class="col-6 col-md-2">
+                {{ form_row(form.checkinTime.start) }}
+            </div>
+            <div class="col-6 col-md-2">
+                {{ form_row(form.checkinTime.end) }}
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-center justify-content-md-start">
+            <div class="col-12 title" style="margin-bottom: -12px !important">
+                {{ form.checkoutTime.vars.label }}
+            </div>
+            <div class="col-6 col-md-2">
+                {{ form_row(form.checkoutTime.start) }}
+            </div>
+            <div class="col-6 col-md-2">
+                {{ form_row(form.checkoutTime.end) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section card mb-3">
+    <div class="card-body">
+        <div class="form-row">
+            <div class="col-12">
+                <h5 class="h5-responsive font-weight-stone-500">Wifi</h5>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-center justify-content-md-start">
+            <div class="col-12">
+                <div class="mb-2 mt-1 title">{{ form.wifi.vars.label }}</div>
+                {% for item in form.wifi.vars.choices %}
+                    {% set state = hostel.wifi == form.wifi.vars.choices[loop.index0].value %}
+                    <div class="form-check form-check-inline data {% if state %}active{% endif %}">
+                        <input class="form-check-input with-gap" value="{{ form.wifi.vars.choices[loop.index0].value }}" type="radio"
+                               name="{{ form.wifi.vars.full_name }}" id="{{ form.wifi.vars.id }}_{{ loop.index0 }}"
+                               {% if state %}checked{% endif %} />
+                        <label class="form-check-label" for="{{ form.wifi.vars.id }}_{{ loop.index0 }}">{{ form.wifi.vars.choices[loop.index0].label }}</label>
+                    </div>
+                {% endfor %}
+                <div class="red-text font-weight-stone-500 mt-2">{{ form_errors(form.wifi) }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section card mb-3">
+    <div class="card-body">
+        <div class="form-row">
+            <div class="col-12">
+                <h5 class="h5-responsive font-weight-stone-500">Parking</h5>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-center justify-content-md-start">
+            <div class="col-12">
+                <div class="mb-2 mt-1 title">{{ form.parking.vars.label }}</div>
+                {% for item in form.parking.vars.choices %}
+                    {% set state = hostel.parking == form.parking.vars.choices[loop.index0].value %}
+                    <div class="form-check form-check-inline data {% if state %}active{% endif %}">
+                        <input class="form-check-input with-gap" value="{{ form.parking.vars.choices[loop.index0].value }}" type="radio"
+                               name="{{ form.parking.vars.full_name }}" id="{{ form.parking.vars.id }}_{{ loop.index0 }}"
+                               {% if state %}checked{% endif %} />
+                        <label class="form-check-label" for="{{ form.parking.vars.id }}_{{ loop.index0 }}">{{ form.parking.vars.choices[loop.index0].label }}</label>
+                    </div>
+                {% endfor %}
+                <div class="red-text font-weight-stone-500 mt-2">{{ form_errors(form.parking) }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section card mb-3">
+    <div class="card-body">
+        <div class="form-row">
+            <div class="col-12">
+                <h5 class="h5-responsive font-weight-stone-500">Petit-déjeuner</h5>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-center justify-content-md-start">
+            <div class="col-12">
+                <div class="mb-2 mt-1 title">{{ form.breakfast.vars.label }}</div>
+                {% for item in form.breakfast.vars.choices %}
+                    {% set state = hostel.breakfast == form.breakfast.vars.choices[loop.index0].value %}
+                    <div class="form-check form-check-inline data {% if state %}active{% endif %}">
+                        <input class="form-check-input with-gap" value="{{ form.breakfast.vars.choices[loop.index0].value }}" type="radio"
+                               name="{{ form.breakfast.vars.full_name }}" id="{{ form.breakfast.vars.id }}_{{ loop.index0 }}"
+                               {% if state %}checked{% endif %} />
+                        <label class="form-check-label" for="{{ form.breakfast.vars.id }}_{{ loop.index0 }}">{{ form.breakfast.vars.choices[loop.index0].label }}</label>
+                    </div>
+                {% endfor %}
+                <div class="red-text font-weight-stone-500 mt-2">{{ form_errors(form.breakfast) }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section card mb-3">
+    <div class="card-body">
+        <div class="form-row">
+            <div class="col-12">
+                <h5 class="h5-responsive font-weight-stone-500">Enfants</h5>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-center justify-content-md-start">
+            <div class="col-12">
+                <div class="mb-2 mt-1 title">{{ form.children.vars.label }}</div>
+                {% for item in form.children.vars.choices %}
+                    {% set state = hostel.children == form.children.vars.choices[loop.index0].value %}
+                    <div class="form-check form-check-inline data {% if state %}active{% endif %}">
+                        <input class="form-check-input with-gap" value="{{ form.children.vars.choices[loop.index0].value }}" type="radio"
+                               name="{{ form.children.vars.full_name }}" id="{{ form.children.vars.id }}_{{ loop.index0 }}"
+                               {% if state %}checked{% endif %} />
+                        <label class="form-check-label" for="{{ form.children.vars.id }}_{{ loop.index0 }}">{{ form.children.vars.choices[loop.index0].label }}</label>
+                    </div>
+                {% endfor %}
+                <div class="red-text font-weight-stone-500 mt-2">{{ form_errors(form.children) }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section card mb-3">
+    <div class="card-body">
+        <div class="form-row">
+            <div class="col-12">
+                <h5 class="h5-responsive font-weight-stone-500">Animaux domestiques</h5>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-center justify-content-md-start">
+            <div class="col-12">
+                <div class="mb-2 mt-1 title">{{ form.animalsAllowed.vars.label }}</div>
+                {% for item in form.animalsAllowed.vars.choices %}
+                    {% set state = hostel.animalsAllowed == form.animalsAllowed.vars.choices[loop.index0].value %}
+                    <div class="form-check form-check-inline data {% if state %}active{% endif %}">
+                        <input class="form-check-input with-gap" value="{{ form.animalsAllowed.vars.choices[loop.index0].value }}" type="radio"
+                               name="{{ form.animalsAllowed.vars.full_name }}" id="{{ form.animalsAllowed.vars.id }}_{{ loop.index0 }}"
+                               {% if state %}checked{% endif %} />
+                        <label class="form-check-label" for="{{ form.animalsAllowed.vars.id }}_{{ loop.index0 }}">{{ form.animalsAllowed.vars.choices[loop.index0].label }}</label>
+                    </div>
+                {% endfor %}
+                <div class="red-text font-weight-stone-500 mt-2">{{ form_errors(form.animalsAllowed) }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section card mb-3">
+    <div class="card-body">
+        <div class="form-row">
+            <div class="col-12">
+                <h5 class="h5-responsive font-weight-stone-500">Mode de paiement du client</h5>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-center justify-content-md-start">
+            <div class="col-12">
+                <div class="mb-2 mt-1 title">{{ form.mobilePaymentAllowed.vars.label }}</div>
+                {% for item in form.mobilePaymentAllowed.vars.choices %}
+                    {% set state = hostel.mobilePaymentAllowed == form.mobilePaymentAllowed.vars.choices[loop.index0].value %}
+                    <div class="form-check form-check-inline data {% if state %}active{% endif %}">
+                        <input class="form-check-input with-gap" value="{{ form.mobilePaymentAllowed.vars.choices[loop.index0].value }}" type="radio"
+                               name="{{ form.mobilePaymentAllowed.vars.full_name }}" id="{{ form.mobilePaymentAllowed.vars.id }}_{{ loop.index0 }}"
+                               {% if state %}checked{% endif %} />
+                        <label class="form-check-label" for="{{ form.mobilePaymentAllowed.vars.id }}_{{ loop.index0 }}">{{ form.mobilePaymentAllowed.vars.choices[loop.index0].label }}</label>
+                    </div>
+                {% endfor %}
+                <div class="red-text font-weight-stone-500 mt-2">{{ form_errors(form.mobilePaymentAllowed) }}</div>
+            </div>
+            <div class="col-12">
+                <div class="mb-2 mt-3 title">{{ form.cardPaymentAllowed.vars.label }}</div>
+                {% for item in form.cardPaymentAllowed.vars.choices %}
+                    {% set state = hostel.cardPaymentAllowed == form.cardPaymentAllowed.vars.choices[loop.index0].value %}
+                    <div class="form-check form-check-inline data {% if state %}active{% endif %}">
+                        <input class="form-check-input with-gap" value="{{ form.cardPaymentAllowed.vars.choices[loop.index0].value }}" type="radio"
+                               name="{{ form.cardPaymentAllowed.vars.full_name }}" id="{{ form.cardPaymentAllowed.vars.id }}_{{ loop.index0 }}"
+                               {% if state %}checked{% endif %} />
+                        <label class="form-check-label" for="{{ form.cardPaymentAllowed.vars.id }}_{{ loop.index0 }}">{{ form.cardPaymentAllowed.vars.choices[loop.index0].label }}</label>
+                    </div>
+                {% endfor %}
+                <div class="red-text font-weight-stone-500 mt-2">{{ form_errors(form.cardPaymentAllowed) }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section card mb-3">
+    <div class="card-body">
+        <div class="form-row">
+            <div class="col-12">
+                <h5 class="h5-responsive font-weight-stone-500">Fermeture</h5>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-center justify-content-md-start">
+            <div class="col-12">
+                <div class="mb-2 mt-1 title">{{ form.closed.vars.label }}</div>
+                {% for item in form.closed.vars.choices %}
+                    {% set state = hostel.closed == form.closed.vars.choices[loop.index0].value %}
+                    <div class="form-check form-check-inline data {% if state %}active{% endif %}">
+                        <input class="form-check-input with-gap" value="{{ form.closed.vars.choices[loop.index0].value }}" type="radio"
+                               name="{{ form.closed.vars.full_name }}" id="{{ form.closed.vars.id }}_{{ loop.index0 }}"
+                               {% if state %}checked{% endif %} />
+                        <label class="form-check-label" for="{{ form.closed.vars.id }}_{{ loop.index0 }}">{{ form.closed.vars.choices[loop.index0].label }}</label>
+                    </div>
+                {% endfor %}
+                <div class="red-text font-weight-stone-500 mt-2">{{ form_errors(form.closed) }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+

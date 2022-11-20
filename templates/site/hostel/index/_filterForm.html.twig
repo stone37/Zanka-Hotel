@@ -1,0 +1,40 @@
+{% form_theme form 'ui/Form/filter_theme.html.twig' %}
+{% import 'ui/Macro/money.html.twig' as money %}
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="h5-responsive font-weight-stone-500 mb-4">Filtrer les résultats</h5>
+
+        <div class="row">
+            <div class="col-12 name-field">
+                {{ form_row(form.name) }}
+            </div>
+            <div class="col-12 equipment-field mt-4">
+                {{ form_row(form.equipments.equipments) }}
+            </div>
+            <div class="col-12 price-field my-4">
+                <div class="title">Prix total</div>
+                <div class="data-price d-flex justify-content-between mb-1">
+                    <div class="min dark-grey-text pr-1">
+                        {{ form_row(form.price.min_price) }}
+                    </div>
+                    <div class="max dark-grey-text pl-1">
+                        {{ form_row(form.price.max_price) }}
+                    </div>
+                </div>
+                <div class="multi-range-field mb-3">
+                    <input id="multi-filter-price" class="multi-range" type="range" />
+                </div>
+            </div>
+
+            <div class="col-12 mt-3">
+                <button type="submit" class="btn btn-primary btn-md btn-block">
+                    <i class="fas fa-search mr-1"></i> Filtrer maintenant
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,109 @@
+{% form_theme form 'Ui/Form/theme.html.twig' %}
+
+<section class="container">
+    <div class="row mb-5 d-flex justify-content-center">
+        <div class="col-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h1 class="h1-responsive display-3 mb-3 text-center font-weight-bold">
+                        {% if oauth_type %}Se connecter avec {{ oauth_type }}{% else %}S'inscrire{% endif %}
+                    </h1>
+
+                    {% if oauth_registration %}
+                        <div class="alert alert-info" role="alert">
+                            Vous y êtes presque, il ne vous reste plus qu'à choisir votre numéro de telephone
+                        </div>
+                    {% endif %}
+
+                    <section class="mt-5 mb-4 row d-flex justify-content-center">
+                        <div class="col-md-6">
+                            <a class="btn btn-outline-grey btn-google btn-block mb-4 d-none d-md-inline-block" href="{{ path('oauth_connect', {service: 'google'}) }}">
+                                <img src='https://developers.google.com/identity/images/g-logo.png' class="img-fluid mr-1 my-0" alt="Google icon">
+                                S'inscrire avec Google
+                            </a>
+                            <a class="btn btn-outline-grey btn-sm btn-google btn-block mb-4 d-inline-block d-md-none" href="{{ path('oauth_connect', {service: 'google'}) }}">
+                                <img src='https://developers.google.com/identity/images/g-logo.png' class="img-fluid mr-1 my-0" alt="Google icon">
+                                S'inscrire avec Google
+                            </a>
+
+                            <a href="{{ path('oauth_connect', {service: 'facebook'}) }}" class="btn btn-primary btn-facebook btn-block mb-1 d-none d-md-inline-block">
+                                <i class="fab fa-facebook-square mr-1"></i>
+                                S'inscrire avec Facebook
+                            </a>
+
+                            <a href="{{ path('oauth_connect', {service: 'facebook'}) }}" class="btn btn-primary btn-sm btn-facebook btn-block mb-1 d-inline-block d-md-none">
+                                <i class="fab fa-facebook-square mr-1"></i>
+                                S'inscrire avec Facebook
+                            </a>
+                        </div>
+                    </section>
+
+                    <section class="d-flex align-content-center">
+                        <hr class="w-100" style="border-color: #f5f5f5; border-width: 2px;">
+                        <div class="h5-responsive font-weight-stone-500 text-center grey-text px-2">Ou</div>
+                        <hr class="w-100" style="border-color: #f5f5f5; border-width: 2px;">
+                    </section>
+
+                    {% if errors|length > 0 %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for error in errors %}
+                                {{ error.message }}
+                                {% if not loop.last %}<br />{% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {{ form_start(form) }}
+                    <div class="form-row">
+                        {% if form.lastname is defined %}
+                            <div class="col-12 col-md-6 col-lg-4">
+                                {{ form_row(form.lastname) }}
+                            </div>
+                        {% endif %}
+
+                        {% if form.firstname is defined %}
+                            <div class="col-12 col-md-6 col-lg-4">
+                                {{ form_row(form.firstname) }}
+                            </div>
+                        {% endif %}
+
+                        {% if form.email is defined %}
+                            <div class="col-12 col-md-6 col-lg-4">
+                                {{ form_row(form.email) }}
+                            </div>
+                        {% endif %}
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            {{ form_row(form.phone) }}
+                        </div>
+
+                        {% if form.plainPassword is defined %}
+                            <div class="col-12 col-md-6 col-lg-4">
+                                {{ form_widget(form.plainPassword.first) }}
+                            </div>
+                            <div class="col-12 col-md-6 col-lg-4">
+                                {{ form_widget(form.plainPassword.second) }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="small-9 mt-3 mb-4">
+                        En créant un compte, j'accepte les <a href="{{ path('app_cgu') }}" class="link">conditions d'utilisation</a>
+                        et la <a href="{{ path('app_confidentialite') }}" class="link">politique de confidentialité</a> de {{ config.settings.name }}.com.
+                    </div>
+
+                    {{ form_widget(form._token) }}
+
+                    <div class="text-center my-3">
+                        <button type="submit" class="btn btn-primary" >S'inscrire</button>
+                    </div>
+
+                    <div class="mt-3 mb-1 text-center">
+                        Vous avez déja un compte ? <a href="{{ path('app_login') }}" class="link">Connectez-vous</a>
+                    </div>
+                    {{ form_end(form, {'render_rest': false}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

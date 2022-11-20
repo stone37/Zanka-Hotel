@@ -1,0 +1,17 @@
+{% extends 'partner/layout.html.twig' %}
+
+{% block title %}Rapport Financier | {{ parent() }}{% endblock %}
+
+{% block app_body %}
+    {% include 'partner/payout/report/_header.html.twig' %}
+
+    {% include 'partner/payout/report/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

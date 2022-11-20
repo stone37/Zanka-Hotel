@@ -56,13 +56,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 8, max: 4096, minMessage: 'Votre mot de passe doit comporter au moins {{ limit }} caractères')]
+    /*#[Assert\NotBlank]
+    #[Assert\Length(min: 8, max: 4096, minMessage: 'Votre mot de passe doit comporter au moins {{ limit }} caractères')]*/
     #[SerializedName('password')]
     private $plainPassword;
 
-    #[Assert\NotBlank(message: "Entrez un nom d'utilisateur s'il vous plait.", groups: ['Registration', 'Profile'])]
-    #[Assert\Length(min: 2, max: 180, minMessage: "Le nom d'utilisateur est trop courte.", maxMessage: "Le nom d'utilisateur est trop longue.", groups: ['Registration', 'Profile'])]
+    /*#[Assert\NotBlank(message: "Entrez un nom d'utilisateur s'il vous plait.", groups: ['Registration', 'Profile'])]
+    #[Assert\Length(min: 2, max: 180, minMessage: "Le nom d'utilisateur est trop courte.", maxMessage: "Le nom d'utilisateur est trop longue.", groups: ['Registration', 'Profile'])]*/
     #[ORM\Column(length: 180, nullable: true)]
     private ?string $username = null;
 
@@ -106,10 +106,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?DateTimeInterface $lastLoginAt = null;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $isVerified = null;
+    private ?bool $isVerified = false;
 
     #[ORM\Column(nullable: true)]
     private ?bool $subscribedToNewsletter = false;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $confirmationToken;
 
     #[Assert\File(maxSize: '8M')]
     #[Vich\UploadableField(
@@ -136,6 +139,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Commande::class)]
     private Collection $commandes;
 
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Payout::class)]
+    private Collection $payouts;
+
     public function __construct()
     {
         $this->hostels = new ArrayCollection();
@@ -143,6 +149,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->reviews = new ArrayCollection();
         $this->bookings = new ArrayCollection();
         $this->commandes = new ArrayCollection();
+        $this->payouts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -180,6 +187,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
+        $roles[] = 'ROLE_PARTNER';
 
         return array_unique($roles);
     }
@@ -400,6 +408,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getConfirmationToken(): ?string
+    {
+        return $this->confirmationToken;
+    }
+
+    public function setConfirmationToken(?string $confirmationToken): self
+    {
+        $this->confirmationToken = $confirmationToken;
+
+        return $this;
+    }
+
     public function getFile(): ?File
     {
         return $this->file;
@@ -560,6 +580,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($commande->getOwner() === $this) {
                 $commande->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Payout>
+     */
+    public function getPayouts(): Collection
+    {
+        return $this->payouts;
+    }
+
+    public function addPayout(Payout $payout): self
+    {
+        if (!$this->payouts->contains($payout)) {
+            $this->payouts[] = $payout;
+            $payout->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayout(Payout $payout): self
+    {
+        if ($this->payouts->removeElement($payout)) {
+            // set the owning side to null (unless already changed)
+            if ($payout->getOwner() === $this) {
+                $payout->setOwner(null);
             }
         }
 

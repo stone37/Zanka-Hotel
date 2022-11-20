@@ -1,0 +1,17 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Groupes équipements d'hébergement | {{ parent() }}{% endblock %}
+
+{% block app_body %}
+    {% include 'admin/roomEquipmentGroup/index/_header.html.twig' %}
+
+    {% include 'admin/roomEquipmentGroup/index/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

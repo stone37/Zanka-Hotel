@@ -19,4 +19,8 @@ return [
     WhiteOctober\BreadcrumbsBundle\WhiteOctoberBreadcrumbsBundle::class => ['all' => true],
     Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle::class => ['all' => true],
     Vich\UploaderBundle\VichUploaderBundle::class => ['all' => true],
+    FOS\ElasticaBundle\FOSElasticaBundle::class => ['all' => true],
+    Craue\FormFlowBundle\CraueFormFlowBundle::class => ['all' => true],
+    MobileDetectBundle\MobileDetectBundle::class => ['all' => true],
+    BabDev\PagerfantaBundle\BabDevPagerfantaBundle::class => ['all' => true],
 ];

@@ -1,0 +1,20 @@
+{% extends 'partner/layout.html.twig' %}
+
+{% block title %}
+    Affichage d'un hébergement | Hébergements | {{ parent() }}
+{% endblock %}
+
+{% block app_body %}
+    {% include 'partner/room/show/_header.html.twig' %}
+
+    {% include 'partner/room/show/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+

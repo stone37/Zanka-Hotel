@@ -1,0 +1,43 @@
+{% extends 'site/layout.html.twig' %}
+
+{% block title 'Hôtels à ' ~ city  %}
+
+{% block meta %}
+    {% set content = "Resultat de recherche d'hôtels à " ~ city %}
+    <meta name="description" content="{{ content }}"/>
+    <meta property="og:description" content="{{ content }}" />
+{% endblock %}
+
+{% block app_intro %}
+    <section class="bc container">
+        <div>
+            {{ wo_render_breadcrumbs({viewTemplate: '_breadcrumb.html.twig', listClass: 'breadcrumb',
+                itemClass: 'breadcrumb-item', separator: '>', separatorClass: 'fas fa-long-arrow-alt-right'}) }}
+        </div>
+    </section>
+
+    <section class="hostel-list">
+        {{ render(controller('App\\Controller\\BookingController::search')) }}
+    </section>
+{% endblock %}
+
+{% block app_body %}
+    {{ include('site/hostel/index/content.html.twig') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% include 'Ui/_stylesheets.html.twig' with {'path': 'assets/css/hotel-datepicker.css'} %}
+    {% include 'Ui/_stylesheets.html.twig' with {'path': 'assets/css/multi-range.min.css'} %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/fecha.min.js'} %}
+    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/hotel-datepicker.min.js'} %}
+    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/multi-range.min.js'} %}
+    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/site/booking.js'} %}
+{% endblock %}
+

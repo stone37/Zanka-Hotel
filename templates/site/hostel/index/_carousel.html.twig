@@ -1,0 +1,29 @@
+
+<div id="carousel-hostel-{{ hostel.id }}" class="carousel slide carousel-fade" data-ride="carousel" data-interval="false">
+    <ol class="carousel-indicators">
+        {% for gallery in hostel.galleries %}
+            {% if loop.index <= 4 %}
+                <li data-target="#carousel-hostel-{{ hostel.id }}" data-slide-to="{{ loop.index0 }}" {% if loop.first %}class="active"{% endif %}></li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+
+    <div class="carousel-inner" role="listbox">
+        {% for gallery in hostel.galleries %}
+            {% if loop.index <= 4 %}
+                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    <img class="d-block w-100" src="{{ asset(gallery.webPath) }}" alt="{{ gallery.name }}">
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <a class="carousel-control-prev" href="#carousel-hostel-{{ hostel.id }}" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carousel-hostel-{{ hostel.id }}" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>

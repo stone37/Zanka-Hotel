@@ -4,7 +4,39 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    locale: fr_CI
     google_recaptcha_site_key: '%env(GOOGLE_RECAPTCHA_SITE_KEY)%'
+    app.path.image_orphanage: '%kernel.cache_dir%/uploader/orphanage'
+    image_resize_key: '%env(resolve:IMAGE_RESIZE_KEY)%'
+    dkim_key: '%env(resolve:default::MAILER_DKIM)%'
+    maintenance_dir: '%env(resolve:MAINTENANCE_DIR)%'
+    app.path.user: /uploads/images/user
+    app.path.category: /uploads/images/categories
+    app.path.city: /uploads/images/cities
+    app.path.settings: /uploads/images/logo
+    app.path.hostel: /uploads/images/hostels
+    app.path.banner: /uploads/images/banners
+    app.path.banner_mobile: /uploads/images/banners_mobile
+
+    app_name_property_prefix: name
+    app_city_property_prefix: city
+    app_description_property_prefix: description
+    app_location_property_prefix: location
+    app_position_property_prefix: position
+    app_equipment_property_prefix: equipments
+    app_equipment_property: equipments.id
+    app_city_property: location.city
+    app_city_name_property: location.city.name
+    app_enabled_property: enabled
+    app_room_price_property_prefix: price
+    app_room_property_prefix: rooms
+    app_created_at_property_prefix: createdAt
+    app_fuzziness: AUTO
+    app_pagination_available_page_limits: [9, 18, 36]
+    app_pagination_default_limit: 9
+    app_hostel_filter_price_min: 0
+    app_hostel_filter_price_max: 99000
+    app_hostel_filter_price_step: 500
 
 services:
     # default configuration for services in *this* file
@@ -23,3 +55,56 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\Mailing\Mailer:
+        class: App\Mailing\Mailer
+        arguments:
+            $dkimKey: '%dkim_key%'
+
+    App\Manager\ConfigurationFileManager:
+        arguments:
+            $maintenanceDirectory: '%maintenance_dir%'
+
+    App\PropertyNameResolver\NameResolver:
+        arguments:
+            $propertyPrefix: '%app_name_property_prefix%'
+
+    App\PropertyNameResolver\PriceNameResolver:
+        arguments:
+            $pricePropertyPrefix: '%app_room_price_property_prefix%'
+
+    App\PropertyNameResolver\ConcatedPriceNameResolver:
+        arguments:
+            $propertyPrefix: '%app_room_property_prefix%'
+
+    App\Controller\HomeController:
+        tags: [controller.service_arguments]
+        public: true
+        arguments:
+            - '@fos_elastica.finder.equipment'
+
+    App\Finder\HostelFinder:
+        arguments:
+            $hostelFinder: '@fos_elastica.finder.hostel'
+
+    App\Finder\NamedHostelsFinder:
+        arguments:
+            $hostelsFinder: '@fos_elastica.finder.hostel'
+
+    App\Finder\HostelEquipmentsFinder:
+        arguments:
+            $equipmentsFinder: '@fos_elastica.finder.equipment'
+
+    App\Finder\CitiesFinder:
+        arguments:
+            $citiesFinder: '@fos_elastica.finder.city'
+
+    App\Finder\CategoriesFinder:
+        arguments:
+            $categoriesFinder: '@fos_elastica.finder.category'
+
+    App\Finder\BannerFinder:
+        arguments:
+            $bannerFinder: '@fos_elastica.finder.banner'
+
+

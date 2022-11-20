@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\PositionTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\EquipmentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -11,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: EquipmentRepository::class)]
 class Equipment
 {
+    use PositionTrait;
     use TimestampableTrait;
 
     #[ORM\Id]
@@ -26,12 +30,18 @@ class Equipment
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne]
-    private ?User $owner = null;
-
+    #[Assert\NotBlank]
     #[ORM\ManyToOne(inversedBy: 'equipments')]
     #[ORM\JoinColumn(nullable: false)]
     private ?EquipmentGroup $equipmentGroup = null;
+
+    #[ORM\ManyToMany(targetEntity: Hostel::class, mappedBy: 'equipments')]
+    private Collection $hostels;
+
+    public function __construct()
+    {
+        $this->hostels = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -62,18 +72,6 @@ class Equipment
         return $this;
     }
 
-    public function getOwner(): ?User
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(?User $owner): self
-    {
-        $this->owner = $owner;
-
-        return $this;
-    }
-
     public function getEquipmentGroup(): ?EquipmentGroup
     {
         return $this->equipmentGroup;
@@ -82,6 +80,33 @@ class Equipment
     public function setEquipmentGroup(?EquipmentGroup $equipmentGroup): self
     {
         $this->equipmentGroup = $equipmentGroup;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Hostel>
+     */
+    public function getHostels(): Collection
+    {
+        return $this->hostels;
+    }
+
+    public function addHostel(Hostel $hostel): self
+    {
+        if (!$this->hostels->contains($hostel)) {
+            $this->hostels[] = $hostel;
+            $hostel->addEquipment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHostel(Hostel $hostel): self
+    {
+        if ($this->hostels->removeElement($hostel)) {
+            $hostel->removeEquipment($this);
+        }
 
         return $this;
     }

@@ -1,0 +1,14 @@
+{% set route = app.request.attributes.get('_route') %}
+{% set queryParameters = app.request.query.all|unset_elements(['limit', 'page']) %}
+
+<div class="dropdown pagination ml-1">
+    <a class="btn btn-outline-dark btn-sm dropdown-toggle z-depth-0" type="button" data-toggle="dropdown">
+        Nombre de résultats <i class="fas fa-angle-down ml-2"></i>
+    </a>
+
+    <div class="dropdown-menu dropdown-dark">
+        {% for limit in app_pagination_available_page_limits %}
+            <a class="dropdown-item" href="{{ path(route, {'limit': limit}|merge(queryParameters)) }}">{{ limit }}</a>
+        {% endfor %}
+    </div>
+</div>

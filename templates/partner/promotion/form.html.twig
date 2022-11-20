@@ -1,0 +1,74 @@
+<div class="section card mb-3">
+    <div class="card-body py-3">
+        <div class="form-row">
+            <div class="col-12">
+                <h4 class="h5-responsive font-weight-stone-500">Informations de base</h4>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-start">
+            <div class="col-12 col-md-4">
+                {{ form_row(form.name) }}
+            </div>
+            <div class="col-12 col-md-4 col-lg-3">
+                <div class="title promotion-title" style="margin-bottom: -21.2px !important">Date de début (facultatif)</div>
+                {{ form_row(form.startDate) }}
+            </div>
+            <div class="col-12 col-md-4 col-lg-3">
+                <div class="title promotion-title" style="margin-bottom: -21.2px !important">Date de fin (facultatif)</div>
+                {{ form_row(form.endDate) }}
+            </div>
+            <div class="col-12 col-md-2 mt-2 pl-lg-4">
+                <div class="grey-text pb-1">{{ form.enabled.vars.label|trans }}</div>
+                <div class="switch stone-switch mt-1 ml-md-2">
+                    <label>
+                        Non
+                        <input type="checkbox" name="{{ form.enabled.vars.full_name }}" id="{{ form.enabled.vars.id }}"
+                               value="{{ form.enabled.vars.value }}" {% if form.enabled.vars.checked %}checked="checked{% endif %}">
+                        <span class="lever"></span>
+                        Oui
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section card mb-3">
+    <div class="card-body py-3">
+        <div class="form-row">
+            <div class="col-12">
+                <h4 class="h5-responsive font-weight-stone-500 mb-0">Hébergement</h4>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-start">
+            <div class="col-12 col-md-4">
+                {{ form_widget(form.rooms) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="section card mb-3">
+    <div class="card-body py-3">
+        <div class="form-row">
+            <div class="col-12">
+                <h4 class="h5-responsive font-weight-stone-500 mb-0">Configuration</h4>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-start">
+            <div class="col-12 col-md-4 col-lg-3">
+                {{ form_widget(form.action.type) }}
+            </div>
+            <div class="col-12 col-md-4 col-lg-3 promotion-action-amount">
+                <div class="title" style="margin-bottom: -21.2px !important"></div>
+                {{ form_row(form.action.configuration.amount) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

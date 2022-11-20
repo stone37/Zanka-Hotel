@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\PositionTrait;
+use App\Entity\Traits\TimestampableTrait;
 use App\Repository\RoomGalleryRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
@@ -11,6 +13,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: RoomGalleryRepository::class)]
 class RoomGallery
 {
+    use PositionTrait;
+    use TimestampableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -30,7 +35,7 @@ class RoomGallery
     )]
     private ?File $file;
 
-    private ?string $tempFilename;
+    private ?string $tempFilename = null;
 
     #[ORM\ManyToOne(inversedBy: 'galleries')]
     #[ORM\JoinColumn(nullable: false)]

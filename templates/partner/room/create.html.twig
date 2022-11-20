@@ -1,0 +1,19 @@
+{% extends 'partner/layout.html.twig' %}
+
+{% block title %}Nouveau hébergement | Hébergements | {{ parent() }}{% endblock %}
+
+{% block app_body %}
+    {% include 'partner/room/create/_header.html.twig' %}
+
+    {% include 'partner/room/create/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+

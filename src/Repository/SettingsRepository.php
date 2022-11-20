@@ -44,5 +44,11 @@ class SettingsRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
-
+    public function getSettings(): ?Settings
+    {
+        return $this->createQueryBuilder('s')
+            ->getQuery()
+            ->enableResultCache(600, 'AppSettings')
+            ->getOneOrNullResult();
+    }
 }

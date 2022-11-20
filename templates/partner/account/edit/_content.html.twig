@@ -1,0 +1,69 @@
+{% import 'Ui/Macro/buttons.html.twig' as buttons %}
+
+{% form_theme form_update 'Ui/Form/theme.html.twig' %}
+
+<section class="row mb-5 mt-md-5">
+    <div class="col-12 col-md-8 col-lg-9">
+        {{ form_start(form_update, {'attr': { 'class': 'fos_user_profile_edit', 'novalidate': 'novalidate' } }) }}
+        <div class="card card-cascade mb-5">
+            <div class="view view-cascade gradient-card-header bg-primary pt-3 pb-2 z-depth-2"
+                 style="border-radius: 0 !important">
+                <h5 class="card-header-title h5-responsive">Vos informations</h5>
+            </div>
+            <div class="card-body card-body-cascade">
+
+                {% include 'partner/account/form_edit.html.twig' with {'form_update': form_update} %}
+
+                {{ form_widget(form_update._token) }}
+
+                <div class="d-flex justify-content-center mt-3">
+                    <div class="text-center">{{ buttons.validate('Modifier mon profil', 'fas fa-pencil-alt', '') }}</div>
+                </div>
+            </div>
+        </div>
+        {{ form_end(form_update, {'render_rest': false}) }}
+    </div>
+    <div class="col-12 col-md-4 col-lg-3">
+        {{ form_start(form_avatar, {'attr': { 'class': 'fos_user_avatar', 'novalidate': 'novalidate' } }) }}
+        <div class="card card-cascade mb-4">
+            <div class="view view-cascade gradient-card-header bg-grey pt-3 pb-2 z-depth-2"
+                 style="border-radius: 0 !important">
+                <h6 class="card-header-title">Photo de profil</h6>
+            </div>
+            <div class="card-body card-body-cascade pt-4 pb-3 text-center">
+                {% set avatar = vich_uploader_asset(user, 'file') %}
+
+                <div>
+                    {% if avatar %}
+                        <img src="{{ avatar }}" alt="" class="img-fluid img-thumbnail mb-3" id="image-view" />
+                    {% else %}
+                        <img src="" alt="" class="img-fluid img-thumbnail mb-3 d-none" id="image-view" />
+                    {% endif %}
+                </div>
+                <div class="file-field text-center d-flex justify-content-center">
+                    <div class="btn btn-mdb-color btn-sm float-left">
+                        <i class="fas fa-cloud-upload-alt mr-1"></i>
+                        {% if avatar %}
+                            <span>Modifier la photo</span>
+                        {% else %}
+                            <span>Choisir une photo</span>
+                        {% endif %}
+
+                        <input type="file" name="{{ form_avatar.file.children.file.vars.full_name }}" id="entity-image" />
+                    </div>
+                </div>
+
+                {{ form_widget(form_avatar._token) }}
+
+                <div class="text-center mt-3"><button type="submit" class="btn btn-sm btn-grey">Valider</button></div>
+            </div>
+        </div>
+        {{ form_end(form_avatar, {'render_rest': false}) }}
+    </div>
+</section>
+
+
+
+
+
+

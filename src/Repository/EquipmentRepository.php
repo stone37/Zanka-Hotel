@@ -3,10 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Equipment;
+use App\Model\Admin\EquipmentSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Model\EquipmentSearch;
 
 /**
  * @extends ServiceEntityRepository<Equipment>
@@ -51,8 +51,9 @@ class EquipmentRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('e')
             ->orderBy('e.position', 'asc');
 
-        if ($search->getName())
+        if ($search->getName()) {
             $qb->andWhere('e.name LIKE :name')->setParameter('name', '%'.$search->getName().'%');
+        }
 
         return $qb;
     }

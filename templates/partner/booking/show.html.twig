@@ -1,0 +1,20 @@
+{% extends 'partner/layout.html.twig' %}
+
+{% block title %}
+    Affichage d'une reservation | Reservations | {{ parent() }}
+{% endblock %}
+
+{% block app_body %}
+    {% include 'partner/booking/show/_header.html.twig' %}
+
+    {% include 'partner/booking/show/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+

@@ -1,0 +1,17 @@
+{% extends 'partner/layout.html.twig' %}
+
+{% block title %}Modification du profil | {{ parent() }}{% endblock %}
+
+{% block app_body %}
+    {% include 'partner/account/edit/_header.html.twig' %}
+
+    {% include 'partner/account/edit/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

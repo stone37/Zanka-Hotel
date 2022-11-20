@@ -1,0 +1,12 @@
+<div class="view zoom rgba-white-slight z-depth-1">
+    {% if banner.fileName %}
+        <img src="{{ image_url(banner, 500, 290) }}" class="img-fluid w-100" alt="Banner image" />
+    {% else %}
+        {% set img_url = asset('assets/img/no-image.png') %}
+        <img src="{{ image_asset(img_url, 500, 290) }}" class="img-fluid" alt="Banner not image" />
+    {% endif %}
+    <a {% if banner.url %}href="{{ banner.url }}" target="_blank"{% endif %}>
+        <div class="mask"></div>
+    </a>
+</div>
+

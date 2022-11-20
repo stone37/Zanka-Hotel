@@ -1,0 +1,57 @@
+{% import 'ui/Macro/pagination.html.twig' as pagination %}
+
+{% set data = config.booker.bookingData %}
+
+<section class="container mb-4 hostel-list-header">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="h2-responsive font-weight-bold mb-1">
+                Hébergements à {{ city|capitalize }}
+            </h2>
+            <div class="font-weight-normal">
+                <span>{{ (hostels|length > 1) ? hostels|length ~ ' hébergements' : hostels|length ~ ' hébergement' }}</span>
+                <i class="fas fa-circle mx-1"></i>
+                <span>
+                    {{ date(data.duration.checkin)|format_datetime(pattern="dd") }}
+                    {{ date(data.duration.checkin)|format_datetime(pattern="MMM") }} -
+                    {{ date(data.duration.checkout)|format_datetime(pattern="dd") }}
+                    {{ date(data.duration.checkout)|format_datetime(pattern="MMM") }}
+                </span>
+                <i class="fas fa-circle mx-1"></i>
+                {% set guest = data.adult + data.children %}
+                <span>{{ (guest > 1) ? guest ~ ' voyageurs' : guest ~ ' voyageur' }}</span>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="container mb-5">
+    <div class="row">
+        <section class="col-12 col-md-4 hostel-list-filter">
+            {{ form_start(form, {'method': 'GET', 'attr': {'class': 'hostel-form'}}) }}
+                {{ include('site/hostel/index/_filterForm.html.twig') }}
+            {{ form_end(form, {'render_rest': false}) }}
+        </section>
+        <div class="col-12 col-md-8">
+            <section class="row mb-5">
+                <div class="col-12 d-flex justify-content-end hostel-list-sorting">
+                    {{ include('site/hostel/index/_sorting.html.twig') }}
+                    {{ include('site/hostel/index/_pagination.html.twig') }}
+                </div>
+            </section>
+            {% if hostels|length > 0 %}
+                <section class="row hostels-list" id="hostels-list">
+                    {% for hostel in hostels %}
+                        <div class="col-12">
+                            {% include 'site/hostel/index/_box.html.twig' %}
+                        </div>
+                    {% endfor %}
+                </section>
+
+                {{ pagination.simple(hostels) }}
+            {% else %}
+                {{ include('site/hostel/index/_no_data.html.twig') }}
+            {% endif %}
+        </div>
+    </div>
+</section>
+

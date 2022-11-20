@@ -1,7 +1,37 @@
 vich_uploader:
     db_driver: orm
+    metadata:
+        type: attribute
+    mappings:
+        category:
+            uri_prefix: '%app.path.category%'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            upload_destination: '%kernel.project_dir%/public%app.path.category%'
+        city:
+            uri_prefix: '%app.path.city%'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            upload_destination: '%kernel.project_dir%/public%app.path.city%'
+        settings:
+            uri_prefix: '%app.path.settings%'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            upload_destination: '%kernel.project_dir%/public%app.path.settings%'
+        user:
+            uri_prefix: '%app.path.user%'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            upload_destination: '%kernel.project_dir%/public%app.path.user%'
+        hostel:
+            uri_prefix: '%app.path.hostel%'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            upload_destination: '%kernel.project_dir%/public%app.path.hostel%'
+        banner:
+            uri_prefix: '%app.path.banner%'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            upload_destination: '%kernel.project_dir%/public%app.path.banner%'
+        banner_mobile:
+            uri_prefix: '%app.path.banner_mobile%'
+            namer: Vich\UploaderBundle\Naming\UniqidNamer
+            upload_destination: '%kernel.project_dir%/public%app.path.banner_mobile%'
 
-    #mappings:
     #    products:
     #        uri_prefix: /images/products
     #        upload_destination: '%kernel.project_dir%/public/images/products'

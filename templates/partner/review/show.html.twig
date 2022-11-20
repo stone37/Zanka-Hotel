@@ -1,0 +1,21 @@
+{% extends 'partner/layout.html.twig' %}
+
+{% block title %}
+    Affichage d'un avis client | Avis clients | {{ parent() }}
+{% endblock %}
+
+{% block app_body %}
+    {% include 'partner/review/show/_header.html.twig' %}
+
+    {% include 'partner/review/show/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+

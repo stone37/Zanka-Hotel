@@ -25,7 +25,10 @@ class Room
     #[ORM\Column]
     private ?int $id = null;
 
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: "Veuillez sélectionner un type d'hébergement.")]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $type = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
 
@@ -33,37 +36,56 @@ class Room
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $perfectName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $specification = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $feature = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $amenities = null;
+
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: "Veuillez indiquer le nombre d'hébergement.")]
     #[ORM\Column(nullable: true)]
     private ?int $roomNumber = null;
 
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: "Veuillez indiquer le prix de cet type d'hébergement.")]
     #[ORM\Column(nullable: true)]
     private ?int $price = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $smoker = null;
+    #[ORM\Column(nullable: true)]
+    private ?int $originalPrice = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(nullable: true)]
-    private ?int $maximumAdults = null;
+    private ?int $smoker = null;
 
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: "Veuillez indiquer le nombre d'occupant max.")]
     #[ORM\Column(nullable: true)]
-    private ?int $maximumOfChildren = null;
+    private ?int $occupant = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $area = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $couchage = null;
+    #[ORM\Column(nullable: true)]
+    private ?int $dataRoomNumber = null;
 
-    #[ORM\ManyToMany(targetEntity: RoomEquipmentGroup::class, inversedBy: 'rooms')]
+    #[ORM\Column(nullable: true)]
+    private ?int $dataLivingRoomNumber = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $dataBathroomNumber = null;
+
+    #[ORM\ManyToMany(targetEntity: RoomEquipment::class, inversedBy: 'rooms')]
     private Collection $equipments;
 
+    #[Assert\NotBlank(message: "Veuillez sélectionner un établissement.")]
     #[ORM\ManyToOne(inversedBy: 'rooms')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Hostel $hostel = null;
@@ -72,17 +94,21 @@ class Room
     #[ORM\OrderBy(['position' => 'ASC'])]
     private Collection $galleries;
 
-    #[ORM\OneToMany(mappedBy: 'room', targetEntity: Promotion::class)]
-    private Collection $promotions;
-
     #[ORM\ManyToMany(targetEntity: Supplement::class, inversedBy: 'rooms')]
     private Collection $supplements;
 
-    #[ORM\ManyToOne(inversedBy: 'rooms')]
-    private ?Taxe $taxe = null;
-
     #[ORM\OneToMany(mappedBy: 'room', targetEntity: Booking::class)]
     private Collection $bookings;
+
+    #[ORM\ManyToMany(targetEntity: Promotion::class, mappedBy: 'rooms')]
+    private Collection $promotions;
+
+    #[Assert\Valid]
+    #[ORM\OneToMany(mappedBy: 'room', targetEntity: Bedding::class, orphanRemoval: true, cascade: ['ALL'])]
+    private Collection $beddings;
+
+    #[ORM\ManyToMany(targetEntity: Taxe::class, inversedBy: 'rooms')]
+    private Collection $taxes;
 
     public function __construct()
     {
@@ -91,11 +117,25 @@ class Room
         $this->promotions = new ArrayCollection();
         $this->supplements = new ArrayCollection();
         $this->bookings = new ArrayCollection();
+        $this->beddings = new ArrayCollection();
+        $this->taxes = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(?string $type): self
+    {
+        $this->type = $type;
+
+        return $this;
     }
 
     public function getName(): ?string
@@ -118,6 +158,54 @@ class Room
     public function setSlug(?string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getPerfectName(): ?string
+    {
+        return $this->perfectName;
+    }
+
+    public function setPerfectName(?string $perfectName): self
+    {
+        $this->perfectName = $perfectName;
+
+        return $this;
+    }
+
+    public function getSpecification(): ?string
+    {
+        return $this->specification;
+    }
+
+    public function setSpecification(?string $specification): self
+    {
+        $this->specification = $specification;
+
+        return $this;
+    }
+
+    public function getFeature(): ?string
+    {
+        return $this->feature;
+    }
+
+    public function setFeature(?string $feature): self
+    {
+        $this->feature = $feature;
+
+        return $this;
+    }
+
+    public function getAmenities(): ?string
+    {
+        return $this->amenities;
+    }
+
+    public function setAmenities(?string $amenities): self
+    {
+        $this->amenities = $amenities;
 
         return $this;
     }
@@ -158,38 +246,38 @@ class Room
         return $this;
     }
 
-    public function getSmoker(): ?string
+    public function getOriginalPrice(): ?int
+    {
+        return $this->originalPrice;
+    }
+
+    public function setOriginalPrice(?int $originalPrice): self
+    {
+        $this->originalPrice = $originalPrice;
+
+        return $this;
+    }
+
+    public function getSmoker(): ?int
     {
         return $this->smoker;
     }
 
-    public function setSmoker(?string $smoker): self
+    public function setSmoker(?int $smoker): self
     {
         $this->smoker = $smoker;
 
         return $this;
     }
 
-    public function getMaximumAdults(): ?int
+    public function getOccupant(): ?int
     {
-        return $this->maximumAdults;
+        return $this->occupant;
     }
 
-    public function setMaximumAdults(?int $maximumAdults): self
+    public function setOccupant(?int $occupant): self
     {
-        $this->maximumAdults = $maximumAdults;
-
-        return $this;
-    }
-
-    public function getMaximumOfChildren(): ?int
-    {
-        return $this->maximumOfChildren;
-    }
-
-    public function setMaximumOfChildren(?int $maximumOfChildren): self
-    {
-        $this->maximumOfChildren = $maximumOfChildren;
+        $this->occupant = $occupant;
 
         return $this;
     }
@@ -206,27 +294,51 @@ class Room
         return $this;
     }
 
-    public function getCouchage(): ?string
+    public function getDataRoomNumber(): ?int
     {
-        return $this->couchage;
+        return $this->dataRoomNumber;
     }
 
-    public function setCouchage(?string $couchage): self
+    public function setDataRoomNumber(?int $dataRoomNumber): self
     {
-        $this->couchage = $couchage;
+        $this->dataRoomNumber = $dataRoomNumber;
+
+        return $this;
+    }
+
+    public function getDataLivingRoomNumber(): ?int
+    {
+        return $this->dataLivingRoomNumber;
+    }
+
+    public function setDataLivingRoomNumber(?int $dataLivingRoomNumber): self
+    {
+        $this->dataLivingRoomNumber = $dataLivingRoomNumber;
+
+        return $this;
+    }
+
+    public function getDataBathroomNumber(): ?int
+    {
+        return $this->dataBathroomNumber;
+    }
+
+    public function setDataBathroomNumber(?int $dataBathroomNumber): self
+    {
+        $this->dataBathroomNumber = $dataBathroomNumber;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, RoomEquipmentGroup>
+     * @return Collection<int, RoomEquipment>
      */
     public function getEquipments(): Collection
     {
         return $this->equipments;
     }
 
-    public function addEquipment(RoomEquipmentGroup $equipment): self
+    public function addEquipment(RoomEquipment $equipment): self
     {
         if (!$this->equipments->contains($equipment)) {
             $this->equipments[] = $equipment;
@@ -235,7 +347,7 @@ class Room
         return $this;
     }
 
-    public function removeEquipment(RoomEquipmentGroup $equipment): self
+    public function removeEquipment(RoomEquipment $equipment): self
     {
         $this->equipments->removeElement($equipment);
 
@@ -285,36 +397,6 @@ class Room
     }
 
     /**
-     * @return Collection<int, Promotion>
-     */
-    public function getPromotions(): Collection
-    {
-        return $this->promotions;
-    }
-
-    public function addPromotion(Promotion $promotion): self
-    {
-        if (!$this->promotions->contains($promotion)) {
-            $this->promotions[] = $promotion;
-            $promotion->setRoom($this);
-        }
-
-        return $this;
-    }
-
-    public function removePromotion(Promotion $promotion): self
-    {
-        if ($this->promotions->removeElement($promotion)) {
-            // set the owning side to null (unless already changed)
-            if ($promotion->getRoom() === $this) {
-                $promotion->setRoom(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Supplement>
      */
     public function getSupplements(): Collection
@@ -334,18 +416,6 @@ class Room
     public function removeSupplement(Supplement $supplement): self
     {
         $this->supplements->removeElement($supplement);
-
-        return $this;
-    }
-
-    public function getTaxe(): ?Taxe
-    {
-        return $this->taxe;
-    }
-
-    public function setTaxe(?Taxe $taxe): self
-    {
-        $this->taxe = $taxe;
 
         return $this;
     }
@@ -376,6 +446,87 @@ class Room
                 $booking->setRoom(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Promotion>
+     */
+    public function getPromotions(): Collection
+    {
+        return $this->promotions;
+    }
+
+    public function addPromotion(Promotion $promotion): self
+    {
+        if (!$this->promotions->contains($promotion)) {
+            $this->promotions[] = $promotion;
+            $promotion->addRoom($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromotion(Promotion $promotion): self
+    {
+        if ($this->promotions->removeElement($promotion)) {
+            $promotion->removeRoom($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Bedding>
+     */
+    public function getBeddings(): Collection
+    {
+        return $this->beddings;
+    }
+
+    public function addBedding(Bedding $bedding): self
+    {
+        if (!$this->beddings->contains($bedding)) {
+            $this->beddings->add($bedding);
+            $bedding->setRoom($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBedding(Bedding $bedding): self
+    {
+        if ($this->beddings->removeElement($bedding)) {
+            // set the owning side to null (unless already changed)
+            if ($bedding->getRoom() === $this) {
+                $bedding->setRoom(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Taxe>
+     */
+    public function getTaxes(): Collection
+    {
+        return $this->taxes;
+    }
+
+    public function addTax(Taxe $tax): self
+    {
+        if (!$this->taxes->contains($tax)) {
+            $this->taxes[] = $tax;
+        }
+
+        return $this;
+    }
+
+    public function removeTax(Taxe $tax): self
+    {
+        $this->taxes->removeElement($tax);
 
         return $this;
     }

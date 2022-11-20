@@ -1,0 +1,65 @@
+{% extends 'site/layout.html.twig' %}
+
+{% block title 'Promotions et réductions sur vos réservations d’hôtel, de économique au luxe' %}
+
+{% block meta %}
+    {% set content = "Réservez des chambres dans des hôtels luxueux ou des hôtels à petit budget.
+                     Lisez les avis impartiaux des voyageurs, localisez les hôtels sur une carte et
+                     consultez des photos de qualité. Réservez dès maintenant votre chambre d'hôtel
+                     et économisez grâce à notre garantie de prix." %}
+
+    <meta name="description" content="{{ content }}"/>
+    <meta property="og:description" content="{{ content }}" />
+{% endblock %}
+
+{% block app_intro %}
+    <section class="view intro" id="home-intro"
+             style="background-image: url({{ asset('assets/img/home_intro.jpg') }});
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    background-position: center center;">
+        <div class="mask home-intro-gradiant">
+            <div class="container h-100 d-flex justify-content-start align-items-start">
+                <div class="row mt-3 mt-lg-5">
+                    <div class="col-12 col-lg-12 wow fadeIn">
+                        <h1 class="display-4 mt-lg-0 text-dark wow fadeIn">Trouvez l'endroit qui vous convient</h1>
+                    </div>
+                    <div class="col-lg-12 wow fadeIn mb-5">
+                        <h4 class="h4-responsive font-weight-stone-500 dark-grey-text">
+                            Votre voyage ne manque pas d'expériences. Avec {{ config.name }},
+                            réserver des hôtels, des hébergements indépendants et plus encore
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {{ render(controller('App\\Controller\\BookingController::search')) }}
+{% endblock %}
+
+{% block app_body %}
+    <div class="container">
+        {{ render(controller('App\\Controller\\BannerController::show', {'type': 'silver', 'location': 'middle'})) }}
+
+        {{ render(controller('App\\Controller\\LocationController::home')) }}
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% include 'Ui/_stylesheets.html.twig' with {'path': 'assets/css/hotel-datepicker.css'} %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/fecha.min.js'} %}
+    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/hotel-datepicker.min.js'} %}
+    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/site/booking.js'} %}
+{% endblock %}
+
+
+
+

@@ -1,0 +1,18 @@
+{% extends 'partner/layout.html.twig' %}
+
+{% block title %}Edition d'un supplément | Suppléments | {{ parent() }}{% endblock %}
+
+{% block app_body %}
+    {% include 'partner/supplement/edit/_header.html.twig' %}
+
+    {% include 'partner/supplement/edit/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+

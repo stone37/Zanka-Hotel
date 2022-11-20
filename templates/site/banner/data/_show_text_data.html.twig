@@ -1,0 +1,11 @@
+<div class="alert banner alert-dismissible fade show mb-0" {% if banner.bgColor %}style="background-color: {{ banner.bgColor }} !important"{% endif %}>
+    <div class="d-flex justify-content-between">
+        <div class="content">
+            {% if banner.mainText %}<div class="main-text text-dark font-weight-stone-500">{{ banner.mainText }}</div>{% endif %}
+            {% if banner.secondaryText %}<div class="secondary-text text-dark small-8 pr-md-4">{{ banner.secondaryText }}</div>{% endif %}
+        </div>
+    </div>
+    <button data-id="{{ banner.id }}" type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>

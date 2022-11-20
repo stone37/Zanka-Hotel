@@ -1,0 +1,19 @@
+{% if banners|length > 0  %}
+    {% for banner in banners %}
+        {% if not app_has_banner_view(banner) %}
+            <section class="
+                {% if banner.device == 0 %}d-block
+                {% elseif banner.device == 1 %}d-none d-lg-block
+                {% else %}d-block d-lg-none
+                {% endif %}">
+                {% if banner.url %}
+                    <a href="{{ banner.url }}" class="d-block" target="_blank">
+                        {{ include('site/banner/data/_show_text_data.html.twig', {'banner': banner}) }}
+                    </a>
+                {% else %}
+                    {{ include('site/banner/data/_show_text_data.html.twig', {'banner': banner}) }}
+                {% endif %}
+            </section>
+        {% endif %}
+    {% endfor %}
+{% endif %}

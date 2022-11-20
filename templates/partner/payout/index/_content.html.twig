@@ -1,0 +1,84 @@
+{% import 'Ui/Macro/buttons.html.twig' as buttons %}
+
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-center justify-content-md-between">
+        <div class="d-flex ml-auto">
+            <div class="">
+                {% include 'partner/payout/filter.html.twig' with {'form': searchForm}  %}
+            </div>
+            <div class="mr-3">
+                <a href="" class="btn btn-grey" data-toggle="modal" data-target="#entity-search">
+                    <i class="fas fa-filter mr-1" aria-hidden="true"></i> Filtres
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if payouts|length > 0 %}
+    <div class="row app-user mb-5">
+        <div class="col-12">
+            <table class="table table-responsive-sm">
+                <thead class="text-primary">
+                <tr>
+                    <th scope="col" class="font-weight-stone-500 text-center">Date</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">Commande</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">Hotel</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">État</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">Montant (CFA)</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">Devise</th>
+                </tr>
+                </thead>
+                <tbody id="list-checkbook-container">
+                {% for payout in payouts %}
+                    <tr>
+                        <td class="text-center">{{ payout.createdAt|date('d/m/Y H:i') }}</td>
+                        <td class="text-center">
+                            <a href="{{ path('app_partner_commande_show', {'id': payout.commande.id}) }}" class="card-link">
+                                #{{ payout.commande.id }}
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ path('app_partner_hostel_show', {'id': payout.hostel.id}) }}" class="card-link">
+                                {{ payout.hostel.name }}
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            {% if payout.state == 2 %}
+                                <span class="badge badge-success">
+                                    <i class="fas fa-adjust mr-1"></i> Complete
+                                </span>
+                            {% elseif payout.state == 3 %}
+                                <span class="badge badge-grey">
+                                    <i class="fas fa-times mr-1"></i> Annuler
+                                </span>
+                            {% else %}
+                                <span class="badge badge-danger">
+                                    <i class="fas fa-check mr-1"></i> Nouveau
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">{{ payout.amount|currency_symbol('XOF') }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-12 d-flex justify-content-start mt-2">
+            <div class="font-weight-stone-500 text-secondary">{{ payouts.totalItemCount }} resultats</div>
+        </div>
+        <div class="col-12 d-flex justify-content-center mt-2 mb-5">
+            {{ knp_pagination_render(payouts, 'Ui/_pagination.html.twig') }}
+        </div>
+    </div>
+{% else %}
+    <div class="row app-user d-flex justify-content-center">
+        <div class="col-12 col-md-8 text-center mt-3 mt-md-5">
+            <h3 class="h3-responsive font-weight-stone-600">
+                Vous n'avez aucun paiement.
+            </h3>
+        </div>
+    </div>
+{% endif %}
+
+

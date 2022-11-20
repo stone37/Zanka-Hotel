@@ -7,7 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Hostel>
+ * @extends ServiceEntityRepository<Gallery>
  *
  * @method HostelGallery|null find($id, $lockMode = null, $lockVersion = null)
  * @method HostelGallery|null findOneBy(array $criteria, array $orderBy = null)
@@ -39,6 +39,11 @@ class HostelGalleryRepository extends ServiceEntityRepository
         }
     }
 
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+    }
+
     public function getGalleries(int $limit = 3)
     {
         $qb = $this->createQueryBuilder('g')->select('COUNT(g)');
@@ -62,8 +67,4 @@ class HostelGalleryRepository extends ServiceEntityRepository
                 ->getResult();
         }
     }
-
-
-
-
 }

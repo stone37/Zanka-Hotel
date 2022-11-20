@@ -1,0 +1,48 @@
+<section class="mt-3 my-lg-4 home-location-data">
+    {% if cities|length > 0 %}
+        <h3 class="h3-responsive title wow fadeIn mb-0" data-wow-delay="0.2s">
+            <strong class="font-weight-stone-600">Partez à la rencontre de la Côte d'Ivoire</strong>
+        </h3>
+        <div class="grey-text w-responsive wow fadeIn mb-4" data-wow-delay="0.2s">
+            Ces destinations populaires ont plein de choses à offrir.
+        </div>
+        <div class="row">
+            <div id="home-location-carousel" class="carousel slide w-100" data-ride="carousel">
+                <div class="carousel-inner w-100 vv-3" role="listbox">
+                    {% for city in cities %}
+                        <div class="carousel-item {% if loop.first %}active{% endif %}">
+                            <div class="col-12 col-md-4 col-lg-3">
+                                <a href="" class="">
+                                    <div class="view zoom rgba-white-slight z-depth-1">
+                                        {% if city.fileName %}
+                                            <img src="{{ image_url(city, 500, 718) }}" class="img-fluid" alt="City image">
+                                        {% else %}
+                                            {% set img_url = asset('assets/img/no-image.png') %}
+                                            <img src="{{ image_asset(img_url, 500, 718) }}" class="img-fluid" alt="City not image" />
+                                        {% endif %}
+                                        <div>
+                                            <div class="mask"></div>
+                                        </div>
+                                    </div>
+                                    <h5 class="h5-responsive mt-3 mb-1 font-weight-stone-500">{{ city.name }}</h5>
+                                    <div class="small-9 grey-text">
+                                        {% set hostel_nbr = app_city_hostel_nbr(city) %}
+                                        {{ hostel_nbr }} {% if hostel_nbr > 1 %}propriétés{% else %}propriété{% endif %}
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <a class="carousel-control-prev" href="#home-location-carousel" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#home-location-carousel" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</section>

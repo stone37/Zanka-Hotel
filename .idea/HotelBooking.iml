@@ -176,6 +176,18 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/finder" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/security-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/translation" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/ruflin/elastica" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pagerfanta/pagerfanta" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/react/promise" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/nyholm/dsn" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/elasticsearch/elasticsearch" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/ezimuel/ringphp" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/ezimuel/guzzlestreams" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/friendsofsymfony/elastica-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/craue/formflow-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/tattali/mobile-detect-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/mobiledetect/mobiledetectlib" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/babdev/pagerfanta-bundle" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

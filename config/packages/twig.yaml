@@ -1,5 +1,12 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
+    globals:
+        config: '@App\Collector\AppCollector'
+        app_pagination_available_page_limits: "%app_pagination_available_page_limits%"
+        app_hostel_filter_price_min: "%app_hostel_filter_price_min%"
+        app_hostel_filter_price_max: "%app_hostel_filter_price_max%"
+        app_hostel_filter_price_step: "%app_hostel_filter_price_step%"
+
 
 when@test:
     twig:

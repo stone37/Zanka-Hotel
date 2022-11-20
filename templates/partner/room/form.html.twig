@@ -1,0 +1,220 @@
+<div class="section card mb-3">
+    <div class="card-body py-3">
+        <div class="form-row">
+            <div class="col-12">
+                <h4 class="h4-responsive font-weight-stone-500">Informations sur l'hébergement</h4>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-12 col-md-4">
+                {{ form_widget(form.hostel) }}
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-center justify-content-md-start" style="margin-bottom: -10px !important">
+            <div class="col-12 col-md-4 col-lg-3">
+                {{ form_widget(form.type) }}
+            </div>
+            <div class="col-12 col-md-4 col-lg-3">
+                {{ form_widget(form.specification) }}
+            </div>
+            <div class="col-12 col-md-4 col-lg-3">
+                {{ form_widget(form.feature) }}
+            </div>
+            <div class="col-12 col-md-4 col-lg-3">
+                {{ form_widget(form.amenities) }}
+            </div>
+            <div class="col-12 col-md-6">
+               <div class="app-room-name-bulk">
+                   <div class="form-text text-muted font-weight-stone-500 label">Nom de l'hébergement</div>
+                   <div id="app-room-name" class="app-room-name">
+                       <span class="type">{{ room.type }}</span>
+                       <span class="specification">{{ room.specification ? room.specification : '' }}</span>
+                       <span class="feature">{{ room.feature ? ' - ' ~ room.feature : '' }}</span>
+                       <span class="amenities">{{ room.amenities ? room.amenities|lower : '' }}</span>
+                   </div>
+                   <small class="form-text text-muted font-weight-stone-500">
+                       Ce nom sera celui que les clients verront sur le site Internet.
+                   </small>
+               </div>
+            </div>
+            <div class="col-12 col-md-4">
+                {{ form_row(form.perfectName) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-12 col-md-4 room-sub-info">
+                {{ form_widget(form.dataRoomNumber) }}
+            </div>
+            <div class="col-12 col-md-4 room-sub-info">
+                {{ form_widget(form.dataLivingRoomNumber) }}
+            </div>
+            <div class="col-12 col-md-4 room-sub-info">
+                {{ form_widget(form.dataBathroomNumber) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-12 col-md-4">
+                {{ form_widget(form.smoker) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-12 col-md-4">
+                {{ form_row(form.roomNumber) }}
+            </div>
+            {#<div class="col-12 col-md-4">
+                <div class="md-form md-outline input-with-post-icon">
+                    <div class="input-prefix">F CFA</div>
+                    <input type="text" id="suffixInside2" class="form-control">
+                    <label for="suffixInside2">E-mail address</label>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="md-form md-outline input-with-post-icon">
+                    <i class="fas fa-envelope prefix"></i>
+                    <input type="text" id="inputIconEx1" class="form-control">
+                    <label for="inputIconEx1">E-mail address</label>
+                    <small id="emailHelp2" class="form-text text-muted">We'll never share your email with anyone.</small>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="input-group md-form md-outline mb-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">{{ app_locale_currency_code(app.request.locale) }} par nuit</div>
+                    </div>
+                    <input type="text" class="form-control py-0" id="inlineFormInputGroup" placeholder="Username">
+                    <label class="sr-only" for="inlineFormInputGroup">Username</label>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <label class="sr-only" for="inlineFormInputGroup"></label>
+                <div class="input-group md-form md-outline append mb-2">
+                    <input type="text" class="form-control py-0" id="inlineFormInputGroup" placeholder="Username">
+                    <div class="input-group-append">
+                        <div class="input-group-text">m²</div>
+                    </div>
+                </div>
+            </div>#}
+        </div>
+    </div>
+</div>
+<div class="section card mb-3">
+    <div class="card-body py-3">
+        <div class="form-row mb-3">
+            <div class="col-12">
+                <h4 class="h4-responsive font-weight-stone-500">Literie</h4>
+                <div class="small-8 white-text bg-primary py-1 px-2 d-inline-block">Veuillez uniquement indiquer les lits déjà disponibles dans la chambre. N'incluez pas les lits d'appoint.</div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col-12" style="margin-bottom: -15px !important;">
+                Sélectionnez types de lits disponibles dans cet hébergement
+            </div>
+            <div id="room-form-bedding-wrapper" class="col-12 booking-form-occupant-wrapper"
+                 data-prototype="{{ form_widget(form.beddings.vars.prototype)|e('html_attr') }}"
+                 data-index="{{ form.beddings|length }}">
+                {% for field in form.beddings %}
+                    <div class="form-row bed-data-row">
+                        <div class="col-12 col-md-4">{{ form_widget(field.name) }}</div>
+                        <div class="col-12 col-md-3">{{ form_widget(field.number) }}</div>
+                        {% if not loop.first %}
+                            <a id="{{ loop.index0 }}" class="delete_beg btn-floating btn-danger btn-sm"><i class="fas fa-trash"></i></a>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-12">
+                <a id="add_new_beg" class="add_new_beg">
+                    <i class="fas fa-plus-square mr-1"></i> Ajouter un autre lit
+                </a>
+            </div>
+            <div class="col-12 col-md-4 col-lg-3">
+                {{ form_row(form.occupant) }}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section card mb-3">
+    <div class="card-body py-3">
+        <div class="form-row">
+            <div class="col-12">
+                <h4 class="h5-responsive font-weight-stone-500 mb-0">Superficie de l'hébergement (facultatif)</h4>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-start">
+            <div class="col-12 col-md-4 col-lg-3">
+                {{ form_row(form.area) }}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section card price-bulk mb-3">
+    <div class="card-body py-3">
+        <div class="form-row d-flex justify-content-start">
+            <div class="col-12">
+                <h4 class="h5-responsive font-weight-stone-500">Tarif de l'hébergement par nuit</h4>
+            </div>
+            <div class="col-12 col-md-4 col-lg-3">
+                {{ form_row(form.price) }}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section card mb-3">
+    <div class="card-body py-3">
+        <div class="form-row">
+            <div class="col-12">
+                <h4 class="h5-responsive font-weight-stone-500 mb-3">Description de l'hébergement (facultatif)</h4>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-start">
+            <div class="col-12">
+                {{ form_row(form.description) }}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section card mb-3">
+    <div class="card-body py-3">
+        <div class="form-row">
+            <div class="col-12">
+                <h4 class="h5-responsive font-weight-stone-500 mb-3">{{ form.enabled.vars.label }}</h4>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-start">
+            <div class="col-12">
+                {% for item in form.enabled.vars.choices %}
+                    {% set state = room.enabled == form.enabled.vars.choices[loop.index0].value %}
+                    <div class="form-check form-check-inline data {% if state %}active{% endif %}">
+                        <input class="form-check-input with-gap" value="{{ form.enabled.vars.choices[loop.index0].value }}" type="radio"
+                               name="{{ form.enabled.vars.full_name }}" id="{{ form.enabled.vars.id }}_{{ loop.index0 }}"
+                               {% if state %}checked{% endif %} />
+                        <label class="form-check-label" for="{{ form.enabled.vars.id }}_{{ loop.index0 }}">{{ form.enabled.vars.choices[loop.index0].label }}</label>
+                    </div>
+                {% endfor %}
+                <div class="red-text font-weight-stone-500 mt-2">{{ form_errors(form.enabled) }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section card mb-3">
+    <div class="card-body py-3">
+        <div class="form-row mb-3">
+            <div class="col-12">
+                <h4 class="h5-responsive font-weight-stone-500 mb-0">Taux de taxe (facultatif)</h4>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-start">
+            <div class="col-12">
+                <div class="" style="margin-bottom: -15px">Sélectionnez les taxes applicables sur cet hébergement.</div>
+            </div>
+            <div class="col-12 col-md-4">
+                {{ form_widget(form.taxes) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

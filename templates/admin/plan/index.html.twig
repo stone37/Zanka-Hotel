@@ -1,0 +1,17 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Plans de commissions | {{ parent() }}{% endblock %}
+
+{% block app_body %}
+    {% include 'admin/plan/index/_header.html.twig' %}
+
+    {% include 'admin/plan/index/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

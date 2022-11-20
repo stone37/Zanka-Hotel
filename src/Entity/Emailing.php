@@ -10,10 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: EmailingRepository::class)]
 class Emailing
 {
-    const GROUP_PARTICULIER = 'particulier';
-    const GROUP_USER = 'user';
-    const GROUP_PARTNER = 'partner';
-    const GROUP_NEWSLETTER = 'newsletter';
+    const GROUP_PARTICULIER = 1;
+    const GROUP_USER = 2;
+    const GROUP_PARTNER = 3;
+    const GROUP_NEWSLETTER = 4;
 
     use TimestampableTrait;
 
@@ -32,7 +32,7 @@ class Emailing
     private ?string $content = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $groupe = self::GROUP_PARTICULIER;
+    private ?int $groupe = self::GROUP_PARTICULIER;
 
     public function getId(): ?int
     {
@@ -75,12 +75,12 @@ class Emailing
         return $this;
     }
 
-    public function getGroupe(): ?string
+    public function getGroupe(): ?int
     {
         return $this->groupe;
     }
 
-    public function setGroupe(?string $groupe): self
+    public function setGroupe(?int $groupe): self
     {
         $this->groupe = $groupe;
 

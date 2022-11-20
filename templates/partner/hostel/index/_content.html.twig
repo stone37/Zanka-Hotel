@@ -1,0 +1,92 @@
+{% import 'Ui/Macro/buttons.html.twig' as buttons %}
+
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-end">
+        <div class="d-flex ml-auto">
+            {% set path = path('app_partner_hostel_create') %}
+            {% include 'Ui/Grid/Action/create.html.twig' with {'path': path, 'action': {'label': 'Créer'}} %}
+        </div>
+    </div>
+</div>
+
+{% if hostels|length > 0 %}
+    <div class="row app-user mb-5">
+        <div class="col-12">
+            <table class="table table-responsive-sm">
+                <thead class="text-primary">
+                <tr>
+                    <th scope="col" class="font-weight-stone-500 text-center">Nom</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">Email</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">Téléphone</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">Nombre d'étoiles</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">Ville</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">Status</th>
+                    <th scope="col" class="font-weight-stone-500 text-center"></th>
+                </tr>
+                </thead>
+                <tbody id="list-checkbook-container">
+                {% for hostel in hostels %}
+                    <tr>
+                        <td class="text-center">{{ hostel.name|capitalize }}</td>
+                        <td class="text-center">{{ hostel.email }}</td>
+                        <td class="text-center">{{ hostel.phone }}</td>
+                        <td class="text-center">{{ hostel.starNumber }}</td>
+                        <td class="text-center">{{ hostel.location.city.name }}</td>
+                        <td class="text-center">
+                            {% if hostel.enabled %}
+                                {% if not hostel.closed %}
+                                    <span class="badge badge-success">
+                                        <i class="fas fa-check mr-1"></i> En ligne
+                                    </span>
+                                {% else %}
+                                    <span class="badge badge-warning">
+                                        <i class="fas fa-times mr-1"></i> Suspendu
+                                    </span>
+                                {% endif %}
+                            {% else %}
+                                <span class="badge badge-danger">Inactif</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" type="button" data-toggle="dropdown"><i class="fas fa-ellipsis-h text-primary"></i></a>
+                                <div class="dropdown-menu dropdown-primary dropdown-menu-right mt-0">
+                                    <a href="{{ path('app_partner_hostel_show', {'id': hostel.id}) }}" class="dropdown-item">
+                                        <i class="fas fa-eye mr-1"></i> Voir
+                                    </a>
+                                    <a href="{{ path('app_partner_hostel_edit', {'id': hostel.id}) }}" class="dropdown-item">
+                                        <i class="fas fa-pencil-alt mr-1"></i> Éditer
+                                    </a>
+                                    <a href="{{ path('app_partner_hostel_gallery_index', {'hostel_id': hostel.id}) }}" class="dropdown-item">
+                                        <i class="far fa-images mr-1"></i> Galerie
+                                    </a>
+                                    <a href="{{ path('app_partner_hostel_equipment', {'id': hostel.id}) }}" class="dropdown-item">
+                                        <i class="fas fa-cog mr-1"></i> Équipements
+                                    </a>
+                                    <a class="dropdown-item entity-hostel-delete" id="{{ hostel.id }}">
+                                        <i class="fas fa-trash mr-1 text-danger"></i> Supprimer
+                                    </a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-12 d-flex justify-content-start mt-2">
+            <div class="font-weight-stone-500 text-secondary">{{ hostels.totalItemCount }} resultats</div>
+        </div>
+        <div class="col-12 d-flex justify-content-center mt-2">
+            {{ knp_pagination_render(hostels, 'Ui/_pagination.html.twig') }}
+        </div>
+    </div>
+{% else %}
+    <div class="row app-user d-flex justify-content-center">
+        <div class="col-12 col-md-8 text-center mt-3 mt-md-5">
+            <h3 class="h3-responsive font-weight-stone-600">
+                Vous n'avez aucun établissements.
+            </h3>
+        </div>
+    </div>
+{% endif %}

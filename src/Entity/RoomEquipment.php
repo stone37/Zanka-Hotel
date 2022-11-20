@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Entity\Traits\PositionTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\RoomEquipmentRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -28,12 +30,17 @@ class RoomEquipment
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne]
-    private ?User $owner = null;
-
     #[ORM\ManyToOne(inversedBy: 'equipments')]
     #[ORM\JoinColumn(nullable: false)]
     private ?RoomEquipmentGroup $roomEquipmentGroup = null;
+
+    #[ORM\ManyToMany(targetEntity: Room::class, mappedBy: 'equipments')]
+    private Collection $rooms;
+
+    public function __construct()
+    {
+        $this->rooms = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -64,18 +71,6 @@ class RoomEquipment
         return $this;
     }
 
-    public function getOwner(): ?User
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(?User $owner): self
-    {
-        $this->owner = $owner;
-
-        return $this;
-    }
-
     public function getRoomEquipmentGroup(): ?RoomEquipmentGroup
     {
         return $this->roomEquipmentGroup;
@@ -84,6 +79,33 @@ class RoomEquipment
     public function setRoomEquipmentGroup(?RoomEquipmentGroup $roomEquipmentGroup): self
     {
         $this->roomEquipmentGroup = $roomEquipmentGroup;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Room>
+     */
+    public function getRooms(): Collection
+    {
+        return $this->rooms;
+    }
+
+    public function addRoom(Room $room): self
+    {
+        if (!$this->rooms->contains($room)) {
+            $this->rooms[] = $room;
+            $room->addEquipment($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoom(Room $room): self
+    {
+        if ($this->rooms->removeElement($room)) {
+            $room->removeEquipment($this);
+        }
 
         return $this;
     }

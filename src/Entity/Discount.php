@@ -12,8 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: DiscountRepository::class)]
 class Discount
 {
-    const FIXED_PRICE = 'fixed';
-    const PERCENT_REDUCTION = 'percent';
+    const FIXED_DISCOUNT = 'fixed_discount';
+    const PERCENTAGE_DISCOUNT = 'percentage_discount';
 
     use EnabledTrait;
     use TimestampableTrait;
@@ -30,7 +30,7 @@ class Discount
     private ?string $code = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $type = self::PERCENT_REDUCTION;
+    private ?string $type = self::PERCENTAGE_DISCOUNT;
 
     #[ORM\Column(nullable: true)]
     private ?int $utilisation = null;

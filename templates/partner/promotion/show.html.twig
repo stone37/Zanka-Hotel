@@ -1,0 +1,20 @@
+{% extends 'partner/layout.html.twig' %}
+
+{% block title %}
+    Affichage d'une promotion | Promotions | {{ parent() }}
+{% endblock %}
+
+{% block app_body %}
+    {% include 'partner/promotion/show/_header.html.twig' %}
+
+    {% include 'partner/promotion/show/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+

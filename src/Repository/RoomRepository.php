@@ -3,8 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Room;
+use App\Entity\User;
+use App\Model\Admin\RoomSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Room>
@@ -44,4 +48,123 @@ class RoomRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
+    public function getWithFilter()
+    {
+        $results = $this->createQueryBuilder('r')
+            ->andWhere('r.enabled = 1')
+            ->orderBy('r.position', 'asc')
+            ->getQuery()->getArrayResult();
+
+        $data = [];
+
+        foreach ($results as $result) {
+            $data[$result['name']] = $result['id'];
+        }
+
+        return $data;
+    }
+
+    public function getWithPartnerFilter(User|UserInterface $user)
+    {
+        return $this->createQueryBuilder('r')
+            ->leftJoin('r.hostel', 'hostel')
+            ->addSelect('hostel')
+            ->where('hostel.owner = :user')
+            ->andWhere('r.enabled = 1')
+            ->orderBy('r.position', 'asc')
+            ->setParameter('user', $user)
+            ->getQuery()->getResult();
+    }
+
+    public function getAdmins(RoomSearch $search): ?QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->leftJoin('r.hostel', 'hostel')
+            ->leftJoin('r.bookings', 'bookings')
+            ->leftJoin('r.equipments', 'equipments')
+            ->leftJoin('r.galleries', 'galleries')
+            ->leftJoin('r.supplements', 'supplements')
+            ->leftJoin('r.promotions', 'promotions')
+            ->leftJoin('r.taxes', 'taxes')
+            ->addSelect('hostel')
+            ->addSelect('bookings')
+            ->addSelect('equipments')
+            ->addSelect('galleries')
+            ->addSelect('supplements')
+            ->addSelect('promotions')
+            ->addSelect('taxes')
+            ->orderBy('r.position', 'asc');
+
+        if  ($search->getHostel()) {
+            $qb->andWhere('r.hostel = :hostel')->setParameter('hostel', $search->getHostel());
+        }
+
+        if ($search->isEnabled()) {
+            $qb->andWhere('r.enabled = 1');
+        }
+
+        if ($search->getName()) {
+            $qb->andWhere('r.name LIKE :name')->setParameter('name', '%'.$search->getName().'%');
+        }
+
+        return $qb;
+    }
+
+    public function getByPartner(User $user, RoomSearch $search): ?QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->leftJoin('r.hostel', 'hostel')
+            ->leftJoin('r.bookings', 'bookings')
+            ->leftJoin('r.galleries', 'galleries')
+            ->addSelect('hostel')
+            ->addSelect('bookings')
+            ->addSelect('galleries')
+            ->where('hostel.owner = :owner')
+            ->setParameter('owner', $user)
+            ->orderBy('r.position', 'asc');
+
+
+        if ($search->isEnabled()) {
+            $qb->andWhere('r.enabled = 1');
+        }
+
+        if ($search->getName()) {
+            $qb->andWhere('r.name LIKE :name')->setParameter('name', '%'.$search->getName().'%');
+        }
+
+        if ($search->getHostel()) {
+            $qb->andWhere('r.hostel = :hostel')->setParameter('hostel', $search->getHostel());
+        }
+
+        return $qb;
+    }
+
+    public function getByPartnerQueryBuilder(User|UserInterface $user): ?QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->leftJoin('r.hostel', 'hostel')
+            ->addSelect('hostel')
+            ->where('hostel.owner = :user')
+            ->setParameter('user', $user)
+            ->orderBy('r.position', 'asc');
+
+        return $qb;
+    }
+
+    public function getRoomTotalNumber(): ?int
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('SUM(r.roomNumber)');
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getRoomEnabledTotalNumber(): ?int
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('SUM(r.roomNumber)')
+            ->where('r.enabled = 1');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 }

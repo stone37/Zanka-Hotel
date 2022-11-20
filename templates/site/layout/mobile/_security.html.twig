@@ -1,0 +1,59 @@
+<li class="nav-item mobile-user mt-2 d-block d-lg-none">
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+        <div class="row py-2 active">
+            <div class="col-12 px-0">
+                <a href="{{ path('app_user_index') }}" class="d-block">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="d-flex justify-content-start align-items-center">
+                                <div class="">
+                                    {% if vich_uploader_asset(app.user, 'file') %}
+                                        <img src="{{ image_url(user, 110, 110) }}" class="rounded-circle" alt="avatar image">
+                                    {% else %}
+                                        <span class="user-prefix d-inline-block rounded-circle">{{ userPrefixName(app.user) }}</span>
+                                    {% endif %}
+                                </div>
+                                <div class="pl-2 font-weight-stone-500 text-dark">{{ app.user.firstname }} {{ app.user.lastname }}</div>
+                            </div>
+                            <div class="mt-2 mb-1 text-center text-dark created-date">
+                                <span class="icon"><i class="fas fa-clock"></i></span>
+                                <span class="title">Inscrit {{ app.user.createdAt|ago('depuis') }}</span>
+                            </div>
+                        </div>
+                        <div class=""><i class="fas fa-angle-right text-dark"></i></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between menu mt-2 mb-0">
+            <a href="" class="d-block text-center">
+                <div class="icon"><i class="fas fa-calendar"></i></div>
+                <div class="title">Reservations</div>
+            </a>
+            <a href="" class="d-block text-center">
+                <div class="icon"><i class="fas fa-heart"></i></div>
+                <div class="title">Favoris</div>
+            </a>
+            <a href="" class="d-block text-center">
+                <div class="icon"><i class="fas fa-user-circle"></i></div>
+                <div class="title">Profil</div>
+            </a>
+        </div>
+    {% else %}
+        <div class="row user">
+            <div class="col-12 mb-2 px-0">
+                <div class="text-center font-weight-stone-500 mb-2 mt-1">
+                    {#Connectez-vous et profitez de nombreux avantages.#}
+                    Connectez-vous pour profiter d'offres et de réductions !
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <a href="{{ path('app_register') }}" class="btn btn-sm btn-primary z-depth-0">S'inscrire</a>
+                    <a href="{{ path('app_login') }}" class="btn btn-sm btn-outline-primary z-depth-0 bg-white">Se connecter</a>
+                </div>
+                <div class="partner px-0">
+                    <a class="btn btn-sm btn-block btn-amber z-depth-0 bg-white">Rechercher des réservations</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</li>

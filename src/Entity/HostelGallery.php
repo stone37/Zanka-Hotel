@@ -35,7 +35,7 @@ class HostelGallery
     )]
     private ?File $file;
 
-    private ?string $tempFilename;
+    private ?string $tempFilename = null;
 
     #[ORM\ManyToOne(inversedBy: 'galleries')]
     #[ORM\JoinColumn(nullable: false)]

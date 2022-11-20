@@ -1,0 +1,15 @@
+{% set route = app.request.attributes.get('_route') %}
+{% set queryParameters = app.request.query.all|unset_elements(['order_by', 'sort', 'page']) %}
+
+<div class="dropdown sorting">
+    <a class="btn btn-outline-dark btn-sm dropdown-toggle z-depth-0" type="button" data-toggle="dropdown">
+        Trier par <i class="fas fa-angle-down ml-2"></i>
+    </a>
+
+    <div class="dropdown-menu dropdown-dark">
+        <a class="dropdown-item" href="{{ path(route, {'order_by': 'createdAt', 'sort': 'desc'}|merge(queryParameters)) }}">Plus récent</a>
+        <a class="dropdown-item" href="{{ path(route, {'order_by': 'createdAt', 'sort': 'asc'}|merge(queryParameters)) }}">Plus ancien</a>
+        <a class="dropdown-item" href="{{ path(route, {'order_by': 'rooms.price', 'sort': 'desc'}|merge(queryParameters)) }}">Plus cher</a>
+        <a class="dropdown-item" href="{{ path(route, {'order_by': 'rooms.price', 'sort': 'asc'}|merge(queryParameters)) }}">Moins cher</a>
+    </div>
+</div>

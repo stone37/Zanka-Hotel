@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Payment;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Payment>
@@ -44,11 +47,20 @@ class PaymentRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
-    public function getLasts()
+    public function getLasts(User $user = null)
     {
         $qb = $this->createQueryBuilder('p')
             ->orderBy('p.createdAt', 'desc')
             ->setMaxResults(5);
+
+        if ($user) {
+            $qb->leftJoin('p.commande', 'commande')
+                ->leftJoin('commande.hostel', 'hostel')
+                ->addSelect('commande')
+                ->addSelect('hostel')
+                ->andWhere('hostel.owner = :owner')
+                ->setParameter('owner', $user);
+        }
 
         return $qb->getQuery()->getResult();
     }
@@ -61,6 +73,16 @@ class PaymentRepository extends ServiceEntityRepository
     public function getDailyRevenues(): array
     {
         return $this->aggregateRevenus('%Y-%m-%d', '%d', 30);
+    }
+
+    public function getMonthlyPartnerRevenues(User $user): array
+    {
+        return $this->aggregatePartnerRevenus($user,'%Y-%m', '%m', 24);
+    }
+
+    public function getDailyPartnerRevenues(User $user): array
+    {
+        return $this->aggregatePartnerRevenus($user,'%Y-%m-%d', '%d', 30);
     }
 
     public function getMonthlyTaxRevenues(): array
@@ -91,39 +113,77 @@ class PaymentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getNumber()
+    public function getMonthlyReportByPartner(User $user, int $year): array
+    {
+        return $this->createQueryBuilder('p')
+            ->select(
+                'EXTRACT(MONTH FROM p.createdAt) as month',
+                'ROUND(SUM(p.price) * 100) / 100 as price',
+                'ROUND(SUM(p.taxe) * 100) / 100 as tax',
+                'ROUND(SUM(p.discount) * 100) / 100 as fee'
+            )
+            ->leftJoin('p.commande', 'commande')
+            ->leftJoin('commande.hostel', 'hostel')
+            ->groupBy('month')
+            ->where('p.refunded = false')
+            ->andWhere('EXTRACT(YEAR FROM p.createdAt) = :year')
+            ->andWhere('hostel.owner = :owner')
+            ->setParameter('year', $year)
+            ->orderBy('month', 'DESC')
+            ->setParameter('owner', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getNumber(User $user = null)
     {
         $qb = $this->createQueryBuilder('p')
             ->select('count(p.id)');
 
+        if ($user) {
+            $qb = $this->hasPartner($qb, $user);
+        }
+
         return $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function totalRevenues()
+    public function totalRevenues(User $user = null)
     {
-        return $this->createQueryBuilder('p')
+        $qb =  $this->createQueryBuilder('p')
             ->select('ROUND(SUM(p.price)) as amount')
-            ->where('p.refunded = false')
-            ->getQuery()
-            ->getSingleScalarResult();
+            ->where('p.refunded = false');
+
+        if ($user) {
+            $qb = $this->hasPartner($qb, $user);
+        }
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function totalTax()
+    public function totalTax(User $user = null)
     {
-        return $this->createQueryBuilder('p')
+        $qb = $this->createQueryBuilder('p')
             ->select('ROUND(SUM(p.taxe)) as taxe')
-            ->where('p.refunded = false')
-            ->getQuery()
-            ->getSingleScalarResult();
+            ->where('p.refunded = false');
+
+        if ($user) {
+            $qb = $this->hasPartner($qb, $user);
+        }
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function totalReduction()
+    public function totalReduction(User $user = null)
     {
-        return $this->createQueryBuilder('p')
+        $qb = $this->createQueryBuilder('p')
             ->select('ROUND(SUM(p.discount)) as discount')
-            ->where('p.refunded = false')
-            ->getQuery()
-            ->getSingleScalarResult();
+            ->where('p.refunded = false');
+
+        if ($user) {
+            $qb = $this->hasPartner($qb, $user);
+        }
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     private function aggregateRevenus(string $group, string $label, int $limit): array
@@ -137,6 +197,26 @@ class PaymentRepository extends ServiceEntityRepository
             ->where('p.refunded = false')
             ->groupBy('fulldate', 'date')
             ->orderBy('fulldate', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult());
+    }
+
+    private function aggregatePartnerRevenus(User $user, string $group, string $label, int $limit): array
+    {
+        return array_reverse($this->createQueryBuilder('p')
+            ->select(
+                "DATE_FORMAT(p.createdAt, '$label') as date",
+                "DATE_FORMAT(p.createdAt, '$group') as fulldate",
+                'ROUND(SUM(p.price)) as amount'
+            )
+            ->leftJoin('p.commande', 'commande')
+            ->leftJoin('commande.hostel', 'hostel')
+            ->where('p.refunded = false')
+            ->andWhere('hostel.owner = :owner')
+            ->groupBy('fulldate', 'date')
+            ->orderBy('fulldate', 'DESC')
+            ->setParameter('owner', $user)
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult());
@@ -174,12 +254,6 @@ class PaymentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    /**
-     * @param int $id
-     * @param User|UserInterface $user
-     * @return int|mixed|string|null
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
     public function findForId(int $id, User|UserInterface $user)
     {
         return $this->createQueryBuilder('p')
@@ -195,5 +269,13 @@ class PaymentRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    private function hasPartner(QueryBuilder $qb, User $user): QueryBuilder
+    {
+        return $qb->leftJoin('p.commande', 'commande')
+            ->leftJoin('commande.hostel', 'hostel')
+            ->andWhere('hostel.owner = :owner')
+            ->setParameter('owner', $user);
     }
 }

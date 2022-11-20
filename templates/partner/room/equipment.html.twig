@@ -1,0 +1,17 @@
+{% extends 'partner/layout.html.twig' %}
+
+{% block title %}Gestion des équipements d'un hébergement | Hébergements | {{ parent() }}{% endblock %}
+
+{% block app_body %}
+    {% include 'partner/room/equipment/_header.html.twig' %}
+
+    {% include 'partner/room/equipment/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

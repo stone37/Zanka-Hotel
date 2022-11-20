@@ -1,0 +1,18 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Voir un établissement | Établissements | {{ parent() }}{% endblock %}
+
+{% block app_body %}
+    {% include 'admin/hostel/show/_header.html.twig' %}
+
+    {% include 'admin/hostel/show/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+

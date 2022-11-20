@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Commande;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -42,5 +44,14 @@ class CommandeRepository extends ServiceEntityRepository
     public function flush(): void
     {
         $this->getEntityManager()->flush();
+    }
+
+    public function getByPartner(User $user): QueryBuilder
+    {
+        return $this->createQueryBuilder('c')
+                ->leftJoin('c.hostel', 'hostel')
+                ->where('hostel.owner = :owner')
+                ->setParameter('owner', $user)
+                ->orderBy('c.createdAt', 'desc');
     }
 }

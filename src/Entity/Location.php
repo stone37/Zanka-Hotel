@@ -15,15 +15,21 @@ class Location
     private ?int $id = null;
 
     #[Assert\NotBlank]
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $city = null;
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?City $city = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $zone = null;
+    private ?string $town = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $detail = null;
+
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $latitude = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $longitude = null;
 
@@ -32,26 +38,38 @@ class Location
         return $this->id;
     }
 
-    public function getCity(): ?string
+    public function getCity(): ?City
     {
         return $this->city;
     }
 
-    public function setCity(?string $city): self
+    public function setCity(City $city): self
     {
         $this->city = $city;
 
         return $this;
     }
 
-    public function getZone(): ?string
+    public function getTown(): ?string
     {
-        return $this->zone;
+        return $this->town;
     }
 
-    public function setZone(?string $zone): self
+    public function setTown(?string $town): self
     {
-        $this->zone = $zone;
+        $this->town = $town;
+
+        return $this;
+    }
+
+    public function getDetail(): ?string
+    {
+        return $this->detail;
+    }
+
+    public function setDetail(?string $detail): self
+    {
+        $this->detail = $detail;
 
         return $this;
     }

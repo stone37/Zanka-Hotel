@@ -22,23 +22,28 @@ class Taxe
     private ?int $id = null;
 
     #[Assert\NotBlank]
-    #[ORM\Column(length: 100, nullable: true)]
+    #[ORM\Column(length: 100, unique: true, nullable: true)]
     private ?string $name = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(nullable: true)]
-    private ?float $value = null;
+    private float $value = 0.0;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $includedInPrice = false;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
 
-    #[ORM\OneToMany(mappedBy: 'taxe', targetEntity: Room::class)]
+    #[ORM\ManyToMany(targetEntity: Room::class, mappedBy: 'taxes')]
     private Collection $rooms;
 
     public function __construct()
     {
         $this->rooms = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -57,14 +62,26 @@ class Taxe
         return $this;
     }
 
-    public function getValue(): ?float
+    public function getValue(): float
     {
         return $this->value;
     }
 
-    public function setValue(?float $value): self
+    public function setValue(float $value): self
     {
         $this->value = $value;
+
+        return $this;
+    }
+
+    public function isIncludedInPrice(): ?bool
+    {
+        return $this->includedInPrice;
+    }
+
+    public function setIncludedInPrice(?bool $includedInPrice): self
+    {
+        $this->includedInPrice = $includedInPrice;
 
         return $this;
     }
@@ -93,7 +110,7 @@ class Taxe
     {
         if (!$this->rooms->contains($room)) {
             $this->rooms[] = $room;
-            $room->setTaxe($this);
+            $room->addTax($this);
         }
 
         return $this;
@@ -102,10 +119,7 @@ class Taxe
     public function removeRoom(Room $room): self
     {
         if ($this->rooms->removeElement($room)) {
-            // set the owning side to null (unless already changed)
-            if ($room->getTaxe() === $this) {
-                $room->setTaxe(null);
-            }
+            $room->removeTax($this);
         }
 
         return $this;

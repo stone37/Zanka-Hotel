@@ -1,0 +1,23 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Partenaires{% endblock %}
+
+{% block app_navbar_first %}
+    {% include 'partner/menu/sidebar.html.twig' %}
+
+    {% include 'partner/menu/top.html.twig' %}
+{% endblock %}
+
+{% block app_footer %}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% include 'Ui/_stylesheets.html.twig' with {'path': 'assets/css/partner/partner.css'} %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/partner/partner.js'} %}
+{% endblock %}

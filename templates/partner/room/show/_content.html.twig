@@ -1,0 +1,130 @@
+{% import 'Ui/Macro/buttons.html.twig' as buttons %}
+
+<div class="row app-user mt-5">
+    <div class="col-12">
+        <table class="table table-sm table-bordered table-responsive-sm table-responsive-md">
+            <tbody>
+            <tr>
+                <td class="table-dark text-center font-weight-normal">Id</td>
+                <td class="text-center font-weight-normal">{{ room.id }}</td>
+                <td class="table-dark text-center font-weight-normal">Établissement</td>
+                <td class="text-center font-weight-normal">
+                    <a href="{{ path('app_partner_hostel_show', {'id': room.hostel.id}) }}" class="card-link">{{ room.hostel.name }}</a>
+                </td>
+                <td class="table-dark text-center font-weight-normal">Type d'hébergement</td>
+                <td class="text-center font-weight-normal">{{ room.type }}</td>
+                <td class="table-dark text-center font-weight-normal">Nom</td>
+                <td class="text-center font-weight-normal">
+                    {% if room.perfectName %}{{ room.perfectName }}{% else %}{{ room.name }}{% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td class="table-dark text-center font-weight-normal">Nombre de chambre</td>
+                <td class="text-center font-weight-normal">{{ room.roomNumber }}</td>
+                <td class="table-dark text-center font-weight-normal">Prix</td>
+                <td class="text-center font-weight-normal">
+                    {{ room.price|format_currency(app_locale_currency_code(app.request.locale)) }}
+                </td>
+                <td class="table-dark text-center font-weight-normal">Prix des supplements</td>
+                <td class="text-center font-weight-normal"></td>
+                <td class="table-dark text-center font-weight-normal">Status</td>
+                <td class="text-center font-weight-normal">
+                    {% if room.enabled %}
+                        <span class="badge badge-success"><i class="fas fa-check mr-1"></i> Actif</span>
+                    {% else %}
+                        <span class="badge badge-danger"><i class="fas fa-times mr-1"></i> Inactif</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td class="table-dark text-center font-weight-normal">Fumeurs ou non-fumeurs</td>
+                <td class="text-center font-weight-normal">
+                    {% if room.smoker %}
+                        {{ room.smoker|app_room_smoker }}
+                    {% else %}
+                        <span class="badge badge-grey">Aucun</span>
+                    {% endif %}
+                </td>
+                <td class="table-dark text-center font-weight-normal">Occupant max.</td>
+                <td class="text-center font-weight-normal">{{ room.occupant }}</td>
+                <td class="table-dark text-center font-weight-normal">Superficie</td>
+                <td class="text-center font-weight-normal">
+                    {% if room.area %}{{ room.area }} m²{% else %}<span class="badge badge-grey">Aucun</span>{% endif %}
+                </td>
+                <td class="table-dark text-center font-weight-normal">Taxe</td>
+                <td class="text-center font-weight-normal">
+                    {% if room.taxes|length > 0 %}
+                        {% for taxe in room.taxes %}
+                            {{ taxe.name }} ({{ taxe.value }}%){% if not loop.last %}<br>{% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <span class="badge badge-grey">Aucune</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% if room.type == 'Suite' or room.type == 'Appartement' %}
+                <tr>
+                    <td class="table-dark text-center font-weight-normal">Nombre de chambres</td>
+                    <td class="text-center font-weight-normal">{{ room.dataRoomNumber }}</td>
+                    <td class="table-dark text-center font-weight-normal">Nombre de salons</td>
+                    <td class="text-center font-weight-normal">{{ room.dataLivingRoomNumber }}</td>
+                    <td colspan="2" class="table-dark text-center font-weight-normal">Nombre de salles de bains</td>
+                    <td colspan="2" class="text-center font-weight-normal">{{ room.dataBathroomNumber }}</td>
+                </tr>
+            {% endif %}
+            <tr>
+                <td class="table-dark text-center font-weight-normal">Literie</td>
+                <td colspan="7" class="text-center font-weight-normal">
+                    {% for bedding in room.beddings %}
+                        {{ bedding.name }} (Nombre de lit: {{ bedding.number }})
+                        {% if not loop.last %}<i class="fas fa-angle-right mx-1"></i>{% endif %}
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <td class="table-dark text-center font-weight-normal">Description</td>
+                <td colspan="7" class="text-center font-weight-normal">{{ room.description|raw }}</td>
+            </tr>
+            <tr>
+                <td class="table-dark text-center font-weight-normal">Équipements</td>
+                <td colspan="7" class="text-center font-weight-normal">
+                    {% if room.equipments|length > 0 %}
+                        {% for equipment in room.equipments %}
+                            {{ equipment.name }} {% if not loop.last %}<i class="fas fa-angle-right mx-1"></i>{% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <span class="badge badge-grey">Aucun</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td class="table-dark text-center font-weight-normal">Supplements</td>
+                <td colspan="7" class="text-center font-weight-normal">
+                    {% if room.supplements|length > 0 %}
+                        {% for supplement in room.supplements %}
+                            {{ supplement.name }} {% if not loop.last %}<i class="fas fa-angle-right mx-1"></i>{% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <span class="badge badge-grey">Aucun</span>
+                    {% endif %}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="d-flex justify-content-end mt-4 mb-5">
+            <div class="text-center mr-3">{{ buttons.default(path('app_partner_room_index'), 'Retour à la liste', 'app-entity-list-btn', 'fas fa-angle-left', 'btn-outline-primary') }}</div>
+
+            <div class="text-center mr-3">
+                {{ buttons.default(path('app_partner_booking_room', {'id': room.id}), 'Reservations',
+                    'app-entity-list-order-btn', 'fas fa-ticket-alt', 'btn-grey') }}
+            </div>
+        </div>
+    </div>
+</div>
+
+

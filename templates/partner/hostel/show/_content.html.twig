@@ -1,0 +1,172 @@
+{% import 'Ui/Macro/buttons.html.twig' as buttons %}
+
+<div class="row app-user mt-5">
+    <div class="col-12">
+        <table class="table table-sm table-bordered table-responsive-sm table-responsive-md">
+            <tbody>
+                <tr>
+                    <td class="table-dark text-center font-weight-normal">Type</td>
+                    <td class="text-center font-weight-normal">{{ hostel.category.name }}</td>
+                    <td class="table-dark text-center font-weight-normal">Nom</td>
+                    <td class="text-center font-weight-normal">{{ hostel.name }}</td>
+                    <td class="table-dark text-center font-weight-normal">Email</td>
+                    <td class="text-center font-weight-normal">{{ hostel.email }}</td>
+                    <td class="table-dark text-center font-weight-normal">Téléphone</td>
+                    <td class="text-center font-weight-normal">{{ hostel.phone }}</td>
+                </tr>
+                <tr>
+                    <td class="table-dark text-center font-weight-normal">Nombre d'étoiles</td>
+                    <td class="text-center font-weight-normal">{{ hostel.starNumber }}</td>
+                    <td class="table-dark text-center font-weight-normal">Langues du personnel</td>
+                    <td class="text-center font-weight-normal">
+                        {% for language in hostel.spokenLanguages %}
+                            {{ language }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td class="table-dark text-center font-weight-normal">Reference</td>
+                    <td class="text-center font-weight-normal">
+                        <span class="badge badge-grey small-9">{{ hostel.reference }}</span>
+                    </td>
+                    <td class="table-dark text-center font-weight-normal">Code postal</td>
+                    <td class="text-center font-weight-normal">{{ hostel.codePostal }}</td>
+                </tr>
+                <tr>
+                    <td class="table-dark text-center font-weight-normal">Pays</td>
+                    <td class="text-center font-weight-normal">{{ hostel.location.city.country|country_name }}</td>
+                    <td class="table-dark text-center font-weight-normal">Ville</td>
+                    <td class="text-center font-weight-normal">{{ hostel.location.city.name }}</td>
+                    <td class="table-dark text-center font-weight-normal">Quartier ou Commune</td>
+                    <td class="text-center font-weight-normal">{{ hostel.location.town }}</td>
+                    <td class="table-dark text-center font-weight-normal">Emplacement</td>
+                    <td class="text-center font-weight-normal">{{ hostel.location.detail }}</td>
+                </tr>
+                <tr>
+                    <td class="table-dark text-center font-weight-normal">Adresse</td>
+                    <td class="text-center font-weight-normal">{{ hostel.address }}</td>
+                    <td class="table-dark text-center font-weight-normal">Longitude</td>
+                    <td class="text-center font-weight-normal">{{ hostel.location.longitude }}</td>
+                    <td class="table-dark text-center font-weight-normal">Latitude</td>
+                    <td class="text-center font-weight-normal">{{ hostel.location.latitude }}</td>
+                    <td class="table-dark text-center font-weight-normal">Status</td>
+                    <td class="text-center font-weight-normal">
+                        {% if hostel.enabled %}
+                            {% if not hostel.closed %}
+                                <span class="badge badge-success">
+                                        <i class="fas fa-check mr-1"></i> En ligne
+                                    </span>
+                            {% else %}
+                                <span class="badge badge-warning">
+                                        <i class="fas fa-times mr-1"></i> Suspendu
+                                    </span>
+                            {% endif %}
+                        {% else %}
+                            <span class="badge badge-danger">Inactif</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="table-dark text-center font-weight-normal">Horaire d'arrivée</td>
+                    <td class="text-center font-weight-normal">
+                        De {{ hostel.checkinTime.start|date('H:i') }} à {{ hostel.checkinTime.end|date('H:i') }}
+                    </td>
+                    <td class="table-dark text-center font-weight-normal">Horaire de départ</td>
+                    <td class="text-center font-weight-normal">
+                        De {{ hostel.checkoutTime.start|date('H:i') }} à {{ hostel.checkoutTime.end|date('H:i') }}
+                    </td>
+                    <td class="table-dark text-center font-weight-normal">Wifi</td>
+                    <td class="text-center font-weight-normal">
+                        {% if hostel.wifi %}
+                            <span class="badge badge-success">Oui</span>
+                        {% else %}
+                            <span class="badge badge-danger">Non</span>
+                        {% endif %}
+                    </td>
+                    <td class="table-dark text-center font-weight-normal">Petit-déjeuner</td>
+                    <td class="text-center font-weight-normal">
+                        {% if hostel.breakfast %}
+                            <span class="badge badge-success">Oui</span>
+                        {% else %}
+                            <span class="badge badge-danger">Non</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="table-dark text-center font-weight-normal">Parking</td>
+                    <td class="text-center font-weight-normal">
+                        {% if hostel.parking %}
+                            <span class="badge badge-success">Oui</span>
+                        {% else %}
+                            <span class="badge badge-danger">Non</span>
+                        {% endif %}
+                    </td>
+                    <td class="table-dark text-center font-weight-normal">Animaux domestique</td>
+                    <td class="text-center font-weight-normal">
+                        {% if hostel.animalsAllowed %}
+                            <span class="badge badge-success">Oui</span>
+                        {% else %}
+                            <span class="badge badge-danger">Non</span>
+                        {% endif %}
+                    </td>
+                    <td class="table-dark text-center font-weight-normal">Enfant</td>
+                    <td class="text-center font-weight-normal">
+                        {% if hostel.children %}
+                            <span class="badge badge-success">Oui</span>
+                        {% else %}
+                            <span class="badge badge-danger">Non</span>
+                        {% endif %}
+                    </td>
+                    <td class="table-dark text-center font-weight-normal">Paiement mobile</td>
+                    <td class="text-center font-weight-normal">
+                        {% if hostel.mobilePaymentAllowed %}
+                            <span class="badge badge-success">Oui</span>
+                        {% else %}
+                            <span class="badge badge-danger">Non</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="table-dark text-center font-weight-normal">Paiement par CB</td>
+                    <td class="text-center font-weight-normal">
+                        {% if hostel.cardPaymentAllowed %}
+                            <span class="badge badge-success">Oui</span>
+                        {% else %}
+                            <span class="badge badge-danger">Non</span>
+                        {% endif %}
+                    </td>
+                    <td class="table-dark text-center font-weight-normal">Annulations</td>
+                    <td colspan="3" class="font-weight-normal">
+                        Nombre de jour(s) d'avance: <span class="font-weight-stone-600">{{ hostel.cancellationPolicy.state|app_cancellation_view_state }} </span><br>
+                        Action: <span class="font-weight-stone-600">{{ hostel.cancellationPolicy.result|app_cancellation_view_action }}</span>
+                    </td>
+                    <td class="table-dark text-center font-weight-normal">Date de création</td>
+                    <td class="text-center font-weight-normal">{{ hostel.createdAt|date('d/m/Y H:i') }}</td>
+                </tr>
+                <tr>
+                    <td class="table-dark text-center font-weight-normal">Dernière modification</td>
+                    <td class="text-center font-weight-normal">{{ hostel.updatedAt|date('d/m/Y H:i') }}</td>
+                    <td class="table-dark text-center font-weight-normal">Équipements</td>
+                    <td colspan="5" class="font-weight-normal">
+                        {% for equipment in hostel.equipments %}
+                            {{ equipment.name }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="d-flex justify-content-end mt-4 mb-5">
+            <div class="text-center mr-3">{{ buttons.default(path('app_partner_hostel_index'), 'Retour à la liste', 'app-entity-list-btn', 'fas fa-angle-left', 'btn-outline-primary') }}</div>
+
+            <div class="text-center mr-3">
+                {{ buttons.default(path('app_partner_commande_hostel', {'id': hostel.id}), 'Commandes',
+                    'app-entity-list-order-btn', 'fas fa-shopping-cart', 'btn-grey') }}
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,17 @@
+{% extends 'partner/layout.html.twig' %}
+
+{% block title %}Nouvelle promotion | Promotions | {{ parent() }}{% endblock %}
+
+{% block app_body %}
+    {% include 'partner/promotion/create/_header.html.twig' %}
+
+    {% include 'partner/promotion/create/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

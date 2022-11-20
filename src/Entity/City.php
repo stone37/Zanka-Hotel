@@ -3,21 +3,29 @@
 namespace App\Entity;
 
 use App\Entity\Traits\EnabledTrait;
+use App\Entity\Traits\MediaTrait;
 use App\Entity\Traits\PositionTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\CityRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
+
+#[Vich\Uploadable]
+#[UniqueEntity(fields: ['name'], message: 'Il existe déjà une ville avec cet nom.')]
 #[ORM\Entity(repositoryClass: CityRepository::class)]
 class City
 {
     use EnabledTrait;
     use TimestampableTrait;
     use PositionTrait;
+    use MediaTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -33,11 +41,19 @@ class City
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $slug = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $country = null;
 
-    #[ORM\OneToMany(mappedBy: 'city', targetEntity: Zone::class, orphanRemoval: true)]
-    private Collection $zones;
+    #[Assert\File(maxSize: '8M')]
+    #[Vich\UploadableField(
+        mapping: 'city',
+        fileNameProperty: 'fileName',
+        size: 'fileSize',
+        mimeType: 'fileMimeType',
+        originalName: 'fileOriginalName'
+    )]
+    private ?File $file = null;
 
     public function __construct()
     {
@@ -85,31 +101,17 @@ class City
         return $this;
     }
 
-    /**
-     * @return Collection<int, Zone>
-     */
-    public function getZones(): Collection
+    public function getFile(): ?File
     {
-        return $this->zones;
+        return $this->file;
     }
 
-    public function addZone(Zone $zone): self
+    public function setFile(?File $file): self
     {
-        if (!$this->zones->contains($zone)) {
-            $this->zones[] = $zone;
-            $zone->setCity($this);
-        }
+        $this->file = $file;
 
-        return $this;
-    }
-
-    public function removeZone(Zone $zone): self
-    {
-        if ($this->zones->removeElement($zone)) {
-            // set the owning side to null (unless already changed)
-            if ($zone->getCity() === $this) {
-                $zone->setCity(null);
-            }
+        if (null !== $file) {
+            $this->updatedAt = new DateTimeImmutable();
         }
 
         return $this;

@@ -1,0 +1,17 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Bannières | {{ parent() }}{% endblock %}
+
+{% block app_body %}
+    {% include 'admin/banner/index/_header.html.twig' %}
+
+    {% include 'admin/banner/index/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

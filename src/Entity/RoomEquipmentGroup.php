@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\PositionTrait;
+use App\Entity\Traits\TimestampableTrait;
 use App\Repository\RoomEquipmentGroupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,6 +14,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: RoomEquipmentGroupRepository::class)]
 class RoomEquipmentGroup
 {
+    use PositionTrait;
+    use TimestampableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -25,19 +30,12 @@ class RoomEquipmentGroup
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne]
-    private ?User $owner = null;
-
     #[ORM\OneToMany(mappedBy: 'roomEquipmentGroup', targetEntity: RoomEquipment::class, orphanRemoval: true)]
     private Collection $equipments;
-
-    #[ORM\ManyToMany(targetEntity: Room::class, mappedBy: 'equipments')]
-    private Collection $rooms;
 
     public function __construct()
     {
         $this->equipments = new ArrayCollection();
-        $this->rooms = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -69,18 +67,6 @@ class RoomEquipmentGroup
         return $this;
     }
 
-    public function getOwner(): ?User
-    {
-        return $this->owner;
-    }
-
-    public function setOwner(?User $owner): self
-    {
-        $this->owner = $owner;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, RoomEquipment>
      */
@@ -106,33 +92,6 @@ class RoomEquipmentGroup
             if ($equipment->getRoomEquipmentGroup() === $this) {
                 $equipment->setRoomEquipmentGroup(null);
             }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Room>
-     */
-    public function getRooms(): Collection
-    {
-        return $this->rooms;
-    }
-
-    public function addRoom(Room $room): self
-    {
-        if (!$this->rooms->contains($room)) {
-            $this->rooms[] = $room;
-            $room->addEquipment($this);
-        }
-
-        return $this;
-    }
-
-    public function removeRoom(Room $room): self
-    {
-        if ($this->rooms->removeElement($room)) {
-            $room->removeEquipment($this);
         }
 
         return $this;

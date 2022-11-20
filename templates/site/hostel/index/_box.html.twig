@@ -1,0 +1,66 @@
+{% dump(hostel) %}
+<div id="hostel_{{ hostel.id }}" class="card hostel-bulk mb-4">
+    <div class="row no-gutters py-0">
+        <div class="col-lg-5 img-bulk">
+            {% if hostel.galleries|length > 0 %}
+                {{ include('site/hostel/index/_carousel.html.twig') }}
+            {% else %}
+                {% set img_url = asset('assets/img/no-image.png') %}
+                <img src="{{ image_asset(img_url, 500, 290) }}" class="img-fluid" alt="Banner not image" />
+            {% endif %}
+
+            <div class="promotion-banner">-10 %</div>
+            <div data-id="{{ hostel.id }}" class="hostel-favorite-btn">
+                <i class="far fa-heart"></i>
+            </div>
+        </div>
+        <div class="col-lg-7 data-bulk">
+            <div class="card-body">
+                <div class="d-flex justify-content-start align-content-center">
+                    <h5 class="h5-responsive font-weight-bold">{{ hostel.name|u.truncate(25, '...') }}</h5>
+                    {% if hostel.starNumber %}
+                        <div>
+                            {% for i in 1..(hostel.starNumber) %}
+                                <i class="fas fa-star amber-text"></i>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="dark-grey-text small-9 font-weight-stone-500">
+                    {% if hostel.location.town %}
+                        {{ hostel.location.town }}
+                    {% else %}
+                        {{ hostel.location.city.name }}
+                    {% endif %}
+                </div>
+
+                <div class="mt-2">
+                    {% if hostel.breakfast %}
+                        <div class="small-9" title="Petit-déjeuner proposé" data-toggle="tooltip">
+                            <i class="fas fa-coffee mr-1"></i> Petit-déjeuner
+                        </div>
+                    {% endif %}
+                    {% if hostel.parking %}
+                        <div class="small-9" title="Parking disponible" data-toggle="tooltip">
+                            <i class="fas fa-parking mr-1"></i> Parking disponible
+                        </div>
+                    {% endif %}
+
+                    {% if hostel.parking %}
+                        <div class="small-9" title="Animaux domestiques acceptés" data-toggle="tooltip">
+                            <i class="fas fa-paw mr-1"></i> Animaux domestiques
+                        </div>
+                    {% endif %}
+
+                    {% if hostel.wifi %}
+                        <div class="small-9" title="Wifi disponible" data-toggle="tooltip">
+                            <i class="fas fa-wifi mr-1"></i> Wifi
+                        </div>
+                    {% endif %}
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>

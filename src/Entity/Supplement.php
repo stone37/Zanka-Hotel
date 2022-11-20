@@ -45,6 +45,9 @@ class Supplement
     #[ORM\Column(nullable: true)]
     private ?int $type = self::PER_PERSON;
 
+    #[ORM\ManyToOne]
+    private ?User $owner = null;
+
     #[ORM\ManyToMany(targetEntity: Room::class, mappedBy: 'supplements')]
     private Collection $rooms;
 
@@ -102,6 +105,18 @@ class Supplement
     public function setType(?int $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
 
         return $this;
     }

@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Hostel;
 use App\Entity\Review;
+use App\Entity\User;
+use App\Model\Admin\ReviewSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -48,13 +51,28 @@ class ReviewRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('r')
             ->leftJoin('r.hostel', 'hostel')
-            ->leftJoin('r.user', 'user')
+            ->leftJoin('r.owner', 'user')
             ->addSelect('hostel')
             ->addSelect('user')
             ->orderBy('r.createdAt', 'desc');
 
-        if ($search->getHostel())
+        if ($search->getHostel()) {
             $qb->andWhere('r.hostel = :hostel')->setParameter('hostel', $search->getHostel());
+        }
+
+        return $qb;
+    }
+
+    public function getByUser(User $user)
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->leftJoin('r.hostel', 'hostel')
+            ->leftJoin('r.owner', 'user')
+            ->addSelect('hostel')
+            ->addSelect('user')
+            ->where('r.owner = :user')
+            ->setParameter('user', $user)
+            ->orderBy('r.createdAt', 'desc');
 
         return $qb;
     }
@@ -63,16 +81,17 @@ class ReviewRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('r')
             ->leftJoin('r.hostel', 'hostel')
-            ->leftJoin('r.user', 'user')
+            ->leftJoin('r.owner', 'owner')
             ->addSelect('hostel')
-            ->addSelect('user')
-            ->where('hostel.user = :user')
-            ->setParameter('user', $user)
+            ->addSelect('owner')
+            ->where('hostel.owner = :owner')
+            ->setParameter('owner', $user)
             ->orderBy('r.createdAt', 'desc');
 
 
-        if ($search->getHostel())
+        if ($search->getHostel()) {
             $qb->andWhere('r.hostel = :hostel')->setParameter('hostel', $search->getHostel());
+        }
 
         return $qb;
     }
@@ -81,9 +100,9 @@ class ReviewRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('r')
             ->leftJoin('r.hostel', 'hostel')
-            ->leftJoin('r.user', 'user')
+            ->leftJoin('r.owner', 'owner')
             ->addSelect('hostel')
-            ->addSelect('user')
+            ->addSelect('owner')
             ->where('r.hostel = :hostel')
             ->setParameter('hostel', $hostel)
             ->orderBy('r.createdAt', 'desc');

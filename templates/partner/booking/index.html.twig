@@ -1,0 +1,36 @@
+{% extends 'partner/layout.html.twig' %}
+
+{% if isActive('app_partner_booking_confirmed_index') %}
+    {% set data = "Reservations confirmées" %}
+    {% set type = 2 %}
+{% elseif isActive('app_partner_booking_cancel_index') %}
+    {% set data = "Reservations annulées" %}
+    {% set type = 3 %}
+{% elseif isActive('app_partner_booking_archive_index') %}
+    {% set data = "Anciennes reservations" %}
+    {% set type = 4 %}
+{% elseif isActive('app_partner_booking_room') %}
+    {% set data = "Reservations d'un hébergement" %}
+    {% set type = 5 %}
+{% else %}
+    {% set data = "Nouvelles reservations" %}
+    {% set type = 1 %}
+{% endif %}
+
+{% block title %}{{ data }} | {{ parent() }}{% endblock %}
+
+{% block app_body %}
+    {% include 'partner/booking/index/_header.html.twig' %}
+
+    {% include 'partner/booking/index/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+
+

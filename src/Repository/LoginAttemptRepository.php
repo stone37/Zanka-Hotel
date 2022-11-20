@@ -52,7 +52,7 @@ class LoginAttemptRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('l')
             ->select('COUNT(l.id) as count')
-            ->where('l.user = :user')
+            ->where('l.owner = :user')
             ->andWhere('l.createdAt > :date')
             ->setParameter('date', new \DateTime("-{$minutes} minutes"))
             ->setParameter('user', $user)
@@ -64,7 +64,7 @@ class LoginAttemptRepository extends ServiceEntityRepository
     public function deleteAttemptsFor(User $user): void
     {
         $this->createQueryBuilder('a')
-            ->where('a.user = :user')
+            ->where('a.owner = :user')
             ->setParameter('user', $user)
             ->delete()
             ->getQuery()

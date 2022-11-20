@@ -3,10 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\EquipmentGroup;
+use App\Model\Admin\EquipmentGroupSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Model\EquipmentGroupSearch;
 
 /**
  * @extends ServiceEntityRepository<EquipmentGroup>
@@ -49,10 +49,11 @@ class EquipmentGroupRepository extends ServiceEntityRepository
     public function getAdmins(EquipmentGroupSearch $search): ?QueryBuilder
     {
         $qb = $this->createQueryBuilder('eg')
-            ->orderBy('eg.name', 'asc');
+            ->orderBy('eg.position', 'asc');
 
-        if ($search->getName())
+        if ($search->getName()) {
             $qb->andWhere('eg.name LIKE :name')->setParameter('name', '%'.$search->getName().'%');
+        }
 
         return $qb;
     }
@@ -60,7 +61,7 @@ class EquipmentGroupRepository extends ServiceEntityRepository
     public function getEnabled(): ?QueryBuilder
     {
         $qb = $this->createQueryBuilder('eg')
-            ->orderBy('eg.name', 'asc');
+            ->orderBy('eg.position', 'asc');
 
         return $qb;
     }
@@ -70,7 +71,7 @@ class EquipmentGroupRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('eg')
             ->leftJoin('eg.equipments', 'equipments')
             ->addSelect('equipments')
-            ->orderBy('eg.name', 'asc');
+            ->orderBy('eg.position', 'asc');
 
         return $qb->getQuery()->getResult();
     }

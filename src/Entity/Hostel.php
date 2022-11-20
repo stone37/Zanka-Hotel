@@ -2,13 +2,16 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\ClosedTrait;
 use App\Entity\Traits\DeletableTrait;
 use App\Entity\Traits\EnabledTrait;
 use App\Entity\Traits\MediaTrait;
 use App\Entity\Traits\Notifiable;
+use App\Entity\Traits\PositionTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\HostelRepository;
 use DateTimeImmutable;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -24,6 +27,8 @@ class Hostel
 {
     use MediaTrait;
     use EnabledTrait;
+    use ClosedTrait;
+    use PositionTrait;
     use TimestampableTrait;
     use DeletableTrait;
     use Notifiable;
@@ -48,16 +53,20 @@ class Hostel
     #[ORM\Column(length: 180,  unique: true, nullable: true)]
     private ?string $email = null;
 
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 5)]
+    #[Assert\NotBlank(message: "Entrez un numéro de téléphone s''il vous plait.")]
+    #[Assert\Length(min: 10, max: 25, minMessage: "Le numéro de téléphone est trop court.", maxMessage: "Le numéro de téléphone est trop long.", groups: ['Registration', 'Profile'])]
+    #[ORM\Column(length: 25, nullable: true)]
+    private ?string $phone = null;
+
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $reference = null;
 
+    #[Assert\NotBlank]
     #[ORM\Column(length: 50, nullable: true)]
-    private ?string $starNumber = null;
+    private ?int $starNumber = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $address = null;
@@ -65,35 +74,30 @@ class Hostel
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $codePostal = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $averageRating = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $propertyAverageRating = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $equipmentAverageRating = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $personalAverageRating = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $comfortAverageRating = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $priceAverageRating = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?int $locationAverageRating = null;
-
+    #[Assert\NotNull(message: 'Cette valeur ne doit pas être vide.')]
+    #[Assert\Type(type: 'bool', message: 'Cette valeur ne doit pas être vide.')]
     #[ORM\Column(nullable: true)]
     private ?bool $parking = null;
 
+    #[Assert\NotNull(message: 'Cette valeur ne doit pas être vide.')]
+    #[Assert\Type(type: 'bool', message: 'Cette valeur ne doit pas être vide.')]
     #[ORM\Column(nullable: true)]
-    private ?int $parkingPrice = null;
+    private ?bool $breakfast = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $animalsAllowed = null;
+    #[Assert\NotNull(message: 'Cette valeur ne doit pas être vide.')]
+    #[Assert\Type(type: 'bool', message: 'Cette valeur ne doit pas être vide.')]
+    #[ORM\Column(nullable: true)]
+    private ?bool $animalsAllowed = null;
+
+    #[Assert\NotNull(message: 'Cette valeur ne doit pas être vide.')]
+    #[Assert\Type(type: 'bool', message: 'Cette valeur ne doit pas être vide.')]
+    #[ORM\Column(nullable: true)]
+    private ?bool $children = null;
+
+    #[Assert\NotNull(message: 'Cette valeur ne doit pas être vide.')]
+    #[Assert\Type(type: 'bool', message: 'Cette valeur ne doit pas être vide.')]
+    #[ORM\Column(nullable: true)]
+    private ?bool $wifi = null;
 
     #[ORM\Column(nullable: true)]
     private ?bool $mobilePaymentAllowed = false;
@@ -101,17 +105,15 @@ class Hostel
     #[ORM\Column(nullable: true)]
     private ?bool $cardPaymentAllowed = false;
 
+    #[Assert\NotBlank]
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
     private ?array $spokenLanguages = [];
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $breakfast = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $enabledAt = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $breakfastPrice = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $cancelFreeOfCharge = null;
+    #[ORM\Column(type: Types::FLOAT, nullable: true)]
+    private ?float $averageRating = 0;
 
     #[Assert\File(maxSize: '8M')]
     #[Vich\UploadableField(
@@ -124,21 +126,27 @@ class Hostel
     private ?File $file = null;
 
     #[ORM\OneToMany(mappedBy: 'hostel', targetEntity: HostelGallery::class, orphanRemoval: true, cascade: ['ALL'])]
+    #[ORM\OrderBy(['position' => 'asc'])]
     private Collection $galleries;
 
+    #[Assert\NotBlank]
+    #[Assert\Valid]
     #[ORM\ManyToOne(inversedBy: 'hostels')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
+    #[Assert\Valid]
     #[ORM\ManyToOne(inversedBy: 'hostels')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Valid]
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Location $location = null;
 
-    #[ORM\ManyToMany(targetEntity: EquipmentGroup::class, inversedBy: 'hostels')]
+    #[ORM\ManyToMany(targetEntity: Equipment::class, inversedBy: 'hostels')]
     private Collection $equipments;
 
     #[ORM\OneToMany(mappedBy: 'hostel', targetEntity: Favorite::class)]
@@ -155,6 +163,24 @@ class Hostel
 
     #[ORM\OneToMany(mappedBy: 'hostel', targetEntity: Commande::class, orphanRemoval: true)]
     private Collection $commandes;
+
+    #[Assert\NotBlank]
+    #[Assert\Valid]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TimeInterval $checkinTime = null;
+
+    #[Assert\NotBlank]
+    #[Assert\Valid]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TimeInterval $checkoutTime = null;
+
+    #[Assert\NotBlank]
+    #[Assert\Valid]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Cancelation $cancellationPolicy = null;
 
     public function __construct()
     {
@@ -208,6 +234,18 @@ class Hostel
         return $this;
     }
 
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
     public function getDescription(): ?string
     {
         return $this->description;
@@ -232,12 +270,12 @@ class Hostel
         return $this;
     }
 
-    public function getStarNumber(): ?string
+    public function getStarNumber(): ?int
     {
         return $this->starNumber;
     }
 
-    public function setStarNumber(?string $starNumber): self
+    public function setStarNumber(?int $starNumber): self
     {
         $this->starNumber = $starNumber;
 
@@ -268,90 +306,6 @@ class Hostel
         return $this;
     }
 
-    public function getAverageRating(): ?int
-    {
-        return $this->averageRating;
-    }
-
-    public function setAverageRating(?int $averageRating): self
-    {
-        $this->averageRating = $averageRating;
-
-        return $this;
-    }
-
-    public function getPropertyAverageRating(): ?int
-    {
-        return $this->propertyAverageRating;
-    }
-
-    public function setPropertyAverageRating(?int $propertyAverageRating): self
-    {
-        $this->propertyAverageRating = $propertyAverageRating;
-
-        return $this;
-    }
-
-    public function getEquipmentAverageRating(): ?int
-    {
-        return $this->equipmentAverageRating;
-    }
-
-    public function setEquipmentAverageRating(?int $equipmentAverageRating): self
-    {
-        $this->equipmentAverageRating = $equipmentAverageRating;
-
-        return $this;
-    }
-
-    public function getPersonalAverageRating(): ?int
-    {
-        return $this->personalAverageRating;
-    }
-
-    public function setPersonalAverageRating(?int $personalAverageRating): self
-    {
-        $this->personalAverageRating = $personalAverageRating;
-
-        return $this;
-    }
-
-    public function getComfortAverageRating(): ?int
-    {
-        return $this->comfortAverageRating;
-    }
-
-    public function setComfortAverageRating(?int $comfortAverageRating): self
-    {
-        $this->comfortAverageRating = $comfortAverageRating;
-
-        return $this;
-    }
-
-    public function getPriceAverageRating(): ?int
-    {
-        return $this->priceAverageRating;
-    }
-
-    public function setPriceAverageRating(?int $priceAverageRating): self
-    {
-        $this->priceAverageRating = $priceAverageRating;
-
-        return $this;
-    }
-
-    public function getLocationAverageRating(): ?int
-    {
-        return $this->locationAverageRating;
-    }
-
-    public function setLocationAverageRating(?int $locationAverageRating): self
-    {
-        $this->locationAverageRating = $locationAverageRating;
-
-        return $this;
-    }
-
     public function isParking(): ?bool
     {
         return $this->parking;
@@ -364,26 +318,50 @@ class Hostel
         return $this;
     }
 
-    public function getParkingPrice(): ?int
+    public function isBreakfast(): ?bool
     {
-        return $this->parkingPrice;
+        return $this->breakfast;
     }
 
-    public function setParkingPrice(?int $parkingPrice): self
+    public function setBreakfast(?bool $breakfast): self
     {
-        $this->parkingPrice = $parkingPrice;
+        $this->breakfast = $breakfast;
 
         return $this;
     }
 
-    public function getAnimalsAllowed(): ?string
+    public function isAnimalsAllowed(): ?bool
     {
         return $this->animalsAllowed;
     }
 
-    public function setAnimalsAllowed(?string $animalsAllowed): self
+    public function setAnimalsAllowed(?bool $animalsAllowed): self
     {
         $this->animalsAllowed = $animalsAllowed;
+
+        return $this;
+    }
+
+    public function isChildren(): ?bool
+    {
+        return $this->children;
+    }
+
+    public function setChildren(?bool $children): self
+    {
+        $this->children = $children;
+
+        return $this;
+    }
+
+    public function isWifi(): ?bool
+    {
+        return $this->wifi;
+    }
+
+    public function setWifi(?bool $wifi): self
+    {
+        $this->wifi = $wifi;
 
         return $this;
     }
@@ -420,42 +398,6 @@ class Hostel
     public function setSpokenLanguages(?array $spokenLanguages): self
     {
         $this->spokenLanguages = $spokenLanguages;
-
-        return $this;
-    }
-
-    public function getBreakfast(): ?string
-    {
-        return $this->breakfast;
-    }
-
-    public function setBreakfast(?string $breakfast): self
-    {
-        $this->breakfast = $breakfast;
-
-        return $this;
-    }
-
-    public function getBreakfastPrice(): ?int
-    {
-        return $this->breakfastPrice;
-    }
-
-    public function setBreakfastPrice(?int $breakfastPrice): self
-    {
-        $this->breakfastPrice = $breakfastPrice;
-
-        return $this;
-    }
-
-    public function getCancelFreeOfCharge(): ?string
-    {
-        return $this->cancelFreeOfCharge;
-    }
-
-    public function setCancelFreeOfCharge(?string $cancelFreeOfCharge): self
-    {
-        $this->cancelFreeOfCharge = $cancelFreeOfCharge;
 
         return $this;
     }
@@ -543,14 +485,14 @@ class Hostel
     }
 
     /**
-     * @return Collection<int, EquipmentGroup>
+     * @return Collection<int, Equipment>
      */
     public function getEquipments(): Collection
     {
         return $this->equipments;
     }
 
-    public function addEquipment(EquipmentGroup $equipment): self
+    public function addEquipment(Equipment $equipment): self
     {
         if (!$this->equipments->contains($equipment)) {
             $this->equipments[] = $equipment;
@@ -559,7 +501,7 @@ class Hostel
         return $this;
     }
 
-    public function removeEquipment(EquipmentGroup $equipment): self
+    public function removeEquipment(Equipment $equipment): self
     {
         $this->equipments->removeElement($equipment);
 
@@ -712,6 +654,66 @@ class Hostel
                 $commande->setHostel(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCheckinTime(): ?TimeInterval
+    {
+        return $this->checkinTime;
+    }
+
+    public function setCheckinTime(TimeInterval $checkinTime): self
+    {
+        $this->checkinTime = $checkinTime;
+
+        return $this;
+    }
+
+    public function getCheckoutTime(): ?TimeInterval
+    {
+        return $this->checkoutTime;
+    }
+
+    public function setCheckoutTime(TimeInterval $checkoutTime): self
+    {
+        $this->checkoutTime = $checkoutTime;
+
+        return $this;
+    }
+
+    public function getCancellationPolicy(): ?Cancelation
+    {
+        return $this->cancellationPolicy;
+    }
+
+    public function setCancellationPolicy(Cancelation $cancellationPolicy): self
+    {
+        $this->cancellationPolicy = $cancellationPolicy;
+
+        return $this;
+    }
+
+    public function getEnabledAt(): ?DateTimeInterface
+    {
+        return $this->enabledAt;
+    }
+
+    public function setEnabledAt(?DateTimeInterface $enabledAt): self
+    {
+        $this->enabledAt = $enabledAt;
+
+        return $this;
+    }
+
+    public function getAverageRating(): ?float
+    {
+        return $this->averageRating;
+    }
+
+    public function setAverageRating(?float $averageRating): self
+    {
+        $this->averageRating = $averageRating;
 
         return $this;
     }

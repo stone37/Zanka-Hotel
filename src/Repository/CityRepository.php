@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\City;
+use App\Model\Admin\CitySearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -44,4 +46,49 @@ class CityRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
+    public function getAdmins(CitySearch $search): ?QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->orderBy('c.position', 'asc');
+
+        if ($search->getName()) {
+            $qb->andWhere('c.name LIKE :name')->setParameter('name', '%'.$search->getName().'%');
+        }
+
+        if ($search->getCountry()) {
+            $qb->andWhere('c.country = :country')->setParameter('country', $search->getCountry());
+        }
+
+        return $qb;
+    }
+
+    public function getPartial(int $limit = 5)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.enabled = 1')
+            ->orderBy('c.position', 'asc')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function search(string $query, int $limit = 5)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.enabled = 1')
+            ->andWhere('c.name LIKE :q')
+            ->setParameter('q', '%'.$query.'%')
+            ->orderBy('c.position', 'asc')
+            ->setMaxResults($limit)
+            ->getQuery()->getResult();
+    }
+
+    public function getByName(string $name): ?City
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.enabled = 1')
+            ->andWhere('c.name = :name')
+            ->setParameter('name', $name)
+            ->getQuery()->getOneOrNullResult();
+    }
 }

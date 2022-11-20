@@ -1,0 +1,17 @@
+{% extends 'partner/layout.html.twig' %}
+
+{% block title %}Fermeture du compte | {{ parent() }}{% endblock %}
+
+{% block app_body %}
+    {% include 'partner/account/delete/_header.html.twig' %}
+
+    {% include 'partner/account/delete/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
