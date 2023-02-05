@@ -1,11 +1,10 @@
-{% import 'ui/Macro/pagination.html.twig' as pagination %}
-
-{% set data = config.booker.bookingData %}
-
+<section class="container mb-4 hostel-list-mobile-filter d-block d-lg-none">
+    {{ include('site/hostel/index/_filterMobileForm.html.twig') }}
+</section>
 <section class="container mb-4 hostel-list-header">
     <div class="row">
         <div class="col-12">
-            <h2 class="h2-responsive font-weight-bold mb-1">
+            <h2 class="h2-responsive font-weight-bold text-dark mb-1">
                 Hébergements à {{ city|capitalize }}
             </h2>
             <div class="font-weight-normal">
@@ -26,28 +25,31 @@
 </section>
 <section class="container mb-5">
     <div class="row">
-        <section class="col-12 col-md-4 hostel-list-filter">
-            {{ form_start(form, {'method': 'GET', 'attr': {'class': 'hostel-form'}}) }}
+        <section class="col-12 col-lg-4 hostel-list-filter d-none d-lg-flex">
+            {{ form_start(form, {'method': 'GET', 'attr': {'class': 'hostel-filter-form'}}) }}
                 {{ include('site/hostel/index/_filterForm.html.twig') }}
             {{ form_end(form, {'render_rest': false}) }}
         </section>
-        <div class="col-12 col-md-8">
-            <section class="row mb-5">
+        <div class="col-12 col-lg-8">
+            <section class="row mb-4 mb-md-5 d-none d-lg-block">
                 <div class="col-12 d-flex justify-content-end hostel-list-sorting">
                     {{ include('site/hostel/index/_sorting.html.twig') }}
-                    {{ include('site/hostel/index/_pagination.html.twig') }}
                 </div>
             </section>
             {% if hostels|length > 0 %}
                 <section class="row hostels-list" id="hostels-list">
                     {% for hostel in hostels %}
                         <div class="col-12">
-                            {% include 'site/hostel/index/_box.html.twig' %}
+                            {{ include('site/hostel/index/_box.html.twig') }}
                         </div>
                     {% endfor %}
                 </section>
 
-                {{ pagination.simple(hostels) }}
+                <section>
+                    <div class="col-12 d-flex justify-content-center my-4">
+                        {{ knp_pagination_render(hostels, 'Ui/_pagination.html.twig') }}
+                    </div>
+                </section>
             {% else %}
                 {{ include('site/hostel/index/_no_data.html.twig') }}
             {% endif %}

@@ -89,6 +89,7 @@ class BookingController extends AbstractController
 
         $form->handleRequest($request);
 
+        // Annule les reservations non confirmer à temps
         $this->manager->cancelledAjustement($this->repository->getCancel());
 
         $qb = $this->repository->getCancelAdmins($search);

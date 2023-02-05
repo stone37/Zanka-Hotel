@@ -5,6 +5,7 @@ namespace App\Controller\Partner;
 use App\Controller\Traits\ControllerTrait;
 use App\Entity\Hostel;
 use App\Event\HostelCreatedEvent;
+use App\Exception\TooManyHostelCreatedException;
 use App\Form\HostelEquipmentType;
 use App\Form\HostelType;
 use App\Repository\HostelRepository;
@@ -16,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -46,7 +48,7 @@ class HostelController extends AbstractController
     }
 
     #[Route(path: '/hostels', name: 'app_partner_hostel_index')]
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $qb = $this->repository->getByPartner($this->getUserOrThrow());
 
@@ -56,9 +58,15 @@ class HostelController extends AbstractController
     }
 
     #[Route(path: '/hostels/create', name: 'app_partner_hostel_create')]
-    public function create(Request $request)
+    public function create(Request $request): RedirectResponse|Response
     {
-        $hostel = $this->service->createHostel($this->getUserOrThrow());
+        try {
+            $hostel = $this->service->createHostel($this->getUserOrThrow());
+        } catch (TooManyHostelCreatedException) {
+            $this->addFlash('error', 'Vous avez atteint le quotas de création d\'établissement. Veuillez contacter le service client pourvoir créer plus d\'établissement.');
+
+            return $this->redirectToRoute('app_partner_hostel_index');
+        }
 
         $form = $this->createForm(HostelType::class, $hostel);
 

@@ -5,33 +5,39 @@ namespace App\Service;
 use App\Entity\Hostel;
 use App\Entity\User;
 use App\Event\HostelDeleteRequestEvent;
+use App\Exception\TooManyHostelCreatedException;
+use App\Repository\HostelRepository;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class HostelService
 {
     public const DAYS = 10;
 
-    private EntityManagerInterface $em;
+    private HostelRepository $hostelRepository;
     private UniqueNumberGenerator $generator;
     private EventDispatcherInterface $dispatcher;
 
     public  function __construct(
-        EntityManagerInterface $em,
+        HostelRepository $hostelRepository,
         EventDispatcherInterface $dispatcher,
         UniqueNumberGenerator $generator)
     {
-        $this->em = $em;
+        $this->hostelRepository = $hostelRepository;
         $this->generator = $generator;
         $this->dispatcher = $dispatcher;
     }
 
     public function createHostel(User $user): Hostel
     {
+        if ($this->hostelRepository->getNumberByUser($user) >= $user->getHostelNumber()) {
+            throw new TooManyHostelCreatedException();
+        }
+
         return (new Hostel())
             ->setOwner($user)
-            ->setReference($this->generator->generate(10, false));
+            ->setEnabled(false)
+            ->setReference($this->generator->generate(14));
     }
 
     public function deleteHostel(Hostel $hostel): void
@@ -40,6 +46,7 @@ class HostelService
 
         $hostel->setDeleteAt(new DateTimeImmutable('+ '.(string) self::DAYS.' days'));
 
-        $this->em->flush();
+        $this->hostelRepository->flush();
     }
 }
+

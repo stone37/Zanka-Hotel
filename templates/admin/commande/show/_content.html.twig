@@ -61,9 +61,7 @@
                 <td class="table-dark text-center font-weight-normal">Remise</td>
                 <td class="text-center font-weight-normal">
                     {% if order.discountAmount %}
-                        <span class="badge badge-success font-weight-stone-500">
-                                {{ order.discountAmount }} %
-                            </span>
+                        {{ order.discountAmount|format_currency('XOF') }}
                     {% else %}
                         <span class="badge badge-warning font-weight-stone-500">Non</span>
                     {% endif %}

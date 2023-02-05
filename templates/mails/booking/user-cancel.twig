@@ -1,0 +1,21 @@
+{% extends layout %}
+
+{% import 'mails/macros.twig' as e %}
+
+{% set settings = config.settings %}
+
+{% block body %}
+
+    {% apply markdown_email %}
+
+        Bonjour {{ booking.firstname }}
+        ===============================
+
+        Votre réservation a été annuler.
+
+        Nous procéderons aux remboursement de la réservation sous peu, selon les conditions d'annulation de l'établissement.
+
+        En cas de problèmes veuillez contacter notre service client.
+
+    {% endapply %}
+{% endblock %}

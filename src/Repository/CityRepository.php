@@ -91,4 +91,20 @@ class CityRepository extends ServiceEntityRepository
             ->setParameter('name', $name)
             ->getQuery()->getOneOrNullResult();
     }
+
+    public function getWithData()
+    {
+        $results = $this->createQueryBuilder('c')
+            ->where('c.enabled = 1')
+            ->orderBy('c.position', 'asc')
+            ->getQuery()->getArrayResult();
+
+        $data = [];
+
+        foreach ($results as $result) {
+            $data[$result['name']] = $result['name'];
+        }
+
+        return $data;
+    }
 }

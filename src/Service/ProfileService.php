@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Dto\ProfileUpdateDto;
 use App\Entity\EmailVerification;
+use App\Entity\User;
 use App\Event\EmailVerificationEvent;
 use App\Exception\TooManyEmailChangeException;
 use App\Repository\EmailVerificationRepository;
@@ -30,10 +31,12 @@ class ProfileService
     public function updateProfile(ProfileUpdateDto $data): void
     {
         $data->user->setUsername($data->username);
-        $data->user->setLastName($data->lastname);
-        $data->user->setFirstName($data->firstname);
+        $data->user->setLastname($data->lastname);
+        $data->user->setFirstname($data->firstname);
         $data->user->setPhone($data->phone);
+        $data->user->setCountry($data->country);
         $data->user->setCity($data->city);
+        $data->user->setAddress($data->address);
 
         if ($data->email !== $data->user->getEmail()) {
             $lastRequest = $this->emailVerificationRepository->findLastForUser($data->user);

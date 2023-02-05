@@ -5,7 +5,7 @@
         <div class="col-12">
             <div class="card mb-4">
                 <div class="card-body">
-                    <h1 class="h1-responsive display-3 mb-3 text-center font-weight-bold">
+                    <h1 class="h1-responsive display-3 mb-3 text-center font-weight-bold text-dark">
                         {% if oauth_type %}Se connecter avec {{ oauth_type }}{% else %}S'inscrire{% endif %}
                     </h1>
 
@@ -15,7 +15,7 @@
                         </div>
                     {% endif %}
 
-                    <section class="mt-5 mb-4 row d-flex justify-content-center">
+                    <section class="mt-lg-5 mb-4 row d-flex justify-content-center">
                         <div class="col-md-6">
                             <a class="btn btn-outline-grey btn-google btn-block mb-4 d-none d-md-inline-block" href="{{ path('oauth_connect', {service: 'google'}) }}">
                                 <img src='https://developers.google.com/identity/images/g-logo.png' class="img-fluid mr-1 my-0" alt="Google icon">
@@ -40,7 +40,7 @@
 
                     <section class="d-flex align-content-center">
                         <hr class="w-100" style="border-color: #f5f5f5; border-width: 2px;">
-                        <div class="h5-responsive font-weight-stone-500 text-center grey-text px-2">Ou</div>
+                        <div class="h5-responsive font-weight-stone-500 text-center grey-text px-2 text-dark">Ou</div>
                         <hr class="w-100" style="border-color: #f5f5f5; border-width: 2px;">
                     </section>
 
@@ -73,7 +73,7 @@
                             </div>
                         {% endif %}
 
-                        <div class="col-12 col-md-6 col-lg-4">
+                        <div class="col-12 col-md-6 col-lg-4 phone-field">
                             {{ form_row(form.phone) }}
                         </div>
 
@@ -87,8 +87,8 @@
                         {% endif %}
                     </div>
                     <div class="small-9 mt-3 mb-4">
-                        En créant un compte, j'accepte les <a href="{{ path('app_cgu') }}" class="link">conditions d'utilisation</a>
-                        et la <a href="{{ path('app_confidentialite') }}" class="link">politique de confidentialité</a> de {{ config.settings.name }}.com.
+                        En créant un compte, j'accepte les <a href="{{ path('app_cgu') }}" class="link font-weight-stone-500">conditions d'utilisation</a>
+                        et la <a href="{{ path('app_confidentialite') }}" class="link font-weight-stone-500">politique de confidentialité</a> de {{ config.settings.name }}.com.
                     </div>
 
                     {{ form_widget(form._token) }}
@@ -98,7 +98,7 @@
                     </div>
 
                     <div class="mt-3 mb-1 text-center">
-                        Vous avez déja un compte ? <a href="{{ path('app_login') }}" class="link">Connectez-vous</a>
+                        Vous avez déja un compte ? <a href="{{ path('app_login') }}" class="link font-weight-stone-500">Connectez-vous</a>
                     </div>
                     {{ form_end(form, {'render_rest': false}) }}
                 </div>

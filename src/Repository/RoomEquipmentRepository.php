@@ -57,12 +57,20 @@ class RoomEquipmentRepository extends ServiceEntityRepository
         return $qb;
     }
 
-
     public function getData(): ?QueryBuilder
     {
         $qb = $this->createQueryBuilder('e')
             ->orderBy('e.position', 'asc');
 
         return $qb;
+    }
+
+    public function getPartial(int $limit = 5): array
+    {
+        return $this->createQueryBuilder('e')
+            ->orderBy('e.position', 'asc')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
     }
 }

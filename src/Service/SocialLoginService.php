@@ -41,8 +41,9 @@ class SocialLoginService
         $user->setEmail($oauthData['email']);
         $user->setGoogleId($oauthData['google_id'] ?? null);
         $user->setFacebookId($oauthData['facebook_id'] ?? null);
-        $user->setUsername($oauthData['username']);
+        //$user->setUsername($oauthData['username']);
         $user->setConfirmationToken(null);
+        $user->setIsVerified(true);
 
         return true;
     }

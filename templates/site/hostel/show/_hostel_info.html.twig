@@ -1,0 +1,138 @@
+{% set settings = config.settings %}
+{% set url = app.request.getSchemeAndHttpHost() ~ '' ~ app.request.requestUri %}
+{% set subject = 'Voici un établissement que j\'ai trouver sur ' ~ settings.name ~ ' : ' ~ hostel.name %}
+
+<div class="row my-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body p-3">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <div class="category mt-2">{{ hostel.category.name }}</div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="share pr-3">
+                                    <div class="dropdown">
+                                        <a href="" class="btn-floating" id="hostel-share-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-share-alt"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-primary dropdown-menu-right" aria-labelledby="hostel-share-dropdown">
+                                            <a class="dropdown-item" data-sharer="facebook" data-hashtag="{{ settings.name|slug('')|lower }}" data-url="{{ url }}">
+                                                <i class="fab fa-facebook-square mr-2"></i>
+                                                Partager sur Facebook
+                                            </a>
+                                            <a class="dropdown-item" data-sharer="whatsapp" data-url="{{ url }}">
+                                                <i class="fab fa-whatsapp mr-2"></i>
+                                                Partager sur Whatsapp
+                                            </a>
+                                            <a class="dropdown-item" data-sharer="twitter" data-hashtags="{{ settings.name|slug('')|lower }}" data-url="{{ url }}">
+                                                <i class="fab fa-twitter mr-2"></i>
+                                                Partager sur Twitter
+                                            </a>
+                                            <a class="dropdown-item" data-sharer="email" data-url="{{ url }}" data-subject="{{ subject }}">
+                                                <i class="fas fa-envelope mr-2"></i>
+                                                Partager par mail
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if not is_granted('created', hostel) %}
+                                    {% set has_favoris = app_has_favoris(hostel) %}
+                                    <div class="favorite pr-md-3">
+                                        <a data-id="{{ hostel.id }}" href="" class="btn-floating hostel-favorite-btn
+                                            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}connected{% endif %}
+                                            {% if has_favoris %}activated{% endif %}">
+                                            <i class="{% if has_favoris %}fas{% else %}far{% endif %} fa-heart"></i>
+                                        </a>
+                                    </div>
+                                {% endif %}
+
+                                <div class="room d-none d-md-inline-block">
+                                    <a href="#hostel-room-list" class="btn btn-primary btn-md z-depth-0">Réserver une chambre</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 content-title mt-3 mb-1">
+                        <div>
+                            <h2 class="h2-responsive font-weight-bold text-dark">{{ hostel.name }}</h2>
+                            {% if hostel.starNumber %}
+                                <div class="star-number">
+                                    {% for i in 1..(hostel.starNumber) %}
+                                        <i class="far fa-star text-default"></i>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="d-flex">
+                            <div class="hostel-review">
+                                {% if hostel.averageRating %}
+                                    <div class="number">
+                                        <span class="d-inline-block font-weight-bold">{{ hostel.averageRating|format_number({fraction_digit: 1}) }}</span>/10
+                                    </div>
+                                    <div class="title font-weight-bold text-primary">{{ app_review_observation(hostel.averageRating) }}</div>
+                                    <div class="review-nbr text-dark">({{ hostel.reviews|length }} avis)</div>
+                                {% endif %}
+                            </div>
+                            {% if hostel.averageRating %}<div class="icon-review"><i class="fas fa-circle mx-1"></i></div>{% endif %}
+                            <div class="hostel-location">
+                                <i class="fas fa-map-marker-alt mr-1"></i>
+                                <span>
+                                    {% if hostel.location.town %}
+                                        {{ hostel.location.town }}, {{ hostel.location.city }}
+                                    {% else %}
+                                        {{ hostel.location.city }}
+                                    {% endif %}
+                                </span>
+                                {% if hostel.location.detail %}<span>({{ hostel.location.detail }})</span>{% endif %}
+                            </div>
+                        </div>
+                        {% if hostel.description %}
+                            <div class="hostel-description d-inline-block mt-2">
+                                <div class="icon d-none d-md-inline-block"><i class="fas fa-h-square mr-lg-2"></i></div>
+                                <div class="text d-none d-lg-inline-block">{{ hostel.description|u.truncate(140, '...', false)|raw }}</div>
+                                <div class="text d-inline-block d-lg-none">{{ hostel.description|u.truncate(120, '...', false)|raw }}</div>
+                                {{ include('site/hostel/show/_hostel_description.html.twig') }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-12 hostel-equipment mt-2">
+                        <h5 class="h5-responsive text-dark mb-3">Ses points forts</h5>
+                        <div class="row">
+                            <div class="col-12 col-md-8 col-lg-6">
+                                <div class="row data">
+                                    {% if hostel.breakfast %}
+                                        <div class="col-md-6"><i class="fas fa-coffee text-primary mr-1"></i> Petit-déjeuner</div>
+                                    {% endif %}
+
+                                    {% if hostel.parking %}
+                                        <div class="col-md-6"><i class="fas fa-parking text-primary mr-1"></i> Parking</div>
+                                    {% endif %}
+
+                                    {% if hostel.animalsAllowed %}
+                                        <div class="col-md-6"><i class="fas fa-paw text-primary mr-1"></i> Animaux domestiques</div>
+                                    {% endif %}
+
+                                    {% if hostel.wifi %}
+                                        <div class="col-md-6"><i class="fas fa-wifi text-primary mr-1"></i> Wifi gratuit</div>
+                                    {% endif %}
+
+                                    {% if hostel.cancellationPolicy.state == 0 %}
+                                        <div class="col-md-6"><i class="fas fa-stopwatch text-primary mr-1"></i> Annulation GRATUITE</div>
+                                    {% endif %}
+                                </div>
+
+                                {{ include('site/hostel/show/_hostel_equipment_modal.html.twig') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

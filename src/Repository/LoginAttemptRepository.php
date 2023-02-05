@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\LoginAttempt;
 use App\Entity\User;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -54,7 +55,7 @@ class LoginAttemptRepository extends ServiceEntityRepository
             ->select('COUNT(l.id) as count')
             ->where('l.owner = :user')
             ->andWhere('l.createdAt > :date')
-            ->setParameter('date', new \DateTime("-{$minutes} minutes"))
+            ->setParameter('date', new DateTime("-{$minutes} minutes"))
             ->setParameter('user', $user)
             ->setMaxResults(1)
             ->getQuery()

@@ -25,7 +25,8 @@
 {% macro bulk(form, data, message, icon, type, yes_class, no_class) %}
     {% import 'Ui/Macro/messages.html.twig' as message %}
 
-    {{ form_start(form, data, message, icon, type, yes_class, no_class) }}
+    {#{{ form_start(form, data, message, icon, type, yes_class, no_class) }}#}
+    {{ form_start(form) }}
     <div class="modal fade" id="confirmMulti{{ data|length }}" tabindex="-1" role="dialog" aria-labelledby="confirmMulti" aria-hidden="true">
         <div class="modal-dialog modal-sm modal-notify {{ type }}" role="document">
             <div class="modal-content text-center">

@@ -2,6 +2,11 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Action\NotFoundAction;
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use App\Api\Controller\GetSettings;
 use App\Entity\Traits\MediaTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\SettingsRepository;
@@ -9,11 +14,26 @@ use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: SettingsRepository::class)]
+#[GetCollection(
+    uriTemplate: '/settings/get',
+    controller: GetSettings::class,
+    openapiContext: ['summary' => 'Récupère la configuration du site'],
+    paginationEnabled: false,
+    normalizationContext: ['groups' => ['settings:read']],
+    name: 'get_settings'
+)]
+#[Get(
+    controller: NotFoundAction::class,
+    output: false,
+    read: false,
+    openapiContext: ['summary' => 'hidden']
+)]
 class Settings
 {
     use MediaTrait;
@@ -22,49 +42,63 @@ class Settings
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups('settings:read')]
     private ?int $id = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('settings:read')]
     private ?string $name = null;
 
     #[Assert\NotBlank]
     #[Assert\Email]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('settings:read')]
     private ?string $email = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('settings:read')]
     private ?string $phone = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups('settings:read')]
     private ?string $description = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('settings:read')]
     private ?string $fax = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('settings:read')]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('settings:read')]
     private ?string $country = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('settings:read')]
     private ?string $city = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('settings:read')]
     private ?string $facebookAddress = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('settings:read')]
     private ?string $twitterAddress = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('settings:read')]
     private ?string $instagramAddress = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('settings:read')]
     private ?string $youtubeAddress = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups('settings:read')]
     private ?string $linkedinAddress = null;
 
     #[ORM\Column(nullable: true)]
@@ -88,12 +122,18 @@ class Settings
     )]
     private ?File $file = null;
 
+    #[ApiProperty(types: ['https://schema.org/fileUrl'])]
+    #[Groups(['settings:read'])]
+    private ?string $fileUrl;
+
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups('settings:read')]
     private ?Currency $baseCurrency = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups('settings:read')]
     private ?Locale $defaultLocale = null;
 
     public function getId(): ?int
@@ -324,6 +364,18 @@ class Settings
         if (null !== $file) {
             $this->updatedAt = new DateTime();
         }
+
+        return $this;
+    }
+
+    public function getFileUrl(): ?string
+    {
+        return $this->fileUrl;
+    }
+
+    public function setFileUrl(?string $fileUrl): self
+    {
+        $this->fileUrl = $fileUrl;
 
         return $this;
     }

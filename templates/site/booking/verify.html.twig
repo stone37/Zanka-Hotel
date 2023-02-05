@@ -1,0 +1,25 @@
+{% extends 'site/layout.html.twig' %}
+
+{% block title 'Verifier du code envoyé' %}
+
+{% block meta %}
+    {% set content = "Verifier du code envoyé par mail" %}
+    <meta name="description" content="{{ content }}"/>
+    <meta property="og:description" content="{{ content }}" />
+{% endblock %}
+
+{% block app_flashes %}{% endblock %}
+
+{% block app_intro %}
+    <section class="bc container">
+        <div>
+            {{ wo_render_breadcrumbs({viewTemplate: '_breadcrumb.html.twig', listClass: 'breadcrumb',
+                itemClass: 'breadcrumb-item', separator: '>', separatorClass: 'fas fa-long-arrow-alt-right'}) }}
+        </div>
+    </section>
+{% endblock %}
+
+{% block app_body %}
+    {{ include('site/booking/verify/content.html.twig') }}
+{% endblock %}
+

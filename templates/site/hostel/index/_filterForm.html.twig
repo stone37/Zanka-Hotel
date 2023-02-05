@@ -2,18 +2,15 @@
 {% import 'ui/Macro/money.html.twig' as money %}
 
 <div class="card">
-    <div class="card-body">
-        <h5 class="h5-responsive font-weight-stone-500 mb-4">Filtrer les résultats</h5>
+    <div class="card-body p-3">
+        <h5 class="h5-responsive font-weight-stone-500 text-dark mb-4">Filtrer les résultats</h5>
 
         <div class="row">
             <div class="col-12 name-field">
                 {{ form_row(form.name) }}
             </div>
-            <div class="col-12 equipment-field mt-4">
-                {{ form_row(form.equipments.equipments) }}
-            </div>
-            <div class="col-12 price-field my-4">
-                <div class="title">Prix total</div>
+            <div class="col-12 price-field mt-4">
+                <div class="title text-dark">Prix total</div>
                 <div class="data-price d-flex justify-content-between mb-1">
                     <div class="min dark-grey-text pr-1">
                         {{ form_row(form.price.min_price) }}
@@ -26,8 +23,42 @@
                     <input id="multi-filter-price" class="multi-range" type="range" />
                 </div>
             </div>
-
-            <div class="col-12 mt-3">
+            <div class="col-12 type-field">
+                <div class="type-label text-dark">{{ form.category.vars.label }}</div>
+                {% for choices in form.category.vars.choices %}
+                    <div class="form-check pl-0">
+                        <input type="radio" class="form-check-input with-gap" id="{{ form.category.vars.id }}_{{ loop.index0 }}"
+                               value="{{ form.category.vars.choices[loop.index0].value }}" name="{{ form.category.vars.full_name }}"
+                               {% if search.category == form.category.vars.choices[loop.index0].value %}checked{% endif %}>
+                        <label class="form-check-label" for="{{ form.category.vars.id }}_{{ loop.index0 }}">
+                            {{ form.category.vars.choices[loop.index0].label }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-12 star-field mt-4">
+                {{ form_row(form.starNumber) }}
+            </div>
+            <div class="col-12 equipment-field mt-4">
+                {{ form_row(form.equipments.equipments) }}
+            </div>
+            <div class="col-12 room-equipment-field mt-4">
+                {{ form_row(form.roomEquipments.roomEquipments) }}
+            </div>
+            <div class="col-12 rating-field mt-4">
+                <div class="rating-label text-dark">{{ form.averageRating.vars.label }}</div>
+                {% for choices in form.averageRating.vars.choices %}
+                <div class="form-check pl-0">
+                    <input type="radio" class="form-check-input with-gap" id="{{ form.averageRating.vars.id }}_{{ loop.index0 }}"
+                           value="{{ form.averageRating.vars.choices[loop.index0].value }}" name="{{ form.averageRating.vars.full_name }}"
+                           {% if search.averageRating == form.averageRating.vars.choices[loop.index0].value %}checked{% endif %}>
+                        <label class="form-check-label" for="{{ form.averageRating.vars.id }}_{{ loop.index0 }}">
+                            {{ form.averageRating.vars.choices[loop.index0].label }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="col-12 mt-4">
                 <button type="submit" class="btn btn-primary btn-md btn-block">
                     <i class="fas fa-search mr-1"></i> Filtrer maintenant
                 </button>

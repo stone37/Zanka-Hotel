@@ -1,0 +1,35 @@
+{% if cancelation_date|length > 0 %}
+    <div class="cancellation mt-2">
+        <div class="cancellation-text">
+            <a href="" class="font-weight-stone-500" data-toggle="modal" data-target="#hostel-cancellation-modal-{{ room.id }}">
+                Annulation gratuite <i class="fas fa-exclamation-circle"></i>
+            </a>
+        </div> {# Annulation sous condition #}
+        <div class="info small font-weight-stone-500">
+            Avant le {{ cancelation_date|format_datetime(pattern="EEE dd MMM") }}
+            {% if hostel.cancellationPolicy.state == 0 %}à 18h00{% endif %} {#mar. 20 déc. à 18h00#}
+        </div>
+        <div class="modal fade" id="hostel-cancellation-modal-{{ room.id }}" tabindex="-1" role="dialog" aria-labelledby="hostel-equipment-modal-label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="small-9">
+                            Annulez votre réservation avant le
+                            <span class="font-weight-stone-600 text-dark">{{ cancelation_date|format_datetime(pattern="EEE dd MMM") }}</span>
+                            <span class="font-weight-stone-600 text-dark">{% if hostel.cancellationPolicy.state == 0 %}à 18h00{% endif %}</span>
+                            et recevez un <span class="font-weight-stone-600 text-dark">remboursement complet</span>.
+                            <br>
+                            Après cela, <span class="font-weight-stone-600 text-dark">{% if hostel.cancellationPolicy.result == 0 %}la première nuit du séjour
+                            {% else %}la totalité du séjour{% endif %}</span> ainsi que les taxes et les frais vous seront facturés. <br>
+                            Les heures correspondent à l’heure locale de l’établissement.
+                        </div>
+                        <div class="mt-3">
+                            <a href="" class="btn btn-danger btn-sm btn-block z-depth-0" data-dismiss="modal" >Fermer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+

@@ -3,7 +3,6 @@
 namespace App\Applicator;
 
 use App\Calculator\PromotionPriceCalculator;
-use App\Entity\Promotion;
 use App\Entity\PromotionAction;
 use App\Entity\Room;
 use App\Exception\ActionBasedPriceCalculatorNotFoundException;
@@ -17,7 +16,22 @@ class ActionBasedDiscountApplicator
         $this->priceCalculator = $priceCalculator;
     }
 
-    public function applyDiscount(Promotion $promotion, PromotionAction $action, Room $room): void
+    public function applyDiscount(PromotionAction $action, Room $room): Room
+    {
+        try {
+            $price = $this->priceCalculator->calculate($room, $action);
+        } catch (ActionBasedPriceCalculatorNotFoundException) {}
+
+        if (null === $room->getOriginalPrice()) {
+            $room->setOriginalPrice($room->getPrice());
+        }
+
+        $room->setPrice($price);
+
+        return $room;
+    }
+
+    /*public function applyDiscount(Promotion $promotion, PromotionAction $action, Room $room): void
     {
         try {
             $price = $this->priceCalculator->calculate($room, $action);
@@ -31,6 +45,6 @@ class ActionBasedDiscountApplicator
 
         $room->setPrice($price);
         $room->addPromotion($promotion);
-    }
+    }*/
 }
 

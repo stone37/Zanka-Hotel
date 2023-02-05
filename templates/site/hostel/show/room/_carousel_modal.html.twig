@@ -1,0 +1,22 @@
+<div id="carousel-modal-hostel-room-{{ room.id }}" class="carousel slide carousel-fade" data-ride="carousel" data-interval="false">
+    <div class="carousel-inner" role="listbox">
+        {% for gallery in room.galleries %}
+            {% if loop.index <= 4 %}
+                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    <img class="d-block w-100" src="{{ image_asset(gallery.webPath, 500, 350) }}" alt="{{ gallery.name }}">
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <a class="carousel-control-prev" href="#carousel-modal-hostel-room-{{ room.id }}" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carousel-modal-hostel-room-{{ room.id }}" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+
+

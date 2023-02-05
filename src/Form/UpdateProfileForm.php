@@ -3,7 +3,7 @@
 namespace App\Form;
 
 use App\Dto\ProfileUpdateDto;
-use Symfony\Component\Form\AbstractType;;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -20,24 +20,20 @@ class UpdateProfileForm extends AbstractType
         parent::buildForm($builder, $options);
 
         $builder
-            ->add('email', EmailType::class, ['required' => true, 'label' => 'Adresse e-mail'])
-            ->add('username', TextType::class, ['required' => false, 'label' => "Nom d'utilisateur"])
-            ->add('firstName', TextType::class, [
-                'label' => 'Prénom'
-            ])
-            ->add('lastName', TextType::class, [
-                'label' => 'Nom'
-            ])
+            ->add('email', EmailType::class, ['label' => 'Adresse e-mail'])
+            ->add('username', TextType::class, ['required' => false, 'label' => "Nom d'utilisateur (facultatif)"])
+            ->add('firstName', TextType::class, ['label' => 'Prénom'])
+            ->add('lastName', TextType::class, ['label' => 'Nom'])
             ->add('phone', TextType::class, ['label' => 'Téléphone'])
-            ->add('address', TextType::class, ['label' => 'Adresse', 'required' => false])
+            ->add('address', TextType::class, ['label' => 'Adresse (facultatif)', 'required' => false])
             ->add('country', CountryType::class, [
-                'label' => 'Pays',
-                'attr' => ['class' => 'mdb-select md-outline md-form dropdown-primary'],
-                'placeholder' => 'Pays',
+                'label' => 'Pays (facultatif)',
+                'attr'  => ['class' => 'mdb-select md-outline md-form dropdown-primary'],
+                'placeholder' => 'Pays (facultatif)',
                 'data' => 'CI',
                 'required' => false,
             ])
-            ->add('city', TextType::class, ['label' => 'Ville', 'required' => false]);
+            ->add('city', TextType::class, ['label' => 'Ville (facultatif)', 'required' => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -2,7 +2,7 @@
     <div class="card-body py-3">
         <div class="form-row">
             <div class="col-12">
-                <h4 class="h4-responsive font-weight-stone-500">Informations sur l'hébergement</h4>
+                <h4 class="h4-responsive font-weight-stone-500 text-dark">Informations sur l'hébergement</h4>
             </div>
         </div>
         <div class="form-row">
@@ -42,13 +42,19 @@
             </div>
         </div>
         <div class="form-row">
-            <div class="col-12 col-md-4 room-sub-info">
+            {% set typeState = true %}
+
+            {% if room.type == 'Suite' or room.type == 'Appartement' %}
+                {% set typeState = false %}
+            {% endif %}
+
+            <div class="col-12 col-md-4 room-sub-info {% if typeState %}d-none{% endif %}">
                 {{ form_widget(form.dataRoomNumber) }}
             </div>
-            <div class="col-12 col-md-4 room-sub-info">
+            <div class="col-12 col-md-4 room-sub-info {% if typeState %}d-none{% endif %}">
                 {{ form_widget(form.dataLivingRoomNumber) }}
             </div>
-            <div class="col-12 col-md-4 room-sub-info">
+            <div class="col-12 col-md-4 room-sub-info {% if typeState %}d-none{% endif %}">
                 {{ form_widget(form.dataBathroomNumber) }}
             </div>
         </div>
@@ -61,39 +67,6 @@
             <div class="col-12 col-md-4">
                 {{ form_row(form.roomNumber) }}
             </div>
-            {#<div class="col-12 col-md-4">
-                <div class="md-form md-outline input-with-post-icon">
-                    <div class="input-prefix">F CFA</div>
-                    <input type="text" id="suffixInside2" class="form-control">
-                    <label for="suffixInside2">E-mail address</label>
-                </div>
-            </div>
-            <div class="col-12 col-md-4">
-                <div class="md-form md-outline input-with-post-icon">
-                    <i class="fas fa-envelope prefix"></i>
-                    <input type="text" id="inputIconEx1" class="form-control">
-                    <label for="inputIconEx1">E-mail address</label>
-                    <small id="emailHelp2" class="form-text text-muted">We'll never share your email with anyone.</small>
-                </div>
-            </div>
-            <div class="col-12 col-md-4">
-                <div class="input-group md-form md-outline mb-2">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">{{ app_locale_currency_code(app.request.locale) }} par nuit</div>
-                    </div>
-                    <input type="text" class="form-control py-0" id="inlineFormInputGroup" placeholder="Username">
-                    <label class="sr-only" for="inlineFormInputGroup">Username</label>
-                </div>
-            </div>
-            <div class="col-12 col-md-4">
-                <label class="sr-only" for="inlineFormInputGroup"></label>
-                <div class="input-group md-form md-outline append mb-2">
-                    <input type="text" class="form-control py-0" id="inlineFormInputGroup" placeholder="Username">
-                    <div class="input-group-append">
-                        <div class="input-group-text">m²</div>
-                    </div>
-                </div>
-            </div>#}
         </div>
     </div>
 </div>
@@ -101,7 +74,7 @@
     <div class="card-body py-3">
         <div class="form-row mb-3">
             <div class="col-12">
-                <h4 class="h4-responsive font-weight-stone-500">Literie</h4>
+                <h4 class="h4-responsive font-weight-stone-500 text-dark">Literie</h4>
                 <div class="small-8 white-text bg-primary py-1 px-2 d-inline-block">Veuillez uniquement indiquer les lits déjà disponibles dans la chambre. N'incluez pas les lits d'appoint.</div>
             </div>
         </div>
@@ -137,7 +110,7 @@
     <div class="card-body py-3">
         <div class="form-row">
             <div class="col-12">
-                <h4 class="h5-responsive font-weight-stone-500 mb-0">Superficie de l'hébergement (facultatif)</h4>
+                <h4 class="h5-responsive font-weight-stone-500 mb-0 text-dark">Superficie de l'hébergement (facultatif)</h4>
             </div>
         </div>
         <div class="form-row d-flex justify-content-start">
@@ -151,7 +124,7 @@
     <div class="card-body py-3">
         <div class="form-row d-flex justify-content-start">
             <div class="col-12">
-                <h4 class="h5-responsive font-weight-stone-500">Tarif de l'hébergement par nuit</h4>
+                <h4 class="h5-responsive font-weight-stone-500 text-dark">Tarif de l'hébergement par nuit</h4>
             </div>
             <div class="col-12 col-md-4 col-lg-3">
                 {{ form_row(form.price) }}
@@ -163,7 +136,7 @@
     <div class="card-body py-3">
         <div class="form-row">
             <div class="col-12">
-                <h4 class="h5-responsive font-weight-stone-500 mb-3">Description de l'hébergement (facultatif)</h4>
+                <h4 class="h5-responsive font-weight-stone-500 mb-3 text-dark">Description de l'hébergement (facultatif)</h4>
             </div>
         </div>
         <div class="form-row d-flex justify-content-start">
@@ -177,7 +150,7 @@
     <div class="card-body py-3">
         <div class="form-row">
             <div class="col-12">
-                <h4 class="h5-responsive font-weight-stone-500 mb-3">{{ form.enabled.vars.label }}</h4>
+                <h4 class="h5-responsive font-weight-stone-500 mb-3 text-dark">{{ form.enabled.vars.label }}</h4>
             </div>
         </div>
         <div class="form-row d-flex justify-content-start">
@@ -200,7 +173,7 @@
     <div class="card-body py-3">
         <div class="form-row mb-3">
             <div class="col-12">
-                <h4 class="h5-responsive font-weight-stone-500 mb-0">Taux de taxe (facultatif)</h4>
+                <h4 class="h5-responsive font-weight-stone-500 mb-0 text-dark">Taux de taxe (facultatif)</h4>
             </div>
         </div>
         <div class="form-row d-flex justify-content-start">

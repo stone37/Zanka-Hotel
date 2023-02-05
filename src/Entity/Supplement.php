@@ -9,6 +9,7 @@ use App\Repository\SupplementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -27,25 +28,30 @@ class Supplement
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $id = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 180)]
     #[ORM\Column(length: 180, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $name = null;
 
     #[Gedmo\Slug(fields: ['name'], unique: true)]
     #[ORM\Column(length: 180, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $slug = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $price = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $type = self::PER_PERSON;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'supplements')]
     private ?User $owner = null;
 
     #[ORM\ManyToMany(targetEntity: Room::class, mappedBy: 'supplements')]

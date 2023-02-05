@@ -1,0 +1,66 @@
+{% extends 'site/layout.html.twig' %}
+
+{% set data = config.booker.bookingData %}
+
+{% block title %}
+    {{ hostel.name }} | Hôtels {{ hostel.location.city }}
+{% endblock %}
+
+{% block meta %}
+    <meta name="description" content="{{ hostel.description|raw|striptags }}"/>
+    <meta property="og:description" content="{{ hostel.description|raw|striptags }}" />
+{% endblock %}
+
+{% block app_flashes %}{% endblock %}
+
+{% block app_intro %}
+    <section class="bc container">
+        <div>
+            {{ wo_render_breadcrumbs({viewTemplate: '_breadcrumb.html.twig', listClass: 'breadcrumb',
+                itemClass: 'breadcrumb-item', separator: '>', separatorClass: 'fas fa-long-arrow-alt-right'}) }}
+        </div>
+    </section>
+    <section class="hostel-list hostel-show view-data">
+        {{ include('site/hostel/_formMobileIcon.html.twig') }}
+
+        {{ render(controller('App\\Controller\\BookingController::search')) }}
+
+        {{ include('site/hostel/_formMobileSwitch.html.twig') }}
+    </section>
+    <section class="container mb-2">
+        <a href="{{ path('app_hostel_index', {
+            'adult': data.adult,
+            'children': data.children,
+            'checkin': data.duration.checkin,
+            'checkout': data.duration.checkout,
+            'location': data.location}) }}" class="link font-weight-stone-600">
+            <i class="fas fa-reply mr-1"></i> Tous les hébergement à {{ data.location }}
+        </a>
+    </section>
+    <section class="container">{{ include('ui/_flashes_message.html.twig') }}</section>
+{% endblock %}
+
+{% block app_body %}
+    {{ include('site/hostel/show/content.html.twig') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% include 'Ui/_stylesheets.html.twig' with {'path': 'assets/css/hotel-datepicker.css'} %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/fecha.min.js'} %}
+    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/hotel-datepicker.min.js'} %}
+    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/multi-range.min.js'} %}
+    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/site/booking.js'} %}
+    <script src="https://cdn.jsdelivr.net/npm/sharer.js@latest/sharer.min.js"></script>
+    <script>
+        $("#mdb-lightbox-ui").load("/assets/mdb-addons/mdb-lightbox-ui.html");
+    </script>
+{% endblock %}
+
+

@@ -4,8 +4,8 @@ namespace App\Collector;
 
 use App\Context\AppContext;
 use App\Entity\Settings;
-use App\Exception\CurrencyNotFoundException;
-use App\Exception\LocaleNotFoundException;
+//use App\Exception\CurrencyNotFoundException;
+//use App\Exception\LocaleNotFoundException;
 use App\Storage\BookingStorage;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -13,7 +13,8 @@ class AppCollector
 {
     private AppContext $appContext;
     private BookingStorage $storage;
-    private array $data;
+    private ParameterBagInterface $parameter;
+    //private array $data;
 
     public function __construct(
         AppContext $appContext,
@@ -23,8 +24,9 @@ class AppCollector
     {
         $this->appContext = $appContext;
         $this->storage = $storage;
+        $this->parameter = $parameter;
 
-        $this->data = [
+        /*$this->data = [
             'base_currency_code' => null,
             'currency_code' => null,
             'default_locale_code' => $parameter->get('locale'),
@@ -32,32 +34,32 @@ class AppCollector
             'name' => null,
         ];
 
-        $this->collect();
+        $this->collect();*/
     }
 
     public function getName(): string
     {
-        return $this->data['name'];
+        return $this->getSettings()->getName();
     }
 
     public function getDefaultLocaleCode(): ?string
     {
-        return $this->data['default_locale_code'];
+        return $this->parameter->get('locale');
     }
 
     public function getLocaleCode(): ?string
     {
-        return $this->data['locale_code'];
+        return $this->appContext->getLocaleCode();
     }
 
     public function getCurrencyCode(): ?string
     {
-        return $this->data['currency_code'];
+        return $this->appContext->getCurrencyCode();
     }
 
     public function getDefaultCurrencyCode(): ?string
     {
-        return $this->data['base_currency_code'];
+        return $this->getSettings()->getBaseCurrency()->getCode();
     }
 
     public function getSettings(): ?Settings
@@ -70,7 +72,7 @@ class AppCollector
         return $this->storage;
     }
 
-    private function collect()
+    /*private function collect()
     {
         $settings = $this->appContext->getSettings();
 
@@ -92,5 +94,5 @@ class AppCollector
         $this->data['currency_code'] = null;
         $this->data['locale_code'] = null;
         $this->data['name'] = null;
-    }
+    }*/
 }

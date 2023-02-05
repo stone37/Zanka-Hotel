@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Criteria\PromotionCriteria;
 use App\Entity\Promotion;
-use App\Model\Admin\PromotionSearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -53,12 +52,9 @@ class PromotionRepository extends ServiceEntityRepository
         $criteria->filterQueryBuilder($queryBuilder);
 
         return $queryBuilder
-            ->addSelect('scope')
             ->addSelect('action')
-            ->leftJoin('o.scope', 'scope')
             ->leftJoin('o.action', 'action')
             ->orderBy('o.exclusive', 'desc')
-            ->addOrderBy('o.priority', 'desc')
             ->getQuery()
             ->getResult();
     }

@@ -1,0 +1,26 @@
+{% set startDate = date(data.duration.checkin) %}
+{% set endDate = date(data.duration.checkout) %}
+{% set equipments = hostel|app_hostel_equipment %}
+{% set cancelation_date = app_hostel_cancellation(hostel.cancellationPolicy, startDate) %}
+
+<section class="container hostel-gallery">
+    {{ include('site/hostel/show/_hostel_gallery.html.twig') }}
+</section>
+<section class="container hostel-info">
+    {{ include('site/hostel/show/_hostel_info.html.twig') }}
+</section>
+<section id="hostel-room-list" class="container hostel-room-list">
+    {{ include('site/hostel/show/_hostel_room.html.twig') }}
+</section>
+
+<section class="container hostel-equipment">
+    {{ include('site/hostel/show/_hostel_equipment.html.twig') }}
+</section>
+
+<section class="container hostel-data">
+    {{ include('site/hostel/show/_hostel_data.html.twig') }}
+</section>
+
+<section class="container review">
+    {{ include('site/hostel/show/_review.html.twig') }}
+</section>

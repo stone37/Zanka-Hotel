@@ -1,0 +1,94 @@
+{% set data = config.booker.bookingData %}
+{% set night = app_booking_days_calculator(startDate, endDate) %}
+{% set room_nbr = data.roomNumber %}
+{% set booking_room_nbr = app_booking_room_nbr(room) %}
+{% set priceReduced = app_room_promotion(room) %}
+{% set room_available = room.roomNumber - booking_room_nbr %}
+
+<div id="room_{{ room.id }}" class="card card-cascade narrower mb-4">
+    <div class="view view-cascade overlay">
+        {% if room.galleries|length > 0 %}
+            {{ include('site/hostel/show/room/_carousel.html.twig') }}
+        {% else %}
+            {% set img_url = asset('assets/img/no-image.png') %}
+            <img class="card-img-top" src="{{ image_asset(img_url, 350, 350) }}" alt="Hostel room image">
+        {% endif %}
+        <a><div class="mask rgba-white-slight"></div></a>
+    </div>
+    <div class="card-body card-body-cascade text-left p-0">
+        {% if room.galleries|length > 0 %}
+            <div class="image_nbr font-weight-stone-500">
+                <i class="far fa-images mr-1"></i> {{ room.galleries|length }}
+            </div>
+        {% endif %}
+        <div class="px-3 pt-3">
+            <h5 class="card-title h5-responsive">
+                <strong class="font-weight-stone-600 text-dark">{{ room.name }}</strong>
+            </h5>
+            <div class="data">
+                <ul class="list-unstyled dark-grey-text mb-0">
+                    {% if room.area %}
+                        <li><i class="fas fa-border-style mr-2"></i> {{ room.area }} m²</li>
+                    {% endif %}
+                    {% if room.type == 'Suite' or room.type == 'Appartement' or room.type == 'Villa' %}
+                        <li>
+                            <i class="fas fa-door-open mr-2"></i>
+                            {% if room.dataLivingRoomNumber %}
+                                <span class="mr-1">{{ room.dataLivingRoomNumber > 1 ? room.dataLivingRoomNumber ~ ' salons' : room.dataLivingRoomNumber ~ ' salon' }}</span>
+                            {% endif %}
+                            {% if room.dataRoomNumber %}
+                                <span class="mr-1">{{ room.dataRoomNumber > 1 ? room.dataRoomNumber ~ ' chambres' : room.dataRoomNumber ~ ' chambre' }}</span>
+                            {% endif %}
+                            {% if room.dataBathroomNumber %}
+                                <span class="mr-1">{{ room.dataBathroomNumber > 1 ? room.dataBathroomNumber ~ ' salles de bains' : room.dataBathroomNumber ~ ' salle de bain' }}</span>
+                            {% endif %}
+                        </li>
+                    {% endif %}
+                    <li>
+                        <i class="fas fa-user-friends mr-2"></i>
+                        {{ room.occupant > 1 ? room.occupant ~ ' personnes' : room.occupant ~ ' personne' }}
+                    </li>
+                    {% if room.beddings|length > 0 %}
+                        <li>
+                            <i class="fas fa-bed mr-2"></i>
+                            {% for bedding in room.beddings %}{{ bedding.number }} {{ bedding.name }} {% if not loop.last %}, {% endif %}{% endfor %}
+                        </li>
+                    {% endif %}
+                    {% if room.smoker %}
+                        {% if room.smoker == 1 %}
+                            <li><i class="fas fa-smoking-ban mr-2"></i> Non-fumeurs</li>
+                        {% elseif room.smoker == 2 %}
+                            <li><i class="fas fa-smoking mr-2"></i> Fumeurs</li>
+                        {% elseif room.smoker == 3 %}
+                            <li>
+                                <i class="fas fa-smoking-ban mr-1"></i>
+                                <i class="fas fa-smoking mr-2"></i> Fumeurs et non-fumeurs
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                    {% if hostel.wifi %}
+                        <li><i class="fas fa-wifi mr-2"></i> Accès Wi-Fi gratuit</li>
+                    {% endif %}
+                    {% if hostel.parking %}
+                        <li><i class="fas fa-parking mr-2"></i> Parking gratuit</li>
+                    {% endif %}
+                </ul>
+            </div>
+
+            {{ include('site/hostel/show/room/_cancellation.html.twig') }}
+
+            {% if booking_room_nbr %}
+                {% if room_available >= 1 and room_available <= 9 %}
+                    <div class="room-available">
+                        Il reste plus que {{ room_available > 1 ? room_available ~ ' hébergements' : room_available ~ ' hébergement' }}
+                        de ce type.
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            {{ include('site/hostel/show/room/_info.html.twig') }}
+        </div>
+
+        {{ include('site/hostel/show/room/_footer.html.twig') }}
+    </div>
+</div>

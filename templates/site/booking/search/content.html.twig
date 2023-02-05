@@ -1,0 +1,29 @@
+{% form_theme form 'Ui/Form/theme.html.twig' %}
+
+<section class="container mb-5">
+    <div class="row d-flex justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card">
+                <div class="card-body p-3">
+                    <h1 class="h1-responsive display-3 mb-2 text-center font-weight-bold text-dark">
+                        Consulter vos réservations
+                    </h1>
+
+                    {{ form_start(form) }}
+                    <div class="form-row d-md-flex justify-content-md-center">
+                        <div class="col-12">
+                            {{ form_row(form.email) }}
+                        </div>
+                        {{ form_widget(form._token) }}
+                        <div class="col-12 text-center mt-3">
+                            <button type="submit" class="btn btn-primary px-4 z-depth-0">
+                                Envoyer le code de vérification
+                            </button>
+                        </div>
+                    </div>
+                    {{ form_end(form, {'render_rest': false}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -23,7 +23,7 @@ class PasswordService
 
     private UserRepository $userRepository;
     private PasswordResetTokenRepository $tokenRepository;
-    private $em;
+    private EntityManagerInterface $em;
     private TokenGeneratorService $generator;
     private EventDispatcherInterface $dispatcher;
     private UserPasswordHasherInterface $passwordHasher;
@@ -44,13 +44,6 @@ class PasswordService
         $this->passwordHasher = $passwordHasher;
     }
 
-    /**
-     * Lance une demande de réinitialisation de mot de passe.
-     *
-     * @throws OngoingPasswordResetException
-     * @throws UserNotFoundException
-     * @throws \Exception
-     */
     public function resetPassword(PasswordResetRequestData $data): void
     {
         /** @var User $user */
@@ -72,7 +65,7 @@ class PasswordService
             $this->em->persist($token);
         }
 
-        $token->setUser($user)
+        $token->setOwner($user)
             ->setCreatedAt(new DateTime())
             ->setToken($this->generator->generate());
 
@@ -81,11 +74,6 @@ class PasswordService
         $this->dispatcher->dispatch(new PasswordResetTokenCreatedEvent($token));
     }
 
-    /**
-     * @param PasswordResetToken $token
-     * @return bool
-     * @throws \Exception
-     */
     public function isExpired(PasswordResetToken $token): bool
     {
         $expirationDate = new DateTime('-'.self::EXPIRE_IN.' minutes');
@@ -93,13 +81,9 @@ class PasswordService
         return $token->getCreatedAt() < $expirationDate;
     }
 
-    /**
-     * @param string $password
-     * @param PasswordResetToken $token
-     */
     public function updatePassword(string $password, PasswordResetToken $token): void
     {
-        $user = $token->getUser();
+        $user = $token->getOwner();
         $user->setConfirmationToken(null);
         $user->setPassword($this->passwordHasher->hashPassword($user, $password));
         $this->em->remove($token);

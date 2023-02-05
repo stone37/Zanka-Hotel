@@ -2,6 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Action\NotFoundAction;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use App\Api\Controller\UserCancelledBooking;
+use App\Api\Controller\UserConfirmedBooking;
+use App\Api\Controller\UserNewBooking;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\BookingRepository;
 use DateTimeInterface;
@@ -9,8 +15,55 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
+#[GetCollection(
+    uriTemplate: '/users/{id}/bookings/new',
+    controller: UserNewBooking::class,
+    openapiContext: [
+        'summary' => 'Récupère tous les nouvelles réservations d\'un utilisateur',
+        'security' => [['bearerAuth' => []]]
+    ],
+    paginationItemsPerPage: 10,
+    paginationMaximumItemsPerPage: 20,
+    paginationClientItemsPerPage: true,
+    normalizationContext: ['groups' => ['booking:read', 'skip_null_values' => false]],
+    security: 'is_granted("ROLE_USER")'
+)]
+#[GetCollection(
+    uriTemplate: '/users/{id}/bookings/confirmed',
+    controller: UserConfirmedBooking::class,
+    openapiContext: [
+        'summary' => 'Récupère tous les réservations confirmés d\'un utilisateur',
+        'security' => [['bearerAuth' => []]]
+    ],
+    paginationItemsPerPage: 10,
+    paginationMaximumItemsPerPage: 20,
+    paginationClientItemsPerPage: true,
+    normalizationContext: ['groups' => ['booking:read', 'skip_null_values' => false]],
+    security: 'is_granted("ROLE_USER")'
+)]
+#[GetCollection(
+    uriTemplate: '/users/{id}/bookings/cancelled',
+    controller: UserCancelledBooking::class,
+    openapiContext: [
+        'summary' => 'Récupère tous les réservations refusés d\'un utilisateur',
+        'security' => [['bearerAuth' => []]]
+    ],
+    paginationItemsPerPage: 10,
+    paginationMaximumItemsPerPage: 20,
+    paginationClientItemsPerPage: true,
+    normalizationContext: ['groups' => ['booking:read', 'skip_null_values' => false]],
+    security: 'is_granted("ROLE_USER")'
+)]
+#[Get(
+    controller: NotFoundAction::class,
+    output: false,
+    read: false,
+    openapiContext: ['summary' => 'hidden']
+)]
 class Booking
 {
     const NEW = 'new';
@@ -23,69 +76,91 @@ class Booking
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['booking:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['booking:read'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['booking:read'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['booking:read'])]
     private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['booking:read'])]
     private ?string $phone = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['booking:read'])]
     private ?DateTimeInterface $checkin = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['booking:read'])]
     private ?DateTimeInterface $checkout = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['booking:read'])]
     private ?int $days = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['booking:read'])]
     private ?int $roomNumber = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['booking:read'])]
     private ?string $ip = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['booking:read'])]
     private ?string $message = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['booking:read'])]
     private ?int $adult = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['booking:read'])]
     private ?int $children = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['booking:read'])]
     private ?string $reference = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['booking:read'])]
     private ?string $country = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['booking:read'])]
     private ?string $city = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['booking:read'])]
     private ?DateTimeInterface $confirmedAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['booking:read'])]
     private ?DateTimeInterface $cancelledAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $status = null;
+    #[Groups(['booking:read'])]
+    private ?string $status = Booking::NEW;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['booking:read'])]
     private ?int $amount = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['booking:read'])]
     private ?int $taxeAmount = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['booking:read'])]
     private ?int $discountAmount = null;
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
@@ -97,13 +172,19 @@ class Booking
 
     #[ORM\ManyToOne(inversedBy: 'bookings')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['booking:read'])]
     private ?Room $room = null;
 
-    #[ORM\OneToMany(mappedBy: 'booking', targetEntity: Occupant::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'booking', targetEntity: Occupant::class, orphanRemoval: true, cascade: ['persist', 'remove'])]
+    #[Groups(['booking:read'])]
     private Collection $occupants;
 
     #[ORM\OneToOne(mappedBy: 'booking', cascade: ['persist', 'remove'])]
     private ?Commande $commande = null;
+
+    #[ORM\ManyToOne]
+    #[Groups(['booking:read'])]
+    private ?Cancelation $cancelation = null;
 
     public function __construct()
     {
@@ -373,6 +454,10 @@ class Booking
         return $this->owner;
     }
 
+    /**
+     * @param User|UserInterface|null $owner
+     * @return $this
+     */
     public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
@@ -452,6 +537,18 @@ class Booking
         }
 
         $this->commande = $commande;
+
+        return $this;
+    }
+
+    public function getCancelation(): ?Cancelation
+    {
+        return $this->cancelation;
+    }
+
+    public function setCancelation(?Cancelation $cancelation): self
+    {
+        $this->cancelation = $cancelation;
 
         return $this;
     }

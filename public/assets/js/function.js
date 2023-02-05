@@ -104,7 +104,7 @@ function generatePassword($elements) {
         });
 }
 
-function flashes (selector) {
+function flashes(selector) {
     selector.each(function (index, element) {
         if ($(element).html() !== undefined) {
             toastr[$(element).attr('app-data')]($(element).html());

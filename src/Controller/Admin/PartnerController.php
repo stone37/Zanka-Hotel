@@ -4,20 +4,27 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Event\AdminCRUDEvent;
+use App\Event\PartnerConfirmedEvent;
 use App\Event\PartnerCreatedEvent;
+use App\Event\PartnerPasswordChangeEvent;
 use App\Form\Filter\AdminUserType;
-use App\Form\RegistrationAdminPartnerType;
+use App\Form\RegistrationAdminPartnerAddType;
+use App\Form\RegistrationAdminPartnerEditType;
+use App\Form\RegistrationAdminPartnerPasswordType;
 use App\Model\Admin\UserSearch;
 use App\Repository\UserRepository;
 use App\Service\UserBanService;
 use DateTime;
 use DateTimeImmutable;
+use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -43,7 +50,7 @@ class PartnerController extends AbstractController
     }
 
     #[Route(path: '/partners', name: 'app_admin_partner_index')]
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $search = new UserSearch();
 
@@ -63,7 +70,7 @@ class PartnerController extends AbstractController
     }
 
     #[Route(path: '/partners/no-confirm', name: 'app_admin_partner_no_confirm_index')]
-    public function indexN(Request $request)
+    public function indexN(Request $request): Response
     {
         $search = new UserSearch();
 
@@ -83,7 +90,7 @@ class PartnerController extends AbstractController
     }
 
     #[Route(path: '/partners/deleted', name: 'app_admin_partner_deleted_index')]
-    public function indexD(Request $request)
+    public function indexD(Request $request): Response
     {
         $search = new UserSearch();
 
@@ -103,12 +110,12 @@ class PartnerController extends AbstractController
     }
 
     #[Route(path: '/partners/create', name: 'app_admin_partner_create')]
-    public function create(Request $request)
+    public function create(Request $request): RedirectResponse|Response
     {
         $partner = new User();
         $partner->setRoles(['ROLE_USER', 'ROLE_PARTNER']);
 
-        $form = $this->createForm(RegistrationAdminPartnerType::class, $partner);
+        $form = $this->createForm(RegistrationAdminPartnerAddType::class, $partner);
 
         $form->handleRequest($request);
 
@@ -138,10 +145,43 @@ class PartnerController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/partners/{id}/edit', name: 'app_admin_partner_edit', requirements: ['id' => '\d+'])]
-    public function edit(Request $request, User $partner)
+    #[Route(path: '/partners/{id}/edit/{type}', name: 'app_admin_partner_edit', requirements: ['id' => '\d+'])]
+    public function edit(Request $request, User $partner, $type): RedirectResponse|Response
     {
-        $form = $this->createForm(RegistrationAdminPartnerType::class, $partner);
+        $form = $this->createForm(RegistrationAdminPartnerEditType::class, $partner);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $this->repository->flush();
+
+            $this->dispatcher->dispatch(new PartnerConfirmedEvent($partner));
+
+            $this->addFlash('success', 'Un compte partenaire a été mise à jour');
+
+            return $partner->isIsVerified() ?
+                $this->redirectToRoute('app_admin_partner_index') :
+                $this->redirectToRoute('app_admin_partner_no_confirm_index');
+        }
+
+        return $this->render('admin/partner/edit.html.twig', [
+            'form' => $form->createView(),
+            'partner' => $partner,
+            'type' => $type
+        ]);
+    }
+
+    #[Route(path: '/partners/{id}/show/{type}', name: 'app_admin_partner_show', requirements: ['id' => '\d+', 'type' => '\d+'])]
+    public function show(User $partner, $type): Response
+    {
+       return $this->render('admin/partner/show.html.twig', ['partner' => $partner, 'type' => $type]);
+    }
+
+    #[Route(path: '/partners/password/{id}/edit', name: 'app_admin_partner_password_edit', requirements: ['id' => '\d+'])]
+    public function password(Request $request, User $partner): RedirectResponse|Response
+    {
+        $form = $this->createForm(RegistrationAdminPartnerPasswordType::class, $partner);
 
         $form->handleRequest($request);
 
@@ -158,31 +198,24 @@ class PartnerController extends AbstractController
 
             $this->repository->flush();
 
-            if ($form->get('plainPassword')->getData()) {
-                $this->dispatcher->dispatch(new PartnerCreatedEvent($partner, $form->get('plainPassword')->getData()));
-            }
+            $this->dispatcher->dispatch(new PartnerPasswordChangeEvent($partner, $form->get('plainPassword')->getData()));
 
-            $this->addFlash('success', 'Un compte partenaire a été mise à jour');
+            $this->addFlash('success', 'Un mot de passe d\'un compte partenaire a été réinitialisé');
 
             return $this->redirectToRoute('app_admin_partner_index');
         }
 
-        return $this->render('admin/partner/edit.html.twig', [
+        return $this->render('admin/partner/password.html.twig', [
             'form' => $form->createView(),
             'partner' => $partner
         ]);
     }
 
-    #[Route(path: '/partners/{id}/show/{type}', name: 'app_admin_partner_show', requirements: ['id' => '\d+', 'type' => '\d+'])]
-    public function show(User $partner, $type)
-    {
-       return $this->render('admin/partner/show.html.twig', ['partner' => $partner, 'type' => $type]);
-    }
-
     #[Route(path: '/partner/{id}/ban', name: 'app_admin_partner_ban', requirements: ['id' => '\d+'])]
-    public function ban(Request $request, UserBanService $banService, User $partner)
+    public function ban(Request $request, UserBanService $banService, User $partner): RedirectResponse|JsonResponse
     {
         $banService->ban($partner);
+
         $this->repository->flush();
 
         if ($request->isXmlHttpRequest()) {
@@ -195,7 +228,7 @@ class PartnerController extends AbstractController
     }
 
     #[Route(path: '/partners/{id}/delete', name: 'app_admin_partner_delete', requirements: ['id' => '\d+'], options: ['expose' => true])]
-    public function delete(Request $request, User $partner)
+    public function delete(Request $request, User $partner): RedirectResponse|JsonResponse
     {
         $form = $this->deleteForm($partner);
 
@@ -218,9 +251,7 @@ class PartnerController extends AbstractController
 
             $url = $request->request->get('referer');
 
-            $response = new RedirectResponse($url);
-
-            return $response;
+            return new RedirectResponse($url);
         }
 
         $message = 'Être vous sur de vouloir supprimer cet compte ?';
@@ -238,7 +269,7 @@ class PartnerController extends AbstractController
     }
 
     #[Route(path: '/partners/bulk/delete', name: 'app_admin_partner_bulk_delete', options: ['expose' => true])]
-    public function deleteBulk(Request $request)
+    public function deleteBulk(Request $request): RedirectResponse|JsonResponse
     {
         $ids = (array) json_decode($request->query->get('data'));
 
@@ -271,9 +302,7 @@ class PartnerController extends AbstractController
 
             $url = $request->request->get('referer');
 
-            $response = new RedirectResponse($url);
-
-            return $response;
+            return new RedirectResponse($url);
         }
 
         if (count($ids) > 1)
@@ -293,21 +322,21 @@ class PartnerController extends AbstractController
         return new JsonResponse($response);
     }
 
-    private function deleteForm(User $partner)
+    private function deleteForm(User $partner): FormInterface
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('app_admin_partner_delete', ['id' => $partner->getId()]))
             ->getForm();
     }
 
-    private function deleteMultiForm()
+    private function deleteMultiForm(): FormInterface
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('app_admin_partner_bulk_delete'))
             ->getForm();
     }
 
-    private function configuration()
+    #[ArrayShape(['modal' => "\string[][]"])] private function configuration(): array
     {
         return [
             'modal' => [

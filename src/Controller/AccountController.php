@@ -44,12 +44,12 @@ class AccountController extends AbstractController
     #[Route(path: '/profil/edit', name: 'app_user_profil_edit')]
     public function edit(Request $request): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        //$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $user = $this->getUserOrThrow();
 
         $formUpdate = $this->createForm(UpdateProfileForm::class, new ProfileUpdateDto($user));
-        $formAvatarUpdate = $this->createForm(UpdateAvatarForm::class, $user);
+        $formAvatarUpdate = $this->createForm(UpdateAvatarForm::class, $user, ['action' => $this->generateUrl('app_user_avatar')]);
 
         $formUpdate->handleRequest($request);
 
@@ -85,7 +85,7 @@ class AccountController extends AbstractController
     #[Route(path: '/profil/avatar', name: 'app_user_avatar')]
     public function avatar(Request $request)
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        //$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $user = $this->getUserOrThrow();
 
@@ -107,7 +107,7 @@ class AccountController extends AbstractController
     #[Route(path: '/profil/modifier-mot-passe', name: 'app_user_change_password')]
     public function changePassword(Request $request): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        //$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $user = $this->getUserOrThrow();
         $form = $this->createForm(UpdatePasswordForm::class);

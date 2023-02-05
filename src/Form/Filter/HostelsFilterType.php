@@ -14,7 +14,11 @@ class HostelsFilterType extends AbstractType
         $builder
             ->add('name', NameFilterType::class)
             ->add('equipments', HostelEquipmentsFilterType::class, ['required' => false, 'label' => false])
-            ->add('price', PriceFilterType::class, ['required' => false, 'label' => false]);
+            ->add('price', PriceFilterType::class, ['required' => false, 'label' => false])
+            ->add('roomEquipments', RoomEquipmentsFilterType::class, ['required' => false, 'label' => false])
+            ->add('category', HostelCategoriesFilterType::class)
+            ->add('starNumber', HostelStarFilterType::class)
+            ->add('averageRating', HostelAverageRatingFilterType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -16,10 +16,9 @@ class HostelFinder
 
     public function __construct(
         HostelsQueryBuilder $hostelQueryBuilder,
-        PaginatedFinderInterface $hostelFinder
+
     ) {
         $this->hostelQueryBuilder = $hostelQueryBuilder;
-        $this->hostelFinder = $hostelFinder;
     }
 
     public function find(array $data): Pagerfanta

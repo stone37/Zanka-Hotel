@@ -1,0 +1,59 @@
+<div class="row">
+    <div class="col-12">
+        <a href="" class="more link font-weight-stone-500" data-toggle="modal" data-target="#hostel-equipment-modal">
+            Afficher tous les services et équipements <i class="fas fa-long-arrow-alt-right ml-1"></i>
+        </a>
+        <div class="modal fade" id="hostel-equipment-modal" tabindex="-1" role="dialog" aria-labelledby="hostel-equipment-modal-label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title px-0 pt-1 font-weight-stone-600 text-dark" id="hostel-equipment-modal-label">
+                            Services et équipements de l’établissement
+                        </h6>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <i class="fas fa-times text-danger"></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="row data">
+                                    {% if hostel.breakfast %}
+                                        <div class="col-md-6"><i class="fas fa-coffee text-primary mr-1"></i> Petit-déjeuner</div>
+                                    {% endif %}
+                                    {% if hostel.parking %}
+                                        <div class="col-md-6"><i class="fas fa-parking text-primary mr-1"></i> Parking</div>
+                                    {% endif %}
+
+                                    {% if hostel.parking %}
+                                        <div class="col-md-6"><i class="fas fa-paw text-primary mr-1"></i> Animaux domestiques</div>
+                                    {% endif %}
+
+                                    {% if hostel.wifi %}
+                                        <div class="col-md-6"><i class="fas fa-wifi text-primary mr-1"></i> Wifi gratuit</div>
+                                    {% endif %}
+
+                                    {% if hostel.cancellationPolicy.state == 0 %}
+                                        <div class="col-md-6"><i class="fas fa-stopwatch text-primary mr-1"></i> Annulation GRATUITE</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                {% for key, equipment in equipments %}
+                                    <h5 class="font-weight-stone-600 h5-responsive text-dark mt-2">{{ key }}</h5>
+                                    <div class="">
+                                        <ul class="list-unstyled">
+                                            {% for item in equipment %}
+                                                <li><i class="fas fa-circle mr-2"></i> {{ item }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -10,6 +10,10 @@ parameters:
     image_resize_key: '%env(resolve:IMAGE_RESIZE_KEY)%'
     dkim_key: '%env(resolve:default::MAILER_DKIM)%'
     maintenance_dir: '%env(resolve:MAINTENANCE_DIR)%'
+    fedapay_secret_key: '%env(FEDAPAY_SECRET)%'
+    hsms_client_id: '%env(HSMS_CLIENT_ID)%'
+    hsms_client_secret: '%env(HSMS_CLIENT_SECRET)%'
+    hsms_token: '%env(HSMS_TOKEN)%'
     app.path.user: /uploads/images/user
     app.path.category: /uploads/images/categories
     app.path.city: /uploads/images/cities
@@ -20,20 +24,30 @@ parameters:
 
     app_name_property_prefix: name
     app_city_property_prefix: city
+    app_country_property_prefix: country
     app_description_property_prefix: description
     app_location_property_prefix: location
     app_position_property_prefix: position
     app_equipment_property_prefix: equipments
+    app_room_equipment_property_prefix: roomEquipments
+    app_category_property_prefix: category
+    app_star_number_property_prefix: starNumber
+
     app_equipment_property: equipments.id
     app_city_property: location.city
     app_city_name_property: location.city.name
     app_enabled_property: enabled
+    app_closed_property: closed
+    app_id_property: id
     app_room_price_property_prefix: price
     app_room_property_prefix: rooms
     app_created_at_property_prefix: createdAt
+    app_average_rating_property_prefix: averageRating
+    app_occupant_property_prefix: occupant
+
     app_fuzziness: AUTO
     app_pagination_available_page_limits: [9, 18, 36]
-    app_pagination_default_limit: 9
+    app_pagination_default_limit: 25
     app_hostel_filter_price_min: 0
     app_hostel_filter_price_max: 99000
     app_hostel_filter_price_step: 500
@@ -57,7 +71,6 @@ services:
     # please note that last definitions always *replace* previous ones
 
     App\Mailing\Mailer:
-        class: App\Mailing\Mailer
         arguments:
             $dkimKey: '%dkim_key%'
 
@@ -77,34 +90,24 @@ services:
         arguments:
             $propertyPrefix: '%app_room_property_prefix%'
 
-    App\Controller\HomeController:
-        tags: [controller.service_arguments]
-        public: true
-        arguments:
-            - '@fos_elastica.finder.equipment'
+    App\Provider\HostelProvider:
+        tags:
+            - { name: fos_elastica.pager_provider, index: hostel }
 
-    App\Finder\HostelFinder:
-        arguments:
-            $hostelFinder: '@fos_elastica.finder.hostel'
+    App\Notifier\Transport\HSmsTransportFactory:
+        parent: 'notifier.transport_factory.abstract'
+        tags: ['texter.transport_factory']
 
-    App\Finder\NamedHostelsFinder:
-        arguments:
-            $hostelsFinder: '@fos_elastica.finder.hostel'
+    App\Api\State\UserStateProcessor:
+        bind:
+            $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
 
-    App\Finder\HostelEquipmentsFinder:
-        arguments:
-            $equipmentsFinder: '@fos_elastica.finder.equipment'
+    App\Api\State\FavoriteStateProcessor:
+        bind:
+            $persistProcessor: '@api_platform.doctrine.orm.state.persist_processor'
 
-    App\Finder\CitiesFinder:
-        arguments:
-            $citiesFinder: '@fos_elastica.finder.city'
-
-    App\Finder\CategoriesFinder:
-        arguments:
-            $categoriesFinder: '@fos_elastica.finder.category'
-
-    App\Finder\BannerFinder:
-        arguments:
-            $bannerFinder: '@fos_elastica.finder.banner'
-
+    App\Api\OpenApi\OpenApiFactory:
+        decorates: 'api_platform.openapi.factory'
+        arguments: ['@App\Api\OpenApi\OpenApiFactory.inner' ]
+        autoconfigure: false
 

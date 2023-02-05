@@ -2,7 +2,7 @@
     <div class="card-body">
         <div class="form-row">
             <div class="col-12">
-                <h5 class="h5-responsive font-weight-stone-500">Informations de base</h5>
+                <h5 class="h5-responsive font-weight-stone-500 text-dark">Informations de base</h5>
             </div>
         </div>
         <div class="form-row d-flex justify-content-center justify-content-md-start">
@@ -32,7 +32,7 @@
     <div class="card-body">
         <div class="form-row">
             <div class="col-12">
-                <h5 class="h5-responsive font-weight-stone-500">Localisation</h5>
+                <h5 class="h5-responsive font-weight-stone-500 text-dark">Localisation</h5>
             </div>
         </div>
         <div class="form-row d-flex justify-content-center justify-content-md-start">
@@ -61,10 +61,24 @@
     </div>
 </div>
 <div class="section card mb-3">
+    <div class="card-body py-3">
+        <div class="form-row">
+            <div class="col-12">
+                <h4 class="h5-responsive font-weight-stone-500 text-dark mb-3">Description de l'établissement (facultatif)</h4>
+            </div>
+        </div>
+        <div class="form-row d-flex justify-content-start">
+            <div class="col-12">
+                {{ form_row(form.description) }}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="section card mb-3">
     <div class="card-body">
         <div class="form-row">
             <div class="col-12">
-                <h5 class="h5-responsive font-weight-stone-500">Annulations</h5>
+                <h5 class="h5-responsive font-weight-stone-500 text-dark">Annulations</h5>
             </div>
         </div>
         <div class="form-row d-flex justify-content-center justify-content-md-start">
@@ -83,7 +97,7 @@
     <div class="card-body">
         <div class="form-row">
             <div class="col-12">
-                <h5 class="h5-responsive font-weight-stone-500">Horaires d'arrivée et de départ</h5>
+                <h5 class="h5-responsive font-weight-stone-500 text-dark">Horaires d'arrivée et de départ</h5>
             </div>
         </div>
         <div class="form-row d-flex justify-content-center justify-content-md-start mb-3">
@@ -115,7 +129,7 @@
     <div class="card-body">
         <div class="form-row">
             <div class="col-12">
-                <h5 class="h5-responsive font-weight-stone-500">Wifi</h5>
+                <h5 class="h5-responsive font-weight-stone-500 text-dark">Wifi</h5>
             </div>
         </div>
         <div class="form-row d-flex justify-content-center justify-content-md-start">
@@ -140,12 +154,15 @@
     <div class="card-body">
         <div class="form-row">
             <div class="col-12">
-                <h5 class="h5-responsive font-weight-stone-500">Parking</h5>
+                <h5 class="h5-responsive font-weight-stone-500 text-dark">Parking</h5>
             </div>
         </div>
         <div class="form-row d-flex justify-content-center justify-content-md-start">
             <div class="col-12">
-                <div class="mb-2 mt-1 title">{{ form.parking.vars.label }}</div>
+                <div class="small blue lighten-4 d-inline-block px-2 py-1 text-primary">
+                    Cette information est très importante pour les clients qui arrivent en voiture.
+                </div>
+                <div class="my-2 title">{{ form.parking.vars.label }}</div>
                 {% for item in form.parking.vars.choices %}
                     {% set state = hostel.parking == form.parking.vars.choices[loop.index0].value %}
                     <div class="form-check form-check-inline data {% if state %}active{% endif %}">
@@ -165,7 +182,7 @@
     <div class="card-body">
         <div class="form-row">
             <div class="col-12">
-                <h5 class="h5-responsive font-weight-stone-500">Petit-déjeuner</h5>
+                <h5 class="h5-responsive font-weight-stone-500 text-dark">Petit-déjeuner</h5>
             </div>
         </div>
         <div class="form-row d-flex justify-content-center justify-content-md-start">
@@ -190,7 +207,7 @@
     <div class="card-body">
         <div class="form-row">
             <div class="col-12">
-                <h5 class="h5-responsive font-weight-stone-500">Enfants</h5>
+                <h5 class="h5-responsive font-weight-stone-500 text-dark">Enfants</h5>
             </div>
         </div>
         <div class="form-row d-flex justify-content-center justify-content-md-start">
@@ -215,12 +232,16 @@
     <div class="card-body">
         <div class="form-row">
             <div class="col-12">
-                <h5 class="h5-responsive font-weight-stone-500">Animaux domestiques</h5>
+                <h5 class="h5-responsive font-weight-stone-500 text-dark">Animaux domestiques</h5>
             </div>
         </div>
         <div class="form-row d-flex justify-content-center justify-content-md-start">
             <div class="col-12">
-                <div class="mb-2 mt-1 title">{{ form.animalsAllowed.vars.label }}</div>
+                <div class="small blue lighten-4 d-inline-block px-2 py-1 text-primary">
+                    Certains clients apprécient voyager avec leurs animaux domestiques. Merci d'indiquer si les animaux
+                    sont acceptés dans votre établissement.
+                </div>
+                <div class="my-2 title">{{ form.animalsAllowed.vars.label }}</div>
                 {% for item in form.animalsAllowed.vars.choices %}
                     {% set state = hostel.animalsAllowed == form.animalsAllowed.vars.choices[loop.index0].value %}
                     <div class="form-check form-check-inline data {% if state %}active{% endif %}">
@@ -239,7 +260,7 @@
     <div class="card-body">
         <div class="form-row">
             <div class="col-12">
-                <h5 class="h5-responsive font-weight-stone-500">Mode de paiement du client</h5>
+                <h5 class="h5-responsive font-weight-stone-500 text-dark">Mode de paiement du client</h5>
             </div>
         </div>
         <div class="form-row d-flex justify-content-center justify-content-md-start">
@@ -277,7 +298,7 @@
     <div class="card-body">
         <div class="form-row">
             <div class="col-12">
-                <h5 class="h5-responsive font-weight-stone-500">Fermeture</h5>
+                <h5 class="h5-responsive font-weight-stone-500 text-dark">Fermeture</h5>
             </div>
         </div>
         <div class="form-row d-flex justify-content-center justify-content-md-start">

@@ -1,0 +1,75 @@
+{% set cancelled = app_booking_cancelation_state(booking) %}
+
+<div class="card mb-4 booking-view-item">
+    <div class="card-body p-2">
+        <div class="mb-3">
+            <div class="d-flex justify-content-between mb-2">
+                <div class="font-weight-stone-500 title">Arrivée</div>
+                <div class="font-weight-stone-600 text-dark content">
+                    {{ booking.checkin|format_datetime(pattern="EEEE dd MMM yyyy") }}
+                </div>
+            </div>
+            <div class="d-flex justify-content-between">
+                <div class="font-weight-stone-500 title">Départ</div>
+                <div class="font-weight-stone-600 text-dark content">
+                    {{ booking.checkout|format_datetime(pattern="EEEE dd MMM yyyy") }}
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+            <div class="font-weight-stone-500 title">Durée du séjour</div>
+            <div class="font-weight-stone-600 text-default content">{{ booking.days > 1 ? booking.days ~ ' nuits' : booking.days ~ ' nuit' }}</div>
+        </div>
+        <div class="room-select">
+            <div class="font-weight-stone-500 mb-1 title">Votre sélection</div>
+            <div class="font-weight-stone-500 content">
+                <div class="small-8 font-weight-stone-600 text-dark mb-1 data-room">
+                    <i class="fas fa-long-arrow-alt-right text-secondary mr-1"></i>
+                    {{ booking.roomNumber }} <span>X</span> {{ booking.room.name }}
+                </div>
+                <div class="small-8 font-weight-stone-600 text-dark mb-1">
+                    <i class="fas fa-long-arrow-alt-right text-secondary mr-1"></i> Pour
+                    {% if booking.children %}
+                        {{ booking.adult > 1 ? booking.adult ~ ' adultes' : booking.adult ~ ' adulte' }} et
+                        {{ booking.children > 1 ? booking.children ~ ' enfants' : booking.children ~ ' enfant' }} par chambre
+                    {% else %}
+                        {{ booking.adult > 1 ? booking.adult ~ ' adultes' : booking.adult ~ ' adulte' }} par chambre
+                    {% endif %}
+                </div>
+                <div class="small-8 font-weight-stone-600 text-dark mb-1 data-room">
+                    <i class="fas fa-long-arrow-alt-right text-secondary mr-1"></i> {{ booking.hostel.name }}
+                </div>
+            </div>
+        </div>
+
+        {% if booking.confirmedAt %}
+            <div class="mt-3">
+                <div class="font-weight-stone-500 mb-1 title">Numéro de réservation</div>
+                <div class="booking-number font-weight-stone-500 text-center bg-default text-white">{{ booking.reference|upper }}</div>
+
+                {% if cancelled %}
+                    <div class="cancellation-btn text-right mt-2">
+                        <a data-id="{{ booking.id }}" class="card-link font-weight-stone-600 booking-user-cancellation-btn">
+                            <i class="fas fa-exclamation-triangle"></i> Annuler ma réservation
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if booking.cancelledAt %}
+            <div class="text-right mt-2">
+                {% if booking.commande.payment.refunded %}
+                    <div class="badge badge-success font-weight-stone-500 py-1 px-2 z-depth-0 small-8">
+                        <i class="fas fa-check mr-1"></i> Rembourser
+                    </div>
+                {% else %}
+                    <div class="badge badge-danger font-weight-stone-500 py-1 px-2 z-depth-0 small-8">
+                        <i class="fas fa-times mr-1"></i> Non rembourser
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+

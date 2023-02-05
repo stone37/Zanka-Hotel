@@ -1,0 +1,17 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Remboursements des clients | {{ parent() }}{% endblock %}
+
+{% block app_body %}
+    {% include 'admin/cancelPayout/index/_header.html.twig' %}
+
+    {% include 'admin/cancelPayout/index/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

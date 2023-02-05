@@ -21,22 +21,27 @@ class Summary
 
     public function getAmountTotal(): int
     {
-        return $this->commande->getAmountTotal();
+        return (int) $this->commande->getAmountTotal();
     }
 
     public function getAmountBeforeDiscount(): int
     {
-        return $this->commande->getAmount();
+        return (int) $this->commande->getAmount();
     }
 
     public function getTaxeAmount(): int
     {
-        return $this->commande->getTaxeAmount();
+        return (int) $this->commande->getTaxeAmount();
     }
 
-    public function amountPaid()
+    public function amountPaid(): int
     {
-        return ($this->commande->getAmountTotal() - $this->getDiscount());
+        return ($this->getAmountTotal() - $this->getDiscount());
+    }
+
+    public function amountCommission(): int
+    {
+        return $this->getAmountTotal() - $this->getTaxeAmount();
     }
 
     public function getDiscount(): int
@@ -45,14 +50,16 @@ class Summary
         $discount = $this->commande->getDiscount();
 
         if ($discount) {
-            if ($discount->getType() === Discount::FIXED_PRICE) {
+            if ($discount->getType() === Discount::FIXED_DISCOUNT) {
                 $price = ($this->getAmountBeforeDiscount() - $discount->getDiscount());
-            } elseif ($discount->getType() === Discount::PERCENT_REDUCTION) {
+            } elseif ($discount->getType() === Discount::PERCENTAGE_DISCOUNT) {
                 $price = (($this->getAmountBeforeDiscount() * $discount->getDiscount()) / 100);
             }
+        } else {
+            $price = $this->commande->getDiscountAmount();
         }
 
-        return $price;
+        return (int) $price;
     }
 
     public function hasDiscount(): bool

@@ -5,8 +5,6 @@
         <table class="table table-sm table-bordered table-responsive-sm table-responsive-md">
             <tbody>
             <tr>
-                <td class="table-dark text-center font-weight-normal">Id</td>
-                <td class="text-center font-weight-normal">{{ room.id }}</td>
                 <td class="table-dark text-center font-weight-normal">Établissement</td>
                 <td class="text-center font-weight-normal">
                     <a href="{{ path('app_partner_hostel_show', {'id': room.hostel.id}) }}" class="card-link">{{ room.hostel.name }}</a>
@@ -14,7 +12,7 @@
                 <td class="table-dark text-center font-weight-normal">Type d'hébergement</td>
                 <td class="text-center font-weight-normal">{{ room.type }}</td>
                 <td class="table-dark text-center font-weight-normal">Nom</td>
-                <td class="text-center font-weight-normal">
+                <td colspan="3" class="text-center font-weight-normal">
                     {% if room.perfectName %}{{ room.perfectName }}{% else %}{{ room.name }}{% endif %}
                 </td>
             </tr>
@@ -97,7 +95,7 @@
                     {% endif %}
                 </td>
             </tr>
-            <tr>
+            {#<tr>
                 <td class="table-dark text-center font-weight-normal">Supplements</td>
                 <td colspan="7" class="text-center font-weight-normal">
                     {% if room.supplements|length > 0 %}
@@ -108,7 +106,7 @@
                         <span class="badge badge-grey">Aucun</span>
                     {% endif %}
                 </td>
-            </tr>
+            </tr>#}
             </tbody>
         </table>
     </div>

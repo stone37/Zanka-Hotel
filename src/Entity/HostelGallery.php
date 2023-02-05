@@ -7,6 +7,7 @@ use App\Entity\Traits\TimestampableTrait;
 use App\Repository\HostelGalleryRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
@@ -19,12 +20,15 @@ class HostelGallery
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(['hostel:read'])]
     private $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['hostel:read'])]
     private ?string $extension = null;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(['hostel:read'])]
     private ?string $name = null;
 
     #[Assert\File(
@@ -33,7 +37,7 @@ class HostelGallery
         mimeTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'],
         mimeTypesMessage: 'Format non autorisés. Formats autorisés: png, jpeg, jpg, gif'
     )]
-    private ?File $file;
+    private ?File $file = null;
 
     private ?string $tempFilename = null;
 
@@ -132,6 +136,7 @@ class HostelGallery
         return __DIR__ . '/../../public/' . $this->getUploadDir();
     }
 
+    #[Groups(['hostel:read'])]
     public function getWebPath()
     {
         return $this->getUploadDir() . '/' . $this->getId() . '.' . $this->getExtension();

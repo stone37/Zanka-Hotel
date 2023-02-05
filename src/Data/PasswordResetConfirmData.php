@@ -7,7 +7,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 final class PasswordResetConfirmData
 {
     #[Assert\NotBlank]
-    #[Assert\Length(min: 6)]
+    #[Assert\Length(min: 8)]
     public $password = '';
 
     public function getPassword(): string

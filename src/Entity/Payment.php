@@ -2,12 +2,16 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Entity\Traits\EnabledTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\PaymentRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
+#[GetCollection]
+#[Get]
 class Payment
 {
     use EnabledTrait;
@@ -30,11 +34,19 @@ class Payment
     #[ORM\Column(nullable: true)]
     private ?bool $refunded = false;
 
+    private ?int $refundedAmount;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $lastname = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $phone = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $address = null;
@@ -126,6 +138,30 @@ class Payment
         return $this;
     }
 
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(?string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
     public function getAddress(): ?string
     {
         return $this->address;
@@ -169,6 +205,16 @@ class Payment
 
     public function setCommande(Commande $commande): self
     {
+        // unset the owning side of the relation if necessary
+        if ($commande === null && $this->commande !== null) {
+            $this->commande->setBooking(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($commande !== null && $commande->getPayment() !== $this) {
+            $commande->setPayment($this);
+        }
+
         $this->commande = $commande;
 
         return $this;

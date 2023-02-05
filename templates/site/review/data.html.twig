@@ -1,0 +1,36 @@
+{% form_theme form 'Ui/Form/theme.html.twig' %}
+
+<div class="modal fade hostel-review-check-modal" id="hostel-review-check-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title px-0 pt-1 font-weight-stone-600 text-dark">
+                    Indiquez les informations de votre réservation
+                </h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i class="fas fa-times text-danger"></i>
+                </button>
+            </div>
+            <div class="modal-body pt-2">
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'review-data-form', 'id': 'review-data-form'}}) }}
+                    <div class="row">
+                        <div class="col-12 small-9">
+                            Consultez votre e-mail de confirmation pour trouver votre
+                            <strong class="font-weight-stone-500 text-dark">numéro de réservation</strong>.
+                        </div>
+                        <div class="col-12">{{ form_row(form.number) }}</div>
+                        <div class="col-12 mt-2">
+                            <button type="submit" class="btn btn-primary btn-sm btn-block z-depth-0">Évaluer votre séjour</button>
+                        </div>
+                        <div class="col-12 small mt-3">
+                            Seuls les clients ayant réservé un hébergement dans cet établissement sur {{ config.settings.name }}.com
+                            peuvent laisser un avis. Cela nous permet de nous assurer que les avis sont rédigés par de véritables
+                            clients cet établissement.
+                        </div>
+                    </div>
+                {{ form_widget(form._token) }}
+                {{ form_end(form, {'render_rest': false}) }}
+            </div>
+        </div>
+    </div>
+</div>

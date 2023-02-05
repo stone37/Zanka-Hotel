@@ -40,6 +40,11 @@ class CommandeStorage
         return $this->storage->get($this->provideKey());
     }
 
+    public function has(): bool
+    {
+        return $this->storage->has($this->provideKey());
+    }
+
     private function provideKey(): string
     {
         return '_app_order';

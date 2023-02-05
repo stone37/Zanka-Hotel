@@ -1,6 +1,6 @@
 {% if banners|length > 0  %}
     <section class="mt-5 mt-lg-4">
-        <div id="banner-carousel" class="carousel slide w-100 banner-carousel" data-ride="carousel">
+        <div id="banner-carousel" class="carousel slide w-100 banner-carousel" data-interval="20000" data-ride="carousel">
             <div class="carousel-inner w-100 vv-3" role="listbox">
                 {% for banner in banners %}
                     <div class="carousel-item {% if loop.first %}active{% endif %}">

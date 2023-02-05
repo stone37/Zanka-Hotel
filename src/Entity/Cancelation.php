@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\CancelationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CancelationRepository::class)]
@@ -25,14 +26,17 @@ class Cancelation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['hostel:read'])]
     private ?int $id = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?int $state = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?int $result = null;
 
     public function getId(): ?int

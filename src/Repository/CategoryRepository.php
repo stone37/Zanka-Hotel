@@ -63,7 +63,7 @@ class CategoryRepository extends ServiceEntityRepository
         return $data;
     }
 
-    public function getEnabled(): ?QueryBuilder
+    public function getEnabledQb(): ?QueryBuilder
     {
         $qb = $this->createQueryBuilder('c')
             ->orderBy('c.position', 'asc')
@@ -88,7 +88,7 @@ class CategoryRepository extends ServiceEntityRepository
         return $qb;
     }
 
-    public function getHomeEnabled()
+    public function getEnabled(): ?array
     {
         return $this->createQueryBuilder('c')
             ->leftJoin('c.hostels', 'hostels')

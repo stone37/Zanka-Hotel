@@ -3,8 +3,10 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Form\DataTransformer\IntegerToStringTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -15,9 +17,17 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationFormType extends AbstractType
 {
+    public function __construct(private IntegerToStringTransformer $transformer)
+    {
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->add('phone', TextType::class, ['label' => 'Téléphone']);
+        $builder->add('phone', IntegerType::class, [
+            'label' => 'Téléphone',
+            'help_html' => true,
+            'help' => 'Ex: <span>225</span>0790909090, (<span>225</span>) est l\'indicatif.'
+        ]);
 
         /** @var ?User $user */
         $user = $builder->getData();
@@ -53,6 +63,8 @@ class RegistrationFormType extends AbstractType
                     'second_options' => ['label' => 'Confirmer le mot de passe', 'attr' => $passwordAttrs],
                 ]);
         }
+
+        $builder->get('phone')->addModelTransformer($this->transformer);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

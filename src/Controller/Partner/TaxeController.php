@@ -93,7 +93,7 @@ class TaxeController extends AbstractController
 
             $this->dispatcher->dispatch($event, AdminCRUDEvent::POST_EDIT);
 
-            $this->addFlash('info', 'Une taxe a été mise à jour');
+            $this->addFlash('success', 'Une taxe a été mise à jour');
 
             return $this->redirectToRoute('app_partner_taxe_index');
         }

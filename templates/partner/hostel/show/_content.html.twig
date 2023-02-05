@@ -31,10 +31,11 @@
                     <td class="text-center font-weight-normal">{{ hostel.codePostal }}</td>
                 </tr>
                 <tr>
+                    {% set city = app_city_find(hostel.location.city) %}
                     <td class="table-dark text-center font-weight-normal">Pays</td>
-                    <td class="text-center font-weight-normal">{{ hostel.location.city.country|country_name }}</td>
+                    <td class="text-center font-weight-normal">{{ city.country|country_name }}</td>
                     <td class="table-dark text-center font-weight-normal">Ville</td>
-                    <td class="text-center font-weight-normal">{{ hostel.location.city.name }}</td>
+                    <td class="text-center font-weight-normal">{{ city.name }}</td>
                     <td class="table-dark text-center font-weight-normal">Quartier ou Commune</td>
                     <td class="text-center font-weight-normal">{{ hostel.location.town }}</td>
                     <td class="table-dark text-center font-weight-normal">Emplacement</td>
@@ -144,12 +145,24 @@
                 <tr>
                     <td class="table-dark text-center font-weight-normal">Dernière modification</td>
                     <td class="text-center font-weight-normal">{{ hostel.updatedAt|date('d/m/Y H:i') }}</td>
+                    <td class="table-dark text-center font-weight-normal">Plan de commission</td>
+                    <td class="font-weight-normal">
+                        {% if hostel.plan %}
+                            Pourcentage: <span class="font-weight-stone-600 text-primary">{{ hostel.plan.percent }}%</span>
+                        {% else %}
+                            <span class="badge badge-grey">Aucun</span>
+                        {% endif %}
+                    </td>
                     <td class="table-dark text-center font-weight-normal">Équipements</td>
                     <td colspan="5" class="font-weight-normal">
                         {% for equipment in hostel.equipments %}
                             {{ equipment.name }}{% if not loop.last %}, {% endif %}
                         {% endfor %}
                     </td>
+                </tr>
+                <tr>
+                    <td class="table-dark text-center font-weight-normal">Description</td>
+                    <td colspan="7" class="text-left font-weight-normal">{{ hostel.description|raw }}</td>
                 </tr>
             </tbody>
         </table>

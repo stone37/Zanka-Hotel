@@ -17,12 +17,15 @@ class ContactController extends AbstractController
 {
     use ControllerTrait;
 
+    public function __construct(/*private ReCaptcha $captcha*/)
+    {
+    }
+
     #[Route(path: '/contact', name: 'app_contact')]
     public function index(
         Request $request,
         Breadcrumbs $breadcrumbs,
-        ContactService $contactService,
-        ReCaptcha $reCaptcha
+        ContactService $contactService
     )
     {
         $this->breadcrumb($breadcrumbs)->addItem('Contact');
@@ -34,7 +37,7 @@ class ContactController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            if ($reCaptcha->verify($form['recaptchaToken']->getData())->isSuccess()) {
+            if ($this->captcha->verify($form['recaptchaToken']->getData())->isSuccess()) {
                 try {
                     $contactService->send($data, $request);
                 } catch (TooManyContactException) {

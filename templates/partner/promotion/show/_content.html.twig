@@ -5,14 +5,12 @@
         <table class="table table-sm table-bordered table-responsive-sm table-responsive-md">
             <tbody>
                 <tr>
-                    <td class="table-dark text-center font-weight-normal">Id</td>
-                    <td class="text-center font-weight-normal">{{ promotion.id }}</td>
                     <td class="table-dark text-center font-weight-normal">Nom</td>
-                    <td class="text-center font-weight-normal">{{ promotion.name }}</td>
+                    <td colspan="3" class="text-center font-weight-normal">{{ promotion.name }}</td>
                     <td class="table-dark text-center font-weight-normal">Date de début</td>
                     <td class="text-center font-weight-normal">{{ promotion.startDate|date('d/m/Y à H:i') }}</td>
                     <td class="table-dark text-center font-weight-normal">Date de fin</td>
-                    <td class="text-center font-weight-normal">{{ promotion.startDate|date('d/m/Y à H:i') }}</td>
+                    <td class="text-center font-weight-normal">{{ promotion.endDate|date('d/m/Y à H:i') }}</td>
                 </tr>
                 <tr>
                     <td class="table-dark text-center font-weight-normal">Remise</td>

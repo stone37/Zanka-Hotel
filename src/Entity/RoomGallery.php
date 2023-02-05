@@ -7,6 +7,7 @@ use App\Entity\Traits\TimestampableTrait;
 use App\Repository\RoomGalleryRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\HasLifecycleCallbacks]
@@ -19,12 +20,15 @@ class RoomGallery
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $extension = null;
 
     #[Assert\File(
@@ -33,7 +37,7 @@ class RoomGallery
         mimeTypes: ['image/png', 'image/jpeg', 'image/jpg', 'image/gif'],
         mimeTypesMessage: 'Format non autorisés. Formats autorisés: png, jpeg, jpg, gif'
     )]
-    private ?File $file;
+    private ?File $file = null;
 
     private ?string $tempFilename = null;
 
@@ -131,6 +135,7 @@ class RoomGallery
         return __DIR__ . '/../../public/' . $this->getUploadDir();
     }
 
+    #[Groups(['hostel:read', 'booking:read'])]
     public function getWebPath()
     {
         return $this->getUploadDir() . '/' . $this->getId() . '.' . $this->getExtension();

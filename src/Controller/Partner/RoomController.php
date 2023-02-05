@@ -127,14 +127,13 @@ class RoomController extends AbstractController
             /** @var Bedding $bedding */
             foreach ($originalBedding as $bedding) {
                 if (false === $room->getBeddings()->contains($bedding)) {
-
                     $bedding->setRoom(null);
-
                     $this->em->remove($bedding);
                 }
             }
 
             $room = $this->ajustement($room);
+
             $event = new AdminCRUDEvent($room);
 
             $this->dispatcher->dispatch($event, AdminCRUDEvent::PRE_EDIT);
@@ -328,11 +327,13 @@ class RoomController extends AbstractController
     {
         $room->setName($this->util->getName($room));
 
-        if (($room->getType() === 'Suite') || !($room->getType() === 'Appartement')) {
-            $room->setDataRoomNumber(null);
-            $room->setDataLivingRoomNumber(null);
-            $room->setDataBathroomNumber(null);
+        if ($room->getType() === 'Suite' || $room->getType() === 'Appartement') {
+            return $room;
         }
+
+        $room->setDataRoomNumber(null);
+        $room->setDataLivingRoomNumber(null);
+        $room->setDataBathroomNumber(null);
 
         return $room;
     }

@@ -12,21 +12,26 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class SupplementChoiceType extends AbstractType
 {
     private SupplementRepository $repository;
     private LocaleCurrencyUtil $util;
     private RequestStack $request;
+    private Security $security;
 
     public function __construct(
         SupplementRepository $repository,
         LocaleCurrencyUtil $util,
-        RequestStack $request)
+        RequestStack $request,
+        Security $security
+    )
     {
         $this->repository = $repository;
         $this->util = $util;
         $this->request = $request;
+        $this->security = $security;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -38,8 +43,10 @@ class SupplementChoiceType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
+        $supplements = $this->repository->findBy(['owner' => $this->security->getUser(), 'enabled' => true], ['position' => 'asc']);
+
         $resolver->setDefaults([
-            'choices' => fn(Options $options): array => $this->repository->findBy(['enabled' => true], ['position' => 'asc']),
+            'choices' => fn(Options $options): array => $supplements,
             'choice_value' => 'id',
             'choice_label' => function (Supplement $supplement) {
                 return $supplement->getName() .' ('.$supplement->getPrice(). ' ' .

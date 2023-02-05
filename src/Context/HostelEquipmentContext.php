@@ -2,19 +2,19 @@
 
 namespace App\Context;
 
-use App\Finder\HostelEquipmentsFinder;
+use App\Repository\EquipmentRepository;
 
 class HostelEquipmentContext
 {
-    private HostelEquipmentsFinder $finder;
+    private EquipmentRepository $repository;
 
-    public function __construct(HostelEquipmentsFinder $finder)
+    public function __construct(EquipmentRepository $repository)
     {
-        $this->finder = $finder;
+        $this->repository = $repository;
     }
 
-    public function getEquipments(): ?array
+    public function getEquipments(): array
     {
-        return $this->finder->find(20);
+        return $this->repository->getPartial(20);
     }
 }

@@ -1,0 +1,47 @@
+<section class="container mb-5">
+    {% if reviews|length > 0 %}
+        <div class="row">
+            <div class="col-12">
+                <table class="table table-responsive-sm">
+                    <thead class="text-primary">
+                    <tr>
+                        <th scope="col" class="text-center font-weight-normal">#</th>
+                        <th scope="col" class="text-center font-weight-normal">Date</th>
+                        <th scope="col" class="text-center font-weight-normal">Établissements</th>
+                        <th scope="col" class="text-center font-weight-normal">Note</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for review in reviews %}
+                        <tr>
+                            <td class="text-center font-weight-normal">{{ loop.index }}</td>
+                            <td class="text-center font-weight-normal">{{ review.createdAt|date('d/m/Y H:i:s') }}</td>
+                            <td class="text-center font-weight-normal">{{ review.hostel.name }}</td>
+                            <td class="text-center font-weight-normal">{{ review.rating }}/10</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-12 d-flex justify-content-start mt-2">
+                <div class="font-weight-stone-500 text-primary">{{ reviews.totalItemCount }} resultats</div>
+            </div>
+            <div class="col-12 d-flex justify-content-center mt-2">
+                {{ knp_pagination_render(reviews, 'ui/_pagination.html.twig') }}
+            </div>
+        </div>
+    {% else %}
+        <div class="row d-flex justify-content-center mb-5">
+            <div class="col-12 col-md-8 text-center mt-5 mt-md-5">
+                <h4 class="h4-responsive font-weight-bold text-dark">
+                    Vous n'avez aucun avis.
+                </h4>
+                <p>
+                    C'est ici que vous verrez toutes vos avis dans les établissements dans laquelle vous aviez séjourné.
+                </p>
+            </div>
+        </div>
+    {% endif %}
+</section>
+
+

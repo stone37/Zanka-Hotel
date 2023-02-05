@@ -7,20 +7,16 @@
 
     <div class="d-flex ml-auto change-mode">
         <ul class="nav navbar-nav nav-flex-icons">
-            {% if is_granted("IS_AUTHENTICATED_FULLY") %}
+            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                {{ render(controller('App\\Controller\\NotificationController::index')) }}
+
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle avatar waves-effect text-secondary" href="#"
                        id="userDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {% if vich_uploader_asset(app.user, 'file') %}
-                            <img src="{{ vich_uploader_asset(app.user, 'file') }}" class="rounded-circle z-depth-0" alt="avatar image">
-                        {% else %}
-                            <span class="user-prefix d-inline-block rounded-circle">
-                                {{ userPrefixName(app.user) }}
-                            </span>
-                        {% endif %}
+                        <span class="user-prefix d-inline-block rounded-circle">{{ userPrefixName(app.user) }}</span>
                     </a>
                     <div class="dropdown-menu dropdown-dark dropdown-menu-right" aria-labelledby="userDropdown">
-                        <a class="dropdown-item" href="{{ path('app_admin_admin_edit', {'id': app.user.id}) }}">
+                        <a class="dropdown-item" href="{{ path('app_partner_profil_edit') }}">
                             <i class="fas fa-user-edit mr-2" aria-hidden="true"></i>
                             Modifier le profil
                         </a>

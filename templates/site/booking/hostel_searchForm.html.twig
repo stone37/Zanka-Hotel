@@ -1,0 +1,110 @@
+{% set data = config.booker.bookingData %}
+
+<section id="booking-form" class="container booking-form">
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'booking-data-form', 'id': 'booking-data-form'}}) }}
+    <div class="row booking-form-bulk d-flex align-content-center">
+        <div class="col-12 col-lg-3 booking-form-item booking-date">
+            <div class="md-form md-outline form-lg input-with-pre-icon">
+                <div class="data">
+                    <span class="checkin">
+                        {% if data.duration|length > 0 %}
+                            {{ date(data.duration.checkin)|format_datetime(pattern="EEE dd MMM")|title }}
+                        {% else %}
+                            Arrivée
+                        {% endif %}
+                    </span>
+                    <span class="separator"><i class="fas fa-long-arrow-alt-right"></i></span>
+                    <span class="checkout">
+                        {% if data.duration|length > 0 %}
+                            {{ date(data.duration.checkout)|format_datetime(pattern="EEE dd MMM")|title }}
+                        {% else %}
+                            Départ
+                        {% endif %}
+                    </span>
+                </div>
+                <i class="fas fa-calendar-day input-prefix"></i>
+                {{ form_widget(form.duration) }}
+            </div>
+        </div>
+        <div class="col-12 col-lg-5 d-flex justify-content-between booking-form-item booker-data pr-0">
+            <div class="booking-booker-data">
+                <div class="dropdown-btn">
+                    <div class="icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="data">
+                        <div class="title">Personnes</div>
+                        <div class="date-content">
+                            <span class="room">{{ data.roomNumber }} chambre</span>,
+                            <span class="customer">{{ data.adult }} adultes</span>,
+                            <span class="children">{{ data.children }} enfant</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="navbarDropdownBookerData" class="content-dropdown d-none">
+                    <div class="content-inner">
+                        <div class="d-block d-lg-none mobile-bulk">
+                            <div class="header d-flex justify-content-between">
+                                <h5 class="font-weight-stone-500 text-dark">Voyageurs</h5>
+                                <div class="icon"><i class="fas fa-times"></i></div>
+                            </div>
+                        </div>
+                        <div class="room item d-flex justify-content-between mb-4">
+                            <div class="title font-weight-stone-500">Chambres</div>
+                            <div class="data">
+                                <a href="" class="soustraction disabled">-</a>
+                                <span class="font-weight-stone-500">{{ data.roomNumber }}</span>
+                                <a href="" class="addition">+</a>
+                            </div>
+                        </div>
+                        <div class="adults d-flex justify-content-between mb-3">
+                            <div class="title font-weight-stone-500">
+                                Adultes <span>(par chambre)</span>
+                                <div class="grey-text">+18 ans</div>
+                            </div>
+                            <div class="data">
+                                <a id="adult-soustraction" href="" class="soustraction">-</a>
+                                <span class="font-weight-stone-500">{{ data.adult }}</span>
+                                <a href="" class="addition">+</a>
+                            </div>
+                        </div>
+                        <div class="children item d-flex justify-content-between">
+                            <div class="title font-weight-stone-500">
+                                Enfants <span>(par chambre)</span>
+                                <div class="grey-text">De 0 à 17 ans</div>
+                            </div>
+                            <div class="data">
+                                <a href="" class="soustraction disabled">-</a>
+                                <span class="font-weight-stone-500">{{ data.children }}</span>
+                                <a href="" class="addition {% if children_state is defined %}disabled{% endif %}">+</a>
+                            </div>
+                        </div>
+                        <div class="d-block d-lg-none mobile-bulk">
+                            <hr class="mb-2">
+                            <div class="footer">
+                                <a href="" class="btn btn-primary btn-sm btn-block">Fermer</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{ form_widget(form.adult) }}
+            {{ form_widget(form.children) }}
+            {{ form_widget(form.roomNumber) }}
+            <div class="booking-search-btn d-none d-lg-block">
+                <button type="submit" class="btn-floating btn-blue booking-form-btn z-depth-0">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+        <div class="col-12 booking-form-item d-block d-lg-none">
+            <div class="booking-search-btn">
+                <button type="submit" class="btn btn-blue btn-sm btn-block booking-form-btn z-depth-0">
+                    Rechercher
+                </button>
+            </div>
+        </div>
+    </div>
+    {{ form_widget(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+</section>

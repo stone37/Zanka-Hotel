@@ -1,8 +1,9 @@
 .skin-light {
-    color: #111827;
+    /*color: #111827;*/
+    color: #4b5563;
     background-color: #fafafa;
     font-weight: 400;
-}
+} 
 
 .skin-light .small-9 {
     font-size: .9rem !important;
@@ -20,8 +21,46 @@
     font-size: .6rem !important;
 }
 
+.skin-light .alert-primary {
+    color: #7E22CE;
+    background-color: rgba(126, 34, 206, 0.1);
+    border-color: transparent;
+}
+
+.skin-light .scrollbar {
+    float: left;
+    overflow-y: scroll;
+}
+
+.skin-light .scrollbar-primary::-webkit-scrollbar {
+    width: 5px;
+    background-color: #F5F5F5;
+}
+
+.scrollbar-primary::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
+    background-color: #eee;
+}
+
+.skin-light .scrollbar-primary {
+    scrollbar-color: #eee #F5F5F5;
+}
+
 .skin-light .rotate-180 {
     transform: rotate(-180deg) !important;
+}
+
+.skin-light .close {
+    opacity: 1 !important;
+}
+
+.skin-light .close i {
+    font-size: 0.93rem;
+}
+
+.skin-light .close:not(:disabled):not(.disabled):hover, .close:not(:disabled):not(.disabled):focus {
+    opacity: 1 !important;
 }
 
 /*.skin-light .dropdown .dropdown-menu.dropdown-primary .dropdown-item:hover,
@@ -211,55 +250,55 @@
 
 .skin-light.color-secondary, .skin-light .color-secondary,
 .skin-light .badge-secondary, .skin-light .bg-secondary {
-    background-color: #FFF51A !important
+    background-color: #442ED1 !important
 }
 
 .skin-light .text-secondary {
-    color: #FFF51A !important
+    color: #442ED1 !important
 }
 
 .skin-light .border-secondary {
-    border-color: #FFF51A !important
+    border-color: #442ED1 !important
 }
 
 .skin-light .note-secondary {
-    border-color: #FFF51A
+    border-color: #442ED1
 }
 
 .skin-light .btn-secondary {
     color: #fff;
-    background-color: #FFF51A !important
+    background-color: #442ED1 !important
 }
 
 .skin-light .btn-outline-secondary {
-    color: #FFF51A !important;
+    color: #442ED1 !important;
     background-color: transparent !important;
-    border: 1.6px solid #FFF51A !important
+    border: 1.6px solid #442ED1 !important
 }
 
 .skin-light .btn-secondary:hover {
-    background-color: #FFF51A !important
+    background-color: #442ED1 !important
 }
 
 .skin-light .btn-secondary:focus,
 .skin-light .btn-secondary:active,
 .skin-light .btn-secondary.active {
-    background-color: #FFF51A !important
+    background-color: #442ED1 !important
 }
 
 .skin-light .btn-secondary.dropdown-toggle {
-    background-color: #FFF51A !important
+    background-color: #442ED1 !important
 }
 
 .skin-light .btn-secondary.dropdown-toggle:hover,
 .skin-light .btn-secondary.dropdown-toggle:focus {
-    background-color: #FFF51A !important
+    background-color: #442ED1 !important
 }
 
 .skin-light .btn-secondary:not([disabled]):not(.disabled).active,
 .skin-light .btn-secondary:not([disabled]):not(.disabled):active,
 .skin-light .show>.btn-secondary.dropdown-toggle {
-    background-color: #FFF51A !important
+    background-color: #442ED1 !important
 }
 
 .skin-light .modal-dialog .modal-header .modal-title {
@@ -271,17 +310,17 @@
 }
 
 .skin-light .modal-dialog.modal-secondary .modal-header {
-    background-color: #FFF51A
+    background-color: #442ED1
 }
 
 .skin-light .modal-dialog.modal-secondary .fas,
 .skin-light .modal-dialog.modal-secondary .fab,
 .skin-light .modal-dialog.modal-secondary .far {
-    color: #FFF51A
+    color: #442ED1
 }
 
 .skin-light .modal-dialog.modal-secondary .badge {
-    background-color: #FFF51A
+    background-color: #442ED1
 }
 
 .skin-light .modal-dialog.modal-secondary .btn .fas,
@@ -293,7 +332,7 @@
 .skin-light .modal-dialog.modal-secondary .btn.btn-outline-secondary .fas,
 .skin-light .modal-dialog.modal-secondary .btn.btn-outline-secondary .fab,
 .skin-light .modal-dialog.modal-secondary .btn.btn-outline-secondary .far {
-    color: #FFF51A
+    color: #442ED1
 }
 
 .skin-light.color-default,
@@ -1581,6 +1620,11 @@
     margin-top: -4px !important;
 }
 
+.skin-light .help-text.form-text.text-muted span {
+    color: #7E22CE !important;
+    font-weight: 500;
+}
+
 .skin-light .form-select-error-bulk {
     margin-top: -22px !important;
 }
@@ -1764,8 +1808,9 @@
 .skin-light .md-form.md-outline.invalid textarea.md-textarea:focus:not([readonly])+label {
     color: #ff3547;
 }
-
-.skin-light .md-form.md-outline label {
+/*.skin-light .select-outline label span.label .skin-light .select-wrapper.md-form.md-outline+label*/
+.skin-light .md-form.md-outline label,
+.skin-light .select-wrapper.md-form.md-outline+label {
     font-weight: 400;
 }
 
@@ -2558,7 +2603,7 @@
 }
 
 .skin-light .loader img {
-    width: 120px;
+    width: 100px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -2722,6 +2767,7 @@
 
 .skin-light .table-img {
     width: 40px !important;
+    height: 30px !important;
 }
 
 .skin-light .select-wrapper.md-form.md-outline+label {
@@ -2742,6 +2788,34 @@
     border-bottom: 2px solid #f5f5f5 !important;
     /*padding-top: 1rem !important;
     padding-bottom: 1rem !important;*/
+}
+
+.skin-light .navbar .logo {
+    width: 200px;
+}
+
+.skin-light .page-footer .logo {
+    width: 130px;
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .skin-light .navbar .logo {
+        width: 38px;
+    }
+
+    .skin-light .page-footer .logo {
+        width: 40px;
+    }
+}
+
+@media (max-width: 767px) {
+    .skin-light .navbar .logo {
+        width: 38px;
+    }
+
+    .skin-light .page-footer .logo {
+        width: 40px;
+    }
 }
 
 /*.skin-light .navbar .navbar-collapse {
@@ -2819,7 +2893,12 @@
     }*/
 
     .skin-light .navbar .navbar-toggler i {
-        color: #394353; !important;
+        color: #212121 !important;
+    }
+
+    .skin-light .navbar .navbar-toggler i.fa-times {
+        font-size: 1rem !important;
+        color: #ff3547 !important;
     }
 
     /*.skin-light .navbar .navbar-icon-button a i {
@@ -2950,6 +3029,11 @@
         padding-bottom: 4px;
     }
 
+    .skin-light .navbar .collapse .nav-item.mobile-user > div.active img.avatar {
+        width: 40px;
+        height: 40px;
+    }
+
     .skin-light .navbar .collapse .nav-item .setting-title {
         margin: 0;
     }
@@ -2990,9 +3074,15 @@
         border-top-right-radius: calc(0.3rem - 1px);
     }
 
+    .skin-light .modal .modal-mobile .modal-header h5 {
+        font-size: 1.1rem;
+    }
+
     .skin-light .modal .modal-mobile .modal-header .close i {
-        font-size: 1.2rem;
-        color: #bdbdbd !important;
+        font-size: 1rem;
+        color: #ff3547 !important;
+        position: relative;
+        bottom: 3px;
     }
 
     .skin-light .modal .modal-mobile .list-group .list-group-item {
@@ -3077,7 +3167,6 @@
     background-color: transparent !important;
 }
 
-
 .skin-light .navbar .navbar-nav .nav-item .fas.fa-angle-down {
     position: relative;
     top: 1px;
@@ -3099,6 +3188,15 @@
 
 .skin-light .navbar .navbar-nav .dropdown.notification .dropdown-menu {
     margin-top: .4rem !important;
+    max-height: 18.5rem !important;
+    width: 20rem !important;
+    min-width: 20rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.skin-light .navbar .navbar-nav .dropdown.notification .dropdown-menu .dropdown-item {
+    white-space: normal !important;
 }
 
 .skin-light .navbar .navbar-nav .dropdown.notification .nav-link {
@@ -3123,17 +3221,14 @@
     right: 7px;
     top: 3.5px;
     font-size: .4rem;
-    color: #BEF719;
+    color: #2196f3;
     z-index: 10;
 }
 
 .skin-light .navbar .navbar-nav .dropdown.notification .dropdown-header {
     font-size: 125% !important;
-    color: #394353;
-    padding-left: 15px !important;
-    padding-right: 15px !important;
-    padding-bottom: 3px !important;
-    padding-top: 16px !important;
+    color: #212121;
+    padding: 16px 15px 3px !important;
 }
 
 .skin-light .navbar .navbar-nav .dropdown.notification .dropdown-item .notification-image {
@@ -3155,21 +3250,66 @@
 }
 
 .skin-light .navbar .navbar-nav .dropdown.notification .dropdown-item .content .data {
-    font-size: .88rem;
+    font-size: 0.95rem;
+    line-height: normal;
     font-weight: 400 !important;
-    margin-bottom: 0.05rem;
+    margin-bottom: 0.3rem;
 }
 
 .skin-light .navbar .navbar-nav .dropdown.notification .dropdown-item .content .time {
-    font-size: .75rem;
-    font-weight: 400;
+    font-size: .77rem;
+    font-weight: 600;
 }
 
 .skin-light .navbar .navbar-nav .dropdown.notification .dropdown-item .icon-notification {
     font-size: .45rem;
-    color: #BEF719;
+    color: #2196f3;
     z-index: 10;
 }
+
+.skin-light .modal.notification .modal-body .notification-bulk a {
+    color: #4b5563;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 0.4rem;
+}
+
+.skin-light .modal.notification .modal-body .notification-bulk a:hover,
+.skin-light .modal.notification .modal-body .notification-bulk a:focus,
+.skin-light .modal.notification .modal-body .notification-bulk a:active {
+    color: #fff !important;
+    background-color: #7E22CE;
+}
+
+.skin-light .modal.notification .modal-body .notification-bulk .list-group .list-group-item .content .data {
+    font-size: 0.95rem;
+    line-height: normal;
+    font-weight: 400 !important;
+    margin-bottom: 0.3rem;
+    position: relative;
+    left: -8px;
+}
+
+.skin-light .modal.notification .modal-body .notification-bulk .list-group .list-group-item .content .time {
+    font-size: .7rem;
+    font-weight: 600;
+    position: relative;
+    left: -8px;
+}
+
+.skin-light .modal.notification .modal-body .notification-bulk .list-group .list-group-item .icon-notification i {
+    color: #2196f3;
+    font-size: 0.4rem;
+}
+
+#navbar-notification-menu-link i.fa-circle {
+    color: #2196f3;
+    font-size: 0.4rem;
+    position: absolute;
+    left: 7px;
+    top: 15px;
+}
+
 
 .skin-light .navbar .navbar-nav .dropdown.avatar {
     width: 45px;
@@ -3222,6 +3362,7 @@
 
 .skin-light .partner-form .card .title {
     font-size: .9rem;
+    font-weight: 500;
 }
 
 .skin-light .partner-form .card small,
@@ -3292,7 +3433,11 @@
     border-bottom: 2px solid #7E22CE;
 }
 
-.skin-light .partner-form .card .room-sub-info {
+/*.skin-light .partner-form .card .room-sub-info {
+    display: none;
+}*/
+
+.skin-light .partner-form .card .room-sub-info-state {
     display: none;
 }
 
@@ -3557,13 +3702,10 @@
     color: #ff3547;
 }
 
-
-
-
 .skin-light .booking-form .booking-form-bulk .booking-form-item.booking-date .data {
     position: absolute;
     top: 53%;
-    left: 2.6rem;
+    left: 2.5rem;
     -webkit-transform: translateY(-50%);
     transform: translateY(-50%);
     pointer-events: none;
@@ -3809,19 +3951,23 @@
         padding: 22px 12px 15px 15px;
     }
 
+    .skin-light .booking-form .booking-form-bulk .booking-form-item.location .content-dropdown .mobile-bulk .header h5 {
+        font-size: 1.1rem;
+    }
+
     .skin-light .booking-form .booking-form-bulk .booking-form-item.location .content-dropdown .mobile-bulk .icon i {
         position: absolute;
         right: 20px;
         top: 25.5px;
-        font-size: 1.1em;
-        color: #bdbdbd;
+        font-size: 1em;
+        color: #ff3547;
     }
 
     .skin-light .booking-form .booking-form-bulk .booking-form-item.location .content-dropdown .mobile-bulk .md-form input {
         border-left: 0 !important;
         border-right: 0 !important;
-        border-top: 3px solid #e0e0e0;
-        border-bottom: 3px solid #e0e0e0;
+        border-top: 2px solid #e0e0e0;
+        border-bottom: 2px solid #e0e0e0;
         width: 100% !important;
         border-radius: 0;
         padding-top: 1.5rem;
@@ -3831,7 +3977,10 @@
     .skin-light .booking-form .booking-form-bulk .booking-form-item.location .content-dropdown .mobile-bulk .md-form input:focus:not([readonly]) {
         -webkit-box-shadow: none;
         box-shadow: none;
-        border: 3px solid #7E22CE;
+        border-left: 0 !important;
+        border-right: 0 !important;
+        border-top: 2px solid #7E22CE !important;
+        border-bottom: 2px solid #7E22CE !important;
     }
 
     .skin-light .booking-form .booking-form-bulk .booking-form-item.booker-data .booking-booker-data .content-dropdown .title {
@@ -3867,6 +4016,14 @@
         padding-right: 12px;
     }
 
+    .skin-light .booking-form .booking-form-bulk .booking-form-item.booker-data .content-dropdown .mobile-bulk .header {
+        padding-left: 12px;
+    }
+
+    .skin-light .booking-form .booking-form-bulk .booking-form-item.booker-data .content-dropdown .mobile-bulk .header h5 {
+        font-size: 1.1rem;
+    }
+
     .skin-light .booking-form .booking-form-bulk .booking-form-item.booker-data .content-dropdown .mobile-bulk .icon {
         margin-bottom: 20px;
     }
@@ -3875,7 +4032,7 @@
         position: relative;
         right: 22px;
         font-size: 1.1em;
-        color: #bdbdbd;
+        color: #ff3547;
     }
 
     .skin-light .booking-form .booking-form-bulk .booking-form-item.booker-data .booking-booker-data .content-dropdown .content-inner .footer {
@@ -3895,6 +4052,16 @@
         margin-bottom: -16rem !important;
         padding-left: 1.85rem !important;
         padding-right: 1.85rem !important;
+    }
+
+    .skin-light .hostel-list.hostel-show .booking-form {
+        top: -1rem !important;
+        margin-bottom: 0 !important;
+        display: none;
+    }
+
+    .skin-light .hostel-list.hostel-show .booking-form.active {
+        display: block;
     }
 
     .skin-light .booking-form .booking-form-bulk {
@@ -3950,7 +4117,32 @@
         font-size: .6rem;
     }
 
+    .skin-light .hostel-list.hostel-show .search-form-close {
+        position: absolute;
+        right: 5px;
+        top: 5.2rem;
+    }
 
+    .skin-light .hostel-list.hostel-show.view-data .search-form-close {
+        position: absolute;
+        right: 5px;
+        top: 7.9rem;
+    }
+
+    .skin-light .hostel-list.hostel-show .search-form-data {
+        border-radius: 0.3rem;
+        padding: 10px 15px 8px 15px;
+        margin-bottom: 12px !important;
+        margin-top: -18px !important;
+    }
+
+    .skin-light .hostel-list.hostel-show .search-form-data .icon {
+        margin-right: 10px;
+    }
+
+    .skin-light .hostel-list.hostel-show .search-form-data .icon i {
+        font-size: 0.95rem;
+    }
 
 
 }
@@ -3965,12 +4157,31 @@
         padding-right: 1.9rem !important;
     }
 
+    .skin-light .hostel-list.hostel-show .booking-form {
+        top: -1rem !important;
+        margin-bottom: 0 !important;
+        display: block;
+    }
+
     .skin-light .booking-form .booking-form-bulk {
         background-color: #7E22CE;
         border-radius: 0.3rem;
         padding: 9px;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .skin-light .booking-form .booking-form-bulk .booking-form-item.location .content-dropdown .title {
     font-size: .93rem;
@@ -4242,6 +4453,11 @@
     .skin-light .banner-carousel .carousel-inner.vv-3 .carousel-item-left {
         transform: translateX(0);
     }
+
+    .skin-light .banner-carousel .carousel-inner.vv-3 .carousel-item img,
+    .skin-light .banner-carousel .carousel-inner.vv-3 .carousel-item .view {
+        height: 135px;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
@@ -4460,6 +4676,31 @@
     bottom: 3px;
 }
 
+@media (max-width: 767px) {
+    .skin-light .hostel-list-header .h2-responsive {
+        font-size: 125%;
+    }
+
+    .skin-light .hostel-list-header > div > div > div {
+        font-size: 0.8rem;
+        font-weight: 600 !important;
+    }
+
+    .skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-dialog {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        min-height: 100%;
+        margin: 0
+    }
+}
+
 .skin-light .hostel-list-filter .card .card-body {
     padding: 10px !important;
 }
@@ -4480,6 +4721,7 @@
     margin-bottom: 2px !important;
     font-weight: 500;
     font-size: 1.1rem;
+    color: #212121;
 }
 
 .skin-light .hostel-list-filter .card .card-body .name-field .md-form.md-outline input[type=text]:focus:not([readonly]) {
@@ -4489,12 +4731,35 @@
     border-radius: 4px;
 }
 
-.skin-light .hostel-list-filter .card .card-body .equipment-field .equipment-label {
+.skin-light .hostel-list-filter .card .card-body .equipment-field .equipment-label,
+/*.skin-light .hostel-list-filter .card .card-body .type-field .type-label,*/
+.skin-light .hostel-list-filter .card .card-body .star-field .star-label,
+.skin-light .hostel-list-filter .card .card-body .room-equipment-field .room-equipment-label {
     font-weight: 500;
     font-size: 1.1rem;
+    color: #212121;
 }
 
-.skin-light .hostel-list-filter .card .card-body .equipment-field .checkbox-field-bulk label {
+.skin-light .hostel-list-filter .card .card-body .rating-field .rating-label,
+.skin-light .hostel-list-filter .card .card-body .type-field .type-label {
+    font-weight: 500;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.skin-light .hostel-list-filter .card .card-body .rating-field .form-check label,
+.skin-light .hostel-list-filter .card .card-body .type-field .form-check label {
+    display: inline-block;
+    margin-top: 14px;
+    padding-top: 1px;
+    padding-left: 23px;
+    font-size: .98rem;
+}
+
+.skin-light .hostel-list-filter .card .card-body .equipment-field .checkbox-field-bulk label,
+.skin-light .hostel-list-filter .card .card-body .type-field .checkbox-field-bulk label,
+.skin-light .hostel-list-filter .card .card-body .star-field .checkbox-field-bulk label,
+.skin-light .hostel-list-filter .card .card-body .room-equipment-field .checkbox-field-bulk label {
     padding-left: 28px;
     padding-top: 2px;
     padding-right: 36px;
@@ -4502,11 +4767,17 @@
     font-size: .98rem;
 }
 
-.skin-light .hostel-list-filter .card .card-body .equipment-field .collapse-link {
+.skin-light .hostel-list-filter .card .card-body .equipment-field .collapse-link,
+.skin-light .hostel-list-filter .card .card-body .type-field .collapse-link,
+.skin-light .hostel-list-filter .card .card-body .star-field .collapse-link,
+.skin-light .hostel-list-filter .card .card-body .room-equipment-field .collapse-link {
     margin-top: 12px;
 }
 
-.skin-light .hostel-list-filter .card .card-body .equipment-field .collapse-link a {
+.skin-light .hostel-list-filter .card .card-body .equipment-field .collapse-link a,
+.skin-light .hostel-list-filter .card .card-body .type-field .collapse-link a,
+.skin-light .hostel-list-filter .card .card-body .star-field .collapse-link a,
+.skin-light .hostel-list-filter .card .card-body .room-equipment-field .collapse-link a {
     color: #111827;
     font-size: .92rem;
     font-weight: 500;
@@ -4515,7 +4786,16 @@
 
 .skin-light .hostel-list-filter .card .card-body .equipment-field .collapse-link a:hover,
 .skin-light .hostel-list-filter .card .card-body .equipment-field .collapse-link a:focus,
-.skin-light .hostel-list-filter .card .card-body .equipment-field .collapse-link a:active {
+.skin-light .hostel-list-filter .card .card-body .equipment-field .collapse-link a:active,
+.skin-light .hostel-list-filter .card .card-body .type-field .collapse-link a:hover,
+.skin-light .hostel-list-filter .card .card-body .type-field .collapse-link a:focus,
+.skin-light .hostel-list-filter .card .card-body .type-field .collapse-link a:active,
+.skin-light .hostel-list-filter .card .card-body .star-field .collapse-link a:hover,
+.skin-light .hostel-list-filter .card .card-body .star-field .collapse-link a:focus,
+.skin-light .hostel-list-filter .card .card-body .star-field .collapse-link a:active,
+.skin-light .hostel-list-filter .card .card-body .room-equipment-field .collapse-link a:hover,
+.skin-light .hostel-list-filter .card .card-body .room-equipment-field .collapse-link a:focus,
+.skin-light .hostel-list-filter .card .card-body .room-equipment-field .collapse-link a:active {
     color: #7E22CE;
     border-bottom: 2px solid #7E22CE;
 }
@@ -4523,10 +4803,6 @@
 .skin-light .hostel-list-filter .card .card-body .price-field .title {
     font-weight: 500;
     font-size: 1.1rem;
-}
-
-.skin-light .hostel-list-filter .card .card-body .price-field .data-price {
-
 }
 
 .skin-light .hostel-list-filter .card .card-body .price-field .data-price > div {
@@ -4554,9 +4830,9 @@
 }
 
 
-.skin-light .hostel-list-filter .card .card-body .price-field > div .form-control-app {
+/*.skin-light .hostel-list-filter .card .card-body .price-field > div .form-control-app {
     height: calc(1.5em + 0.7rem) !important;
-}
+}*/
 
 /* Chrome, Safari, Edge, Opera */
 .skin-light .hostel-list-filter .card .card-body .price-field > div input::-webkit-outer-spin-button,
@@ -4583,17 +4859,137 @@
 
 }
 
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-header h5 {
+    font-size: 1.1rem;
+}
+
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .dropdown.sorting .dropdown-menu {
+    width: 100% !important;
+}
+
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .name-field label {
+    margin-bottom: 2px !important;
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: #212121;
+}
+
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .name-field .md-form.md-outline input[type=text]:focus:not([readonly]) {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 1.6px solid #7E22CE;
+    border-radius: 4px;
+}
+
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .price-field .title {
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .price-field .data-price > div {
+    font-size: .9rem;
+    font-weight: 500;
+}
+
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .price-field > div .md-form {
+    margin-bottom: 0 !important;
+}
+
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .equipment-field .equipment-label,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .star-field .star-label,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .room-equipment-field .room-equipment-label {
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: #212121;
+}
+
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .rating-field .rating-label,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .type-field .type-label {
+    font-weight: 500;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .rating-field .form-check label,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .type-field .form-check label {
+    display: inline-block;
+    margin-top: 14px;
+    padding-top: 1px;
+    padding-left: 23px;
+    font-size: .98rem;
+}
+
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .equipment-field .checkbox-field-bulk label,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .type-field .checkbox-field-bulk label,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .star-field .checkbox-field-bulk label,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .room-equipment-field .checkbox-field-bulk label {
+    padding-left: 28px;
+    padding-top: 2px;
+    padding-right: 36px;
+    margin-top: 10px;
+    font-size: .98rem;
+}
+
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .equipment-field .collapse-link,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .type-field .collapse-link,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .star-field .collapse-link,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .room-equipment-field .collapse-link {
+    margin-top: 12px;
+}
+
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .equipment-field .collapse-link a,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .type-field .collapse-link a,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .star-field .collapse-link a,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .room-equipment-field .collapse-link a {
+    color: #111827;
+    font-size: .92rem;
+    font-weight: 500;
+    border-bottom: 2px solid #f5f5f5;
+}
+
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .equipment-field .collapse-link a:hover,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .equipment-field .collapse-link a:focus,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .equipment-field .collapse-link a:active,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .type-field .collapse-link a:hover,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .type-field .collapse-link a:focus,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .type-field .collapse-link a:active,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .star-field .collapse-link a:hover,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .star-field .collapse-link a:focus,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .star-field .collapse-link a:active,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .room-equipment-field .collapse-link a:hover,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .room-equipment-field .collapse-link a:focus,
+.skin-light .hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .room-equipment-field .collapse-link a:active {
+    color: #7E22CE;
+    border-bottom: 2px solid #7E22CE;
+}
+
+
+
+
+
+
+
+
+
+
+
 .skin-light .hostels-list .card {
     cursor: pointer !important;
+    height: 233px !important;
     /*box-shadow: none;
-    background-color: #fafafa;
+    background-color: #fff !important;
     border: 2px solid #f5f5f5;
     box-sizing: content-box;*/
 }
 
+
+.skin-light .hostels-list .card .img-bulk {
+    padding-right: 15px;
+}
+
 .skin-light .hostels-list .card .img-bulk img {
     width: 100%;
-    height: 240px;
+    height: 233px;
     border-top-left-radius: 0.3rem;
     border-bottom-left-radius: 0.3rem;
 }
@@ -4601,7 +4997,7 @@
 .skin-light .hostels-list .card .img-bulk .hostel-favorite-btn {
     position: absolute;
     top: 10px;
-    right: 11px;
+    right: 24px;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-pack: center;
@@ -4630,12 +5026,12 @@
 .skin-light .hostels-list .card .img-bulk .hostel-favorite-btn i {
     display: inline-block;
     color: #fff;
-    font-size: 1.04rem;
+    font-size: 1.1rem;
 }
 
 .skin-light .hostels-list .card .img-bulk .promotion-banner {
     position: absolute;
-    top: 14px;
+    top: 16px;
     left: 11px;
     display: -ms-flexbox;
     display: flex;
@@ -4712,6 +5108,1644 @@
 }
 
 .skin-light .hostels-list .card .data-bulk .card-body {
-    padding: 15px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    padding-right: 12px;
 }
+
+.skin-light .hostels-list .card .data-bulk .card-body .header h4 {
+    font-size: 1.27rem;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .header .star-number {
+    padding-left: 8px;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .header .star-number i {
+    font-size: .8rem;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .header .location {
+    position: relative;
+    bottom: 8px;
+    font-size: .92rem;
+    font-weight: 500;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .data {
+    height: 75px;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .data div {
+    display: inline-block;
+    margin-right: 20px;
+    margin-bottom: 3px;
+    font-size: 0.9rem;
+    color: #6e7582;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .data div.cancellation {
+    display: block;
+    color: #00c851;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-top: 2px;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .data div.room-available {
+    color: #ff3547;
+    font-weight: 600;
+    font-size: 0.8rem;
+    position: relative;
+    bottom: 5px;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-review {
+    margin-top: 3.5rem;
+    display: block;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-review .number {
+    background-color: #7E22CE;
+    display: inline-block;
+    font-size: .78rem;
+    color: #fff;
+    padding: 3px 6px 2px 6px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 8px;
+    border-top-right-radius: 0;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-review .title {
+    display: inline-block;
+    font-size: .95rem;
+    position: relative;
+    top: 2px;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-review .review-nbr {
+    display: inline-block;
+    font-size: .8rem;
+    position: relative;
+    top: 2px;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-price {
+    margin-top: 1.35rem;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-price.plus {
+    margin-top: .6rem;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-price .price {
+    font-size: 1.22rem;
+    color: #212121;
+    font-weight: 900;
+    margin-bottom: 0;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-price .detail {
+    font-size: 0.72rem;
+    font-weight: 500;
+    margin-top: -4px;
+}
+
+.skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-price .price-promotion {
+    color: #4f4f4f;
+    margin-bottom: -4px;
+    padding-right: 5px;
+    position: relative;
+    top: 3.6px;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 767px) {
+    .skin-light .hostels-list .card {
+        height: 200px !important;
+    }
+
+
+    .skin-light .hostels-list .card .img-bulk {
+        padding-right: 5px;
+    }
+
+    .skin-light .hostels-list .card .img-bulk img {
+        height: 200px;
+    }
+
+    .skin-light .hostels-list .card .img-bulk .hostel-favorite-btn {
+        position: absolute;
+        top: 4px;
+        right: 10px;
+        width: 31px;
+        height: 30px;
+        border-radius: 50%;
+    }
+
+    .skin-light .hostels-list .card .img-bulk .hostel-favorite-btn i {
+        font-size: 1rem;
+    }
+
+    .skin-light .hostels-list .card .img-bulk .promotion-banner {
+        position: absolute;
+        top: 8px;
+        left: 6px;
+        color: #fff;
+        font-size: 0.75rem;
+        padding-top: 2px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .skin-light .hostels-list .card .img-bulk .carousel .carousel-indicators {
+        bottom: -18px !important;
+    }
+
+    .skin-light .hostels-list .card .img-bulk .carousel .carousel-indicators li {
+        width: .35rem !important;
+        height: .35rem !important;
+    }
+
+    .skin-light .hostels-list .card .img-bulk .carousel .carousel-indicators li.active {
+        width: .46rem !important;
+        height: .46rem !important;
+    }
+
+    .skin-light .hostels-list .card .img-bulk .carousel .carousel-control-prev,
+    .skin-light .hostels-list .card .img-bulk .carousel .carousel-control-next {
+        top: 45%;
+        width: 25px;
+        height: 25px;
+        display: flex;
+    }
+
+    .skin-light .hostels-list .card .img-bulk .carousel .carousel-control-prev {
+        left: 5px;
+    }
+
+    .skin-light .hostels-list .card .img-bulk .carousel .carousel-control-next {
+        right: 5px
+    }
+
+
+    .skin-light .hostels-list .card .img-bulk .carousel .carousel-control-prev-icon,
+    .skin-light .hostels-list .card .img-bulk .carousel .carousel-control-next-icon {
+        width: 20px;
+        height: 20px;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body {
+        padding-top: 3px;
+        padding-bottom: 3px;
+        padding-right: 5px;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .header h4 {
+        font-size: 0.98rem;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .header .star-number {
+        padding-left: 4px;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .header .star-number i {
+        font-size: .55rem;
+        position: relative;
+        bottom: 0.6px;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .header .location {
+        font-size: .8rem;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .data {
+        height: 75px;
+        margin-top: -4px;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .data > div {
+        display: block;
+        margin-right: 4px;
+        font-size: 0.7rem;
+        font-weight: 500;
+        color: #6e7582;
+        line-height: 15px;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .data div.cancellation {
+        display: block;
+        color: #00c851;
+        font-weight: 600;
+        font-size: 0.7rem;
+        margin-top: 0;
+        line-height: 15px;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .data div.room-available {
+        color: #ff3547;
+        font-weight: 600;
+        font-size: 0.65rem;
+        position: relative;
+        top: 2px;
+        bottom: 0;
+        line-height: 10px;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-review {
+        margin-top: 0;
+        display: block;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-review .no-data {
+        font-size: 0.65rem !important;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-review .number {
+        font-size: .6rem;
+        padding: 2px 5px 0 5px;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-review .title {
+        display: inline-block;
+        font-size: .7rem;
+        position: relative;
+        top: 2px;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-review .review-nbr {
+        display: inline-block;
+        font-size: .6rem;
+        font-weight: 500;
+        position: relative;
+        top: 2px;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-price {
+        margin-top: 5px;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-price.plus {
+        margin-top: 0;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-price .price {
+        font-size: 0.95rem;
+        color: #212121;
+        font-weight: 900;
+        margin-bottom: 0;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-price .detail {
+        font-size: 0.5rem;
+        font-weight: 600;
+        margin-top: -4px;
+    }
+
+    .skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-price .price-promotion {
+        color: #4f4f4f;
+        margin-bottom: -4px;
+        padding-right: 5px;
+        position: relative;
+        top: 3.6px;
+        font-size: 0.65rem;
+        font-weight: 600 !important;
+    }
+
+
+
+
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .skin-light .hostels-list .card .img-bulk .carousel .carousel-control-prev,
+    .skin-light .hostels-list .card .img-bulk .carousel .carousel-control-next {
+        display: flex;
+    }
+}
+
+.skin-light .pagination.pg-primary .page-item.active .page-link {
+    background-color: #7E22CE !important;
+}
+
+.skin-light .pagination.pg-primary .page-item.active .page-link:hover {
+    background-color: #7E22CE !important;
+}
+
+.skin-light .pagination.pg-primary .page-item .page-link {
+    margin-right: 2px;
+    margin-left: 2px;
+}
+
+.skin-light .hostel-gallery {
+    padding-left: 1.45rem !important;
+    padding-right: 1.45rem !important;
+}
+
+.skin-light .hostel-gallery .mdb-lightbox figure img {
+    cursor: pointer;
+    border-radius: 0.4rem;
+}
+
+.skin-light .hostel-gallery .mdb-lightbox figure.principale img {
+    width: 100%;
+    height: 400px;
+}
+
+.skin-light .hostel-gallery .mdb-lightbox figure.children img {
+    width: 100%;
+    height: 192.1px;
+}
+
+.skin-light .hostel-gallery .mdb-lightbox .lightbox-plus {
+    color: #FFFFFF;
+    background-color: rgba(0, 0, 0, .85);
+    cursor: pointer;
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    padding: 8px 12px;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 767px) {
+    .skin-light .hostel-gallery .mdb-lightbox figure.principale img {
+        width: 100%;
+        height: 190px;
+    }
+
+    .skin-light .hostel-gallery .mdb-lightbox .lightbox-plus {
+        cursor: pointer;
+        position: absolute;
+        left: 17px;
+        bottom: 15px;
+        padding: 5px 8px;
+        border-radius: 0.5rem;
+        font-size: 0.7rem;
+    }
+
+    .skin-light .hostel-gallery .mdb-lightbox figure.children img {
+        width: 100%;
+        height: 110px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .skin-light .hostel-gallery .mdb-lightbox figure.principale img {
+        width: 100%;
+        height: 240px;
+    }
+
+    .skin-light .hostel-gallery .mdb-lightbox .lightbox-plus {
+        color: #FFFFFF;
+        background-color: rgba(0, 0, 0, .85);
+        cursor: pointer;
+        position: absolute;
+        left: 20px;
+        bottom: 20px;
+        padding: 8px 12px;
+        border-radius: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .skin-light .hostel-gallery .mdb-lightbox figure.children img {
+        width: 100%;
+        height: 112.1px;
+    }
+
+
+}
+
+.skin-light .pswp__bg {
+    background: #1f2937;
+}
+
+.skin-light .pswp__top-bar {
+    background-color: #1f2937
+}
+
+.skin-light .pswp__container .pswp__item img {
+    border-radius: 0.4rem;
+}
+
+.skin-light .hostel-info .card .card-body .category {
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: #fff;
+    background-color: #691cff;
+    padding: 3px 10px;
+    border-radius: 0.4rem;
+}
+
+.skin-light .hostel-info .card .card-body .share > .dropdown > a,
+.skin-light .hostel-info .card .card-body .favorite a {
+    border-radius: 0.3rem !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    width: 47px !important;
+    height: 46px !important;
+}
+
+.skin-light .hostel-info .card .card-body .share > .dropdown > a:hover,
+.skin-light .hostel-info .card .card-body .share > .dropdown > a:focus,
+.skin-light .hostel-info .card .card-body .share > .dropdown > a:active,
+.skin-light .hostel-info .card .card-body .favorite a:hover,
+.skin-light .hostel-info .card .card-body .favorite a:focus,
+.skin-light .hostel-info .card .card-body .favorite a:active {
+    background-color: rgba(171, 109, 224, 0.2) !important;
+}
+
+.skin-light .hostel-info .card .card-body .share > .dropdown > a > i,
+.skin-light .hostel-info .card .card-body .favorite > a > i {
+    font-size: 1.25rem;
+    color: #7E22CE;
+}
+
+.skin-light .hostel-info .card .card-body .share .dropdown .dropdown-menu a i {
+    font-size: 1.2rem;
+    position: relative;
+    top: 1px;
+}
+
+.skin-light .hostel-info .card .card-body .room a {
+    font-size: 1rem !important;
+}
+
+.skin-light .hostel-info .card .card-body .content-title .star-number {
+    position: relative;
+    top: -8.5px;
+    font-size: 0.88rem;
+}
+
+.skin-light .hostel-info .card .card-body .hostel-review .number {
+    background-color: #7E22CE;
+    display: inline-block;
+    font-size: .78rem;
+    color: #fff;
+    padding: 3px 6px 2px 6px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 8px;
+    border-top-right-radius: 0;
+}
+
+.skin-light .hostel-info .card .card-body .hostel-review .title {
+    display: inline-block;
+    font-size: .95rem;
+    position: relative;
+    top: 2px;
+}
+
+.skin-light .hostel-info .card .card-body .hostel-review .review-nbr {
+    display: inline-block;
+    font-size: .85rem;
+    position: relative;
+    top: 2px;
+}
+
+.skin-light .hostel-info .card .card-body .icon-review i {
+    font-size: .24rem;
+}
+
+.skin-light .hostel-info .card .card-body .hostel-location {
+    position: relative;
+    top: 1px;
+    font-size: .92rem;
+    font-weight: 500;
+}
+
+.skin-light .hostel-info .card .card-body .hostel-location span {
+    display: inline-block;
+    position: relative;
+    top: 1.15px;
+}
+
+.skin-light .hostel-info .card .card-body .hostel-description strong {
+    color: #212121 !important;
+    font-weight: 600;
+}
+
+/*.skin-light .hostel-info .card .card-body .hostel-description a.more,
+.skin-light .hostel-info .card .card-body .hostel-equipment a.more {
+    color: #7E22CE;
+    border-bottom: 2px solid #f5f5f5;
+}
+
+.skin-light .hostel-info .card .card-body .hostel-description a.more:hover,
+.skin-light .hostel-info .card .card-body .hostel-description a.more:focus,
+.skin-light .hostel-info .card .card-body .hostel-description a.more:active,
+.skin-light .hostel-info .card .card-body .hostel-equipment a.more:hover,
+.skin-light .hostel-info .card .card-body .hostel-equipment a.more:focus,
+.skin-light .hostel-info .card .card-body .hostel-equipment a.more:active {
+    color: #7E22CE !important;
+    border-bottom: 2px solid #7E22CE;
+}*/
+
+/*.skin-light .hostel-info .card .card-body .hostel-description .modal .modal-content .modal-header .modal-title {
+    font-size: 1rem;
+    font-weight: bold;
+    padding-top: 5px;
+}*/
+
+.skin-light .hostel-info .card .card-body .hostel-description .modal .modal-content .modal-body img.img-fluid {
+    width: 100%;
+    height: 280px;
+}
+
+@media (max-width: 767px) {
+    .skin-light .hostel-info .card .card-body .hostel-description a {
+        position: relative;
+        bottom: 15px;
+    }
+
+    .skin-light .hostel-info .card .card-body .hostel-description .modal .modal-content .modal-body img.img-fluid {
+        width: 100%;
+        height: 180px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .skin-light .hostel-info .card .card-body .hostel-description a {
+        position: relative;
+        bottom: 15px;
+    }
+
+    .skin-light .hostel-info .card .card-body .hostel-description .modal .modal-content .modal-body img.img-fluid {
+        width: 100%;
+        height: 250px;
+    }
+}
+
+
+.skin-light .hostel-info .card .card-body .hostel-equipment h5,
+.skin-light .hostel-equipment .card .card-body .equipment h5 {
+    font-size: 1.15rem;
+    font-weight: 600;
+}
+
+.skin-light .hostel-info .card .card-body .hostel-equipment .data div,
+.skin-light .hostel-equipment .card .card-body .equipment .data div {
+    font-size: 0.96rem;
+    margin-bottom: 0.7rem;
+}
+
+.skin-light .hostel-info .card .card-body .hostel-equipment .modal .modal-content .modal-body ul li,
+.skin-light .hostel-equipment .card .card-body .equipment ul li {
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+}
+
+.skin-light .hostel-info .card .card-body .hostel-equipment .modal .modal-content .modal-body ul li i,
+.skin-light .hostel-equipment .card .card-body .equipment ul li i {
+    position: relative;
+    bottom: 3px;
+    font-size: 0.3rem;
+    color: #4b5563;
+}
+
+.skin-light .hostel-room-list .card .view {
+    height: 190px;
+}
+
+.skin-light .hostel-room-list .card .view img {
+    width: 323px;
+    height: 190px;
+}
+
+.skin-light .hostel-room-list .card .view .carousel .carousel-control-prev,
+.skin-light .hostel-room-list .card .view .carousel .carousel-control-next {
+    top: 44%;
+    background-color: #212121 !important;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    opacity: 0.8;
+}
+
+.skin-light .hostel-room-list .card .view .carousel .carousel-control-prev,
+.skin-light .hostel-room-list .card .view .carousel .carousel-control-prev,
+.skin-light .hostel-room-list .card .view .carousel .carousel-control-next,
+.skin-light .hostel-room-list .card .view .carousel .carousel-control-next {
+    display: flex;
+}
+
+.skin-light .hostel-room-list .card .view .carousel .carousel-control-prev {
+    left: 10px;
+}
+
+.skin-light .hostel-room-list .card .view .carousel .carousel-control-next {
+    right: 10px
+}
+
+.skin-light .hostel-room-list .card .view .carousel .carousel-control-prev-icon,
+.skin-light .hostel-room-list .card .view .carousel .carousel-control-next-icon {
+    width: 25px;
+    height: 25px;
+}
+
+.skin-light .hostel-room-list .card .card-body .image_nbr {
+    position: absolute;
+    top: 8rem;
+    right: 24px;
+    display: inline-block;
+    color: #fff;
+    z-index: 2;
+    padding: 6px 14px 4px 14px;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
+    text-align: center;
+}
+
+.skin-light .hostel-room-list .card .card-body .image_nbr {
+
+}
+
+.skin-light .hostel-room-list .card .card-body .image_nbr {
+
+}
+
+.skin-light .hostel-room-list .card .card-body .card-title {
+    font-size: 1.05rem;
+}
+
+
+.skin-light .hostel-room-list .card .card-body .data ul li {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.skin-light .hostel-room-list .card .card-body .data ul li i.fa-smoking-ban,
+.skin-light .hostel-room-list .card .card-body .data ul li i.fa-smoking,
+.skin-light .hostel-room-list .card .card-body .data ul li i.fa-parking,
+.skin-light .hostel-room-list .card .card-body .data ul li i.fa-border-style {
+    font-size: 1rem;
+}
+
+.skin-light .hostel-room-list .card .card-body .cancellation .cancellation-text a {
+    font-size: 0.9rem;
+    color: #00c851;
+    border-bottom: 2px solid #fafafa;
+}
+
+.skin-light .hostel-room-list .card .card-body .cancellation .cancellation-text a:hover,
+.skin-light .hostel-room-list .card .card-body .cancellation .cancellation-text a:focus,
+.skin-light .hostel-room-list .card .card-body .cancellation .cancellation-text a:active {
+    color: #00c851;
+    border-bottom: 2px solid #00c851;
+}
+
+.skin-light .hostel-room-list .card .card-body .room-available {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #ff3547;
+    margin-top: 6px;
+}
+
+.skin-light .hostel-room-list .card .card-body .room-detail > a {
+    font-size: 0.95rem;
+    color: #D916A3;
+    border-bottom: 2px solid #f5f5f5;
+}
+
+.skin-light .hostel-room-list .card .card-body .room-detail > a:hover,
+.skin-light .hostel-room-list .card .card-body .room-detail > a:focus,
+.skin-light .hostel-room-list .card .card-body .room-detail > a:active {
+    color: #D916A3;
+    border-bottom: 2px solid #D916A3;
+}
+
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-carousel > div {
+    height: 280px;
+}
+
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-carousel img {
+    width: 100%;
+    height: 280px;
+}
+
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-carousel .carousel .carousel-control-prev,
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-carousel .carousel .carousel-control-next {
+    top: 44%;
+    background-color: #212121 !important;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    opacity: 0.8;
+}
+
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-carousel .carousel .carousel-control-prev,
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-carousel .carousel .carousel-control-prev,
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-carousel .carousel .carousel-control-next,
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-carousel .carousel .carousel-control-next {
+    display: flex;
+}
+
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-carousel .carousel .carousel-control-prev {
+    left: 10px;
+}
+
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-carousel .carousel .carousel-control-next {
+    right: 10px
+}
+
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-carousel .carousel .carousel-control-prev-icon,
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-carousel .carousel .carousel-control-next-icon {
+    width: 25px;
+    height: 25px;
+}
+
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .data,
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-equipment .data,
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-equipment ul {
+    padding-left: 2px;
+}
+
+.skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-equipment ul li i {
+    position: relative;
+    bottom: 3px;
+    font-size: 0.3rem;
+    color: #4b5563;
+}
+
+@media (max-width: 767px) {
+    .skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-carousel > div {
+        height: 230px;
+    }
+
+    .skin-light .hostel-room-list .card .card-body .room-detail .modal .modal-body .room-carousel img {
+        width: 100%;
+        height: 230px;
+    }
+}
+
+.skin-light .hostel-room-list .card .card-body .card-footer {
+    padding: 1rem 1rem 0.75rem 1rem;
+    background-color: transparent;
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.skin-light .hostel-room-list .card .card-body .card-footer .promotion-banner {
+    display: inline-block;
+    z-index: 2;
+    color: #fff;
+    background-color: #ff3547;
+    border-radius: 0.3rem;
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.skin-light .hostel-room-list .card .card-body .card-footer .price-promotion {
+    color: #4f4f4f;
+    margin-bottom: -4px;
+    padding-right: 5px;
+    position: relative;
+    top: 3.6px;
+    font-size: 0.88rem;
+}
+
+.skin-light .hostel-room-list .card .card-body .card-footer .price {
+    font-size: 1.18rem;
+    color: #212121;
+    font-weight: 900;
+    margin-bottom: 0;
+}
+
+.skin-light .hostel-room-list .card .card-body .card-footer .detail {
+    font-size: 0.72rem;
+    font-weight: 500;
+    /*margin-top: -4px;*/
+}
+
+.skin-light .hostel-room-list .card .card-body .card-footer .more {
+    margin-top: 5px;
+}
+
+.skin-light .hostel-room-list .card .card-body .card-footer .more > a {
+    font-size: 0.95rem;
+    color: #D916A3;
+    border-bottom: 2px solid #f5f5f5;
+}
+
+.skin-light .hostel-room-list .card .card-body .card-footer .more > a:hover,
+.skin-light .hostel-room-list .card .card-body .card-footer .more > a:focus,
+.skin-light .hostel-room-list .card .card-body .card-footer .more > a:active {
+    color: #D916A3;
+    border-bottom: 2px solid #D916A3;
+}
+
+.skin-light .hostel-room-list .card .card-body .card-footer .more .modal .modal-body .detail-price-room .title,
+.skin-light .hostel-room-list .card .card-body .card-footer .more .modal .modal-body .detail-price-promotion .title,
+.skin-light .hostel-room-list .card .card-body .card-footer .more .modal .modal-body .detail-price-taxe .title {
+    font-size: 0.95rem;
+}
+
+.skin-light .hostel-room-list .card .card-body .card-footer .more .modal .modal-body .detail-price-night {
+    font-size: 0.7rem;
+    position: relative;
+    top: -5px;
+    margin-bottom: -3px;
+}
+
+.skin-light .hostel-room-list .card .card-body .card-footer .more .modal .modal-body .detail-price-promotion,
+.skin-light .hostel-room-list .card .card-body .card-footer .more .modal .modal-body .detail-price-taxe {
+    margin-bottom: 10px;
+}
+
+.skin-light .hostel-room-list .card .card-body .card-footer .more .modal .modal-body .detail-price-total {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    padding-top: 10px;
+}
+
+.skin-light .hostel-room-list .card .card-body .card-footer .more .modal .modal-body .detail-price-total .detail-price {
+    font-size: 1.1rem;
+}
+
+@media (max-width: 767px) {
+    .skin-light .hostel-room-list .card .card-body .card-footer .booking-btn {
+        position: absolute;
+        right: 12px;
+        bottom: 8px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .skin-light .hostel-room-list .card .card-body .card-footer .booking-btn {
+        position: absolute;
+        right: 12px;
+        bottom: 8px;
+    }
+}
+
+
+
+
+
+.skin-light .card.booking-data-info .card-body .room-info .img-bulk {
+    padding-right: 12px;
+}
+
+.skin-light .card.booking-data-info .card-body .room-info img {
+    width: 100%;
+    height: 110px;
+    border-radius: 0.4rem;
+}
+
+.skin-light .card.booking-data-info .card-body .room-info .carousel .carousel-control-prev,
+.skin-light .card.booking-data-info .card-body .room-info .carousel .carousel-control-next {
+    top: 40%;
+    background-color: #212121 !important;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    opacity: 0.8;
+}
+
+.skin-light .card.booking-data-info .card-body .room-info .carousel .carousel-control-prev,
+.skin-light .card.booking-data-info .card-body .room-info .carousel .carousel-control-next {
+    display: flex;
+}
+
+.skin-light .card.booking-data-info .card-body .room-info .carousel .carousel-control-prev {
+    left: 2px;
+}
+
+.skin-light .card.booking-data-info .card-body .room-info .carousel .carousel-control-next {
+    right: 2px
+}
+
+.skin-light .card.booking-data-info .card-body .room-info .carousel .carousel-control-prev-icon,
+.skin-light .card.booking-data-info .card-body .room-info .carousel .carousel-control-next-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.skin-light .card.booking-data-info .card-body .room-info .card-body .header h5 {
+    font-size: 1rem;
+}
+
+.skin-light .card.booking-data-info .card-body .room-info .card-body .footer .hostel-review {
+    margin-top: 1rem;
+    display: block;
+}
+
+.skin-light .card.booking-data-info .card-body .room-info .card-body .footer .hostel-review .number {
+    background-color: #7E22CE;
+    display: inline-block;
+    font-size: .78rem;
+    color: #fff;
+    padding: 3px 6px 2px 6px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 8px;
+    border-top-right-radius: 0;
+}
+
+.skin-light .card.booking-data-info .card-body .room-info .card-body .footer .hostel-review .title {
+    display: inline-block;
+    font-size: .85rem;
+    position: relative;
+    top: 2px;
+}
+
+.skin-light .card.booking-data-info .card-body .room-info .card-body .footer .hostel-review .review-nbr {
+    display: inline-block;
+    font-size: .75rem;
+    position: relative;
+    top: 2px;
+}
+
+.skin-light .card.booking-data-info .card-body .booking-detail .checkin .data,
+.skin-light .card.booking-data-info .card-body .booking-detail .checkout .data {
+    position: relative;
+    bottom: 2px;
+}
+
+.skin-light .card.booking-data-info .card-body .booking-detail .room-select span {
+    padding-left: 1px;
+    padding-right: 1px;
+    font-size: .8rem;
+}
+
+.skin-light .card.booking-data-info .card-body .booking-detail .info-data {
+    color: #00c853;
+}
+
+.skin-light .card.booking-data-info .card-body .booking-detail .info-data span {
+    border: 1.6px solid #00c853;
+    border-radius: 50%;
+    padding: 0 2px 0 2px;
+}
+
+.skin-light .card.booking-data-info .card-body .booking-detail .info-data span i {
+    font-size: .7rem;
+    color: #00c853;
+}
+
+.skin-light .card.booking-price .card-body .price {
+    font-size: 1.25rem;
+}
+
+.skin-light .card.booking-price .card-body .price-title {
+    font-size: .9rem;
+}
+
+.skin-light .card.booking-price .card-body .price-info {
+    font-size: .65rem;
+}
+
+.skin-light .booking-data-form .card .card-body .sup-help {
+    position: absolute;
+    top: -5px;
+}
+
+.skin-light .booking-data-form .payment-method > div {
+    width: 28%;
+    height: 38px;
+    display: inline-block;
+    border: 1px solid #e0e0e0;
+    background-color: transparent;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.3rem 0.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+}
+
+.skin-light .booking-data-form .payment-method > div.mtn-bulk,
+.skin-light .booking-data-form .payment-method > div.moov-bulk,
+.skin-light .booking-data-form .payment-method > div.wari-bulk {
+    padding: 0.1rem 0.5rem;
+}
+
+.skin-light .booking-data-form .payment-method > div img.orange,
+.skin-light .booking-data-form .payment-method > div img.visa,
+.skin-light .booking-data-form .payment-method > div img.wave {
+    width: 80%;
+}
+
+.skin-light .booking-data-form .payment-method > div img.mtn,
+.skin-light .booking-data-form .payment-method > div img.mastercard {
+    width: 58%;
+}
+
+.skin-light .booking-data-form .payment-method > div img.moov {
+    width: 42.5%;
+}
+
+.skin-light .booking-data-form .payment-method > div img.wari {
+    width: 41%;
+}
+
+/* Chrome, Safari, Edge, Opera */
+.skin-light .phone-field input::-webkit-outer-spin-button,
+.skin-light .phone-field input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+.skin-light .phone-field > div input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.skin-light .commande-success .card .card-body h1 span {
+    position: relative;
+    bottom: 7.1px;
+}
+
+.skin-light .commande-success .card .card-body .booking-room-detail .room-info .img-bulk {
+    padding-right: 12px;
+}
+
+.skin-light .commande-success .card .card-body .booking-room-detail .room-info img {
+    width: 100%;
+    height: 130px;
+    border-radius: 0.4rem;
+}
+
+.skin-light .commande-success .card .card-body .booking-room-detail .carousel .carousel-control-prev,
+.skin-light .commande-success .card .card-body .booking-room-detail .carousel .carousel-control-next {
+    top: 40%;
+    background-color: #212121 !important;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    opacity: 0.8;
+}
+
+.skin-light .commande-success .card .card-body .booking-room-detail .carousel .carousel-control-prev,
+.skin-light .commande-success .card .card-body .booking-room-detail .carousel .carousel-control-next {
+    display: flex;
+}
+
+.skin-light .commande-success .card .card-body .booking-room-detail .carousel .carousel-control-prev {
+    left: 2px;
+}
+
+.skin-light .commande-success .card .card-body .booking-room-detail .carousel .carousel-control-next {
+    right: 2px;
+}
+
+.skin-light .commande-success .card .card-body .booking-room-detail .carousel .carousel-control-prev-icon,
+.skin-light .commande-success .card .card-body .booking-room-detail .carousel .carousel-control-next-icon {
+    width: 20px;
+    height: 20px;
+}
+
+.skin-light .commande-success .card .card-body .booking-room-detail .room-info .card-body .header h5 {
+    font-size: 1.2rem;
+}
+
+.skin-light .commande-success .card .card-body .booking-room-detail .room-info .card-body .footer .hostel-review {
+    margin-top: 1rem;
+    display: block;
+}
+
+.skin-light .commande-success .card .card-body .booking-room-detail .room-info .card-body .footer .hostel-review .number {
+    background-color: #7E22CE;
+    display: inline-block;
+    font-size: .78rem;
+    color: #fff;
+    padding: 3px 6px 2px 6px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 8px;
+    border-top-right-radius: 0;
+}
+
+.skin-light .commande-success .card .card-body .booking-room-detail .room-info .card-body .footer .hostel-review .title {
+    display: inline-block;
+    font-size: .85rem;
+    position: relative;
+    top: 2px;
+}
+
+.skin-light .commande-success .card .card-body .booking-room-detail .room-info .card-body .footer .hostel-review .review-nbr {
+    display: inline-block;
+    font-size: .75rem;
+    position: relative;
+    top: 2px;
+}
+
+
+.skin-light .commande-success .card .card-body .booking-detail > div {
+    margin-bottom: 10px;
+}
+
+.skin-light .commande-success .card .card-body .booking-detail .title {
+    font-size: 0.98rem;
+}
+
+.skin-light .commande-success .card .card-body .booking-detail .content {
+    position: relative;
+    bottom: 2px;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.skin-light .hostel-data .card .card-body .title {
+    font-size: 1.02rem;
+    font-weight: 600;
+}
+
+.skin-light .hostel-data .card .card-body .title i {
+    font-size: 1.1rem;
+}
+
+.skin-light .hostel-data .card .card-body .content {
+    font-size: 0.95rem;
+}
+
+.skin-light .hostel-data .card .card-body .content .payment-method > div {
+    width: 10%;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0.3rem 0.5rem;
+}
+
+.skin-light .hostel-data .card .card-body .content .payment-method > div img.mtn,
+.skin-light .hostel-data .card .card-body .content .payment-method > div img.visa,
+.skin-light .hostel-data .card .card-body .content .payment-method > div img.mastercard {
+    width: 80%;
+}
+
+.skin-light .hostel-data .card .card-body .content > div img.moov {
+    width: 59%;
+}
+
+.skin-light .hostel-data .card .card-body .content .payment-method > div img.wari {
+    width: 55%;
+}
+
+@media (max-width: 767px) {
+    .skin-light .hostel-data .card .card-body .content .payment-method > div {
+        width: 30%;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .skin-light .hostel-data .card .card-body .content .payment-method > div {
+        width: 20%;
+    }
+}
+
+/*.skin-light .hostels-list .card .data-bulk .card-body .footer .hostel-review {
+    margin-top: 3.5rem;
+    display: block;
+}*/
+
+.skin-light .review .card .card-body .hostel-review .number,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .hostel-review .number {
+    background-color: #7E22CE;
+    display: inline-block;
+    font-size: 0.9rem;
+    color: #fff;
+    padding: 3px 10px 2px 10px;
+    border-radius: 20px 0 8px 20px;
+}
+
+.skin-light .review .card .card-body .hostel-review .title,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .hostel-review .title {
+    display: inline-block;
+    font-size: 1.05rem;
+    position: relative;
+    top: 2px;
+    padding-left: 5px;
+}
+
+.skin-light .review .card .card-body .hostel-review .icon i,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .hostel-review .icon i {
+    font-size: 0.2rem;
+}
+
+.skin-light .review .card .card-body .hostel-review .review-nbr,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .hostel-review .review-nbr {
+    display: inline-block;
+    font-size: 1rem;
+    position: relative;
+    top: 2px;
+    padding-right: 10px;
+}
+
+.skin-light .review .card .card-body .review-graph .title > div,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .review-graph .title > div {
+    font-weight: 500;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.skin-light .review .card .card-body .review-graph .content,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .review-graph .content {
+    width: 100%;
+    height: 6px;
+    background-color: #eeeeee;
+    border-radius: 0.4rem;
+    padding: 0;
+}
+
+.skin-light .review .card .card-body .review-graph .content .data,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .review-graph .content .data {
+    height: 6px;
+    background-color: #7E22CE;
+    border-radius: 0.4rem;
+}
+
+.skin-light .review .card .card-body .review-list .data .icon .user-prefix,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .data .icon .user-prefix {
+    color: #ffffff !important;
+    font-size: .9rem;
+    font-weight: 500;
+    background-color: #2196f3 !important;
+    padding-left: 9px;
+    padding-right: 9px;
+    padding-top: 3px;
+    padding-bottom: 2px;
+    border: 2px solid #2196f3;
+}
+
+.skin-light .review .card .card-body .review-list .data .info,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .data .info {
+    padding-left: 7px;
+}
+
+.skin-light .review .card .card-body .review-list .data .info .name,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .data .info .name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    position: relative;
+    top: 1px;
+}
+
+.skin-light .review .card .card-body .review-list .data .info .name .country,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .data .info .name .country {
+    font-size: 0.7rem;
+    font-weight: 400;
+    padding-top: 3.5px;
+    margin-left: 3px;
+}
+
+.skin-light .review .card .card-body .review-list .data .info .time,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .data .info .time {
+    font-size: 0.85rem;
+    position: relative;
+    bottom: 1px;
+}
+
+.skin-light .review .card .card-body .review-list .rating .number,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .rating .number {
+    background-color: #7E22CE;
+    display: inline-block;
+    font-size: 0.9rem;
+    color: #fff;
+    padding: 3px 10px 2px 10px;
+    border-radius: 20px 0 8px 20px;
+}
+
+.skin-light .review .card .card-body .review-list .rating .title,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .rating .title {
+    display: inline-block;
+    font-size: 1.05rem;
+    position: relative;
+    top: 2px;
+    padding-left: 3px;
+}
+
+.skin-light .review .card .card-body .review-list .content,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .content {
+    margin-left: 2.3rem;
+    margin-right: 2.3rem;
+    font-size: 0.95rem;
+}
+
+.skin-light .review .card .card-body .review-list hr,
+.skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list hr {
+    margin: 25px 2px 25px 2px;
+    border-top: 2px solid #f5f5f5;
+}
+
+@media (max-width: 767px) {
+    .skin-light .review .card .card-body .hostel-review .number,
+    .skin-light .review .modal .modal-dialog .modal-content .modal-body .hostel-review .number {
+        font-size: 0.8rem;
+        padding: 3px 10px 0 10px;
+    }
+
+    .skin-light .review .card .card-body .hostel-review .title,
+    .skin-light .review .modal .modal-dialog .modal-content .modal-body .hostel-review .title {
+        font-size: 0.85rem;
+        padding-left: 2px;
+    }
+
+    .skin-light .review .card .card-body .hostel-review .review-nbr,
+    .skin-light .review .modal .modal-dialog .modal-content .modal-body .hostel-review .review-nbr {
+        display: inline-block;
+        font-size: 0.85rem;
+        position: relative;
+        top: 2px;
+        padding-right: 0;
+    }
+
+    .skin-light .review .card .card-body .hostel-review .btn {
+        display: block;
+        width: 100%;
+    }
+
+    .skin-light .review .card .card-body .review-list .data .icon .user-prefix,
+    .skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .data .icon .user-prefix {
+        font-size: .8rem;
+        background-color: #2196f3 !important;
+        padding: 3px 8px 1px 8px;
+        border: 1px solid #2196f3;
+    }
+
+    .skin-light .review .card .card-body .review-list .data .info,
+    .skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .data .info {
+        padding-left: 4px;
+    }
+
+    .skin-light .review .card .card-body .review-list .data .info .name,
+    .skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .data .info .name {
+        font-weight: 500;
+        font-size: 0.85rem;
+        position: relative;
+        top: 1px;
+    }
+
+    .skin-light .review .card .card-body .review-list .data .info .name .country,
+    .skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .data .info .name .country {
+        display: none;
+    }
+
+    .skin-light .review .card .card-body .review-list .data .info .time,
+    .skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .data .info .time {
+        font-size: 0.7rem;
+    }
+
+    .skin-light .review .card .card-body .review-list .rating .number,
+    .skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .rating .number {
+        font-size: 0.78rem;
+        padding: 2px 6px 0 6px;
+    }
+
+    .skin-light .review .card .card-body .review-list .rating .title,
+    .skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .rating .title {
+        font-size: 0.8rem;
+        padding-left: 0;
+    }
+
+    .skin-light .review .card .card-body .review-list .content,
+    .skin-light .review .modal .modal-dialog .modal-content .modal-body .review-list .content {
+        margin-left: 0.5rem;
+        margin-right: 0;
+        font-size: 0.75rem;
+    }
+
+    .skin-light .review .card .card-body .review-footer .btn {
+        display: block;
+        width: 100%;
+    }
+}
+
+.skin-light .review .modal.hostel-review-check-modal {
+    z-index: 1150;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.skin-light .admin-performance .data {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin: 3px;
+}
+
+.skin-light .admin-performance .data.revenu {
+    border: 25px solid #00C851;
+}
+
+.skin-light .admin-performance .data.cancel {
+    border: 25px solid #ff4444;
+}
+
+.skin-light .admin-performance .data.reduction {
+    border: 25px solid #2196f3;
+}
+
+.skin-light .admin-performance .data.paiement {
+    border: 25px solid #442ED1;
+}
+
+.skin-light .admin-performance .data.taxe {
+    border: 25px solid #ff9800;
+}
+
+.skin-light .admin-performance .data.commission {
+    border: 25px solid #3b465e;
+}
+
+.skin-light .admin-performance .data .title {
+    font-size: .8rem;
+    line-height: normal;
+}
+
+.skin-light .admin-performance .data .content {
+    font-size: 0.95rem;
+    font-weight: bold;
+}
+
+.skin-light .admin-performance .data.revenu .content {
+    color: #00C851;
+}
+
+.skin-light .admin-performance .data.cancel .content {
+    color: #ff4444;
+}
+
+.skin-light .admin-performance .data.reduction .content {
+    color: #9933CC;
+}
+
+.skin-light .partner-create-intro .partner-create-form .select-wrapper.md-form.md-outline input {
+    height: calc(1.5em + 1rem + 2px);
+    padding: 0.5rem 1rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    margin-top: 0 !important;
+}
+
+.skin-light .partner-create-intro .partner-create-form .mdb-select.md-form {
+    margin-top: 8px;
+}
+
+.skin-light .partner-create-intro .partner-create-form .select-wrapper.md-form.md-outline+label {
+    top: -0.5rem !important;
+    left: 8px;
+    border-radius:4px
+}
+
+.skin-light .partner-create-intro .partner-create-form h1 {
+    font-size: 2rem;
+}
+
+.skin-light .partner-create-intro .partner-create-form h1 i {
+    font-size: 1.8rem;
+    position: relative;
+    bottom: 3px;
+}
+
+.skin-light .partner-create-intro h1 {
+    font-size: 2.8rem;
+}
+
+.skin-light .partner-create-intro .rgba-indigo-strong,
+.skin-light .partner-create-intro .rgba-indigo-strong:after {
+    background-color: rgba(153, 51, 204, 0.1)
+}
+
+/*.skin-light .partner-create-intro .card,
+.skin-light .partner-create-intro .card .card-body {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+}*/
+
+.skin-light .card.booking-view-item .card-body .state div {
+    display: inline-block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #FFFFFF;
+    padding: 1px 6px 0.5px 6px;
+    border-radius: 0.3rem;
+}
+
+.skin-light .card.booking-view-item .card-body .title {
+    font-size: 0.9rem;
+}
+
+.skin-light .card.booking-view-item .card-body .content {
+    font-size: 0.95rem;
+    position: relative;
+    bottom: 1px;
+}
+
+.skin-light .card.booking-view-item .card-body .booking-number {
+    padding-top: 4px;
+    padding-bottom: 3px;
+    border-radius: 0.3rem;
+}
+
+.skin-light .card.booking-view-item .card-body .cancellation-btn a {
+    color: #212121;
+    font-size: 0.8rem;
+}
+
+.skin-light .card.booking-view-item .card-body .cancellation-btn a:hover,
+.skin-light .card.booking-view-item .card-body .cancellation-btn a:focus,
+.skin-light .card.booking-view-item .card-body .cancellation-btn a:active {
+    color: #7E22CE;
+}
+
+.skin-light .card.card-cascade .card-body img.image-view {
+    height: 120px;
+}
+
+.skin-light .modal .modal-content .modal-body .cancellation-condition {
+    background-color: #eeeeee;
+    padding: 4px 6px;
+    border-radius: 0.3rem;
+    font-size: 0.75rem;
+}
+
+.skin-light .fixed-action-btn {
+    position: fixed;
+    z-index: 998;
+    right: 50px;
+    bottom: 75px;
+    margin-bottom:0;
+    padding-top:15px
+}
+
+.skin-light .fixed-action-btn a {
+    padding: 12px 16px !important;
+    font-size: 1.08rem;
+    line-height: normal;
+    box-shadow: none;
+    -webkit-transition:all .3s linear;
+    -o-transition:all .3s linear;
+    transition:all .3s linear
+}
+
+@media (max-width: 767px) {
+    .skin-light .fixed-action-btn {
+        position: fixed;
+        z-index: 998;
+        right: 0;
+        bottom: 50px;
+    }
+}
+
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .skin-light .fixed-action-btn {
+        position: fixed;
+        z-index: 998;
+        right: 0;
+        bottom: 50px;
+    }
+}
+
+#cookieConsent {
+    background-color: #2e2e2e;
+    opacity: .95;
+    color: #fff;
+    text-align: center;
+    display: none;
+    position: fixed;
+    z-index: 99000;
+    bottom: 0;
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 12px 10px 10px 10px;
+}
+
+@media (max-width: 767px) {
+    #cookieConsent {
+        font-size: 0.8rem;
+    }
+
+    #cookieConsent div {
+        margin-top: 10px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    #cookieConsent {
+        font-size:.85rem;
+    }
+
+    #cookieConsent div {
+        margin-top: 10px;
+    }
+}
+
+
+
+
+
+
 

@@ -1,0 +1,118 @@
+{% extends 'site/layout.html.twig' %}
+
+{% block title 'Réservation' %}
+
+{% block meta %}
+    {% set content = '' %}
+    <meta name="description" content="{{ content }}"/>
+    <meta property="og:description" content="{{ content }}" />
+{% endblock %}
+
+{% block app_flashes %}{% endblock %}
+
+{% block app_intro %}
+    <section class="bc container">
+        <div>
+            {{ wo_render_breadcrumbs({viewTemplate: '_breadcrumb.html.twig', listClass: 'breadcrumb mb-0',
+                itemClass: 'breadcrumb-item', separator: '>', separatorClass: 'fas fa-long-arrow-alt-right'}) }}
+        </div>
+    </section>
+{% endblock %}
+
+{% block app_body %}
+    {{ include('site/booking/index/content.html.twig') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+        $(document).ready(function() {
+            // Material select
+            $('.mdb-select').materialSelect();
+            $('.select-wrapper.md-form.md-outline input.select-dropdown').bind('focus blur', function () {
+                $(this).closest('.select-outline').find('label').toggleClass('active');
+                $(this).closest('.select-outline').find('.caret').toggleClass('active');
+            });
+
+            // Booking occupant data
+            let $wrapper = $('#booking-form-occupant-wrapper'),
+                $nameTitle = '',
+                $emailTitle = '<small class="form-text text-primary font-weight-stone-500" style="margin-top: -5px">Nous envoyons des e-mails uniquement pour communiquer des informations relatives aux reservations.</small>',
+                prototype = $wrapper.data('prototype');
+            let index = $wrapper.data('index'),
+                $occupantState = parseInt($wrapper.data('index'));
+
+            if ($wrapper.length) {
+                if ($occupantState === 0) {
+                    for (let index = 0; index < window.hostel.DEFAULT_ROOM; index++) {
+                        $wrapper.append(content(index))
+
+                        let $booking_content =  $('#booking_room_booker_info_' + index + ' .card-body');
+                        $booking_content.append(prototype.replace(/__name__/g, index));
+                        $('#booking_occupants_'+index).addClass('row');
+
+                        let $booker_input = $('#booking_occupants_'+index+' .md-form.md-outline');
+                        $booker_input.wrap('<div class="col-12 col-md-6 booker-wrap" />');
+
+                        $('#booking_occupants_'+index+' .booker-wrap').each(function (i, e) {
+                            (i === 0) ? $(e).append($nameTitle) : $(e).append($emailTitle);
+                        })
+
+                        $wrapper.data('index', index + 1);
+                    }
+                }
+            }
+        });
+
+        function content(index) {
+            let $content = '<div class="col-12"><div id="booking_room_booker_info_'+index+'" class="card mb-4"><div class="card-body p-3">' +
+                '<h4 class="h4-responsive font-weight-stone-600 text-dark">{{ room.name }}</h4>';
+            $content += ' <ul class="list-unstyled dark-grey-text list-inline small-8 mb-1">';
+
+            {% if room.area %}$content += '<li class="list-inline-item mr-3"><i class="fas fa-border-style mr-1 my-1"></i> {{ room.area }} m²</li>';{% endif %}
+            $content += '<li class="list-inline-item mr-3"><i class="fas fa-user-friends mr-1 my-1"></i> {{ room.occupant > 1 ? room.occupant ~ ' personnes' : room.occupant ~ ' personne' }}</li>';
+            {% if room.beddings|length > 0 %}
+                $content += '<li class="list-inline-item mr-3"><i class="fas fa-bed mr-1 my-1"></i> {% for bedding in room.beddings %}{{ bedding.number }} {{ bedding.name }} {% if not loop.last %}, {% endif %}{% endfor %}</li>'
+            {% endif %}
+
+            {% if room.smoker %}
+                {% if room.smoker == 1 %}
+                    $content += '<li class="list-inline-item mr-3"><i class="fas fa-smoking-ban mr-1 my-1"></i> Non-fumeurs</li>';
+                {% elseif room.smoker == 2 %}
+                    $content += '<li class="list-inline-item mr-3"><i class="fas fa-smoking mr-1 my-1"></i> Fumeurs</li>';
+                {% elseif room.smoker == 3 %}
+                    $content += '<li class="list-inline-item mr-3"><i class="fas fa-smoking-ban mr-1"></i><i class="fas fa-smoking mr-1"></i> Fumeurs et non-fumeurs</li>';
+                {% endif %}
+            {% endif %}
+
+            {% if room.hostel.wifi %}
+                $content += '<li class="list-inline-item mr-3"><i class="fas fa-wifi mr-1 my-1"></i> Accès Wi-Fi gratuit</li>';
+            {% endif %}
+            {% if room.hostel.parking %}
+                $content += '<li class="list-inline-item mr-3"><i class="fas fa-parking mr-1 my-1"></i> Parking gratuit</li>';
+            {% endif %}
+            $content += '</ul>';
+
+            {% if room.equipments|length > 0 %}
+                {% for equipment in room.equipments %}
+                    {% if loop.index <= 10 %}
+                        $content += '<div class="badge badge-primary font-weight-normal mr-2 z-depth-0">{{ equipment.name }}</div>';
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            $content += '<div class="font-weight-normal dark-grey-text small-9 mt-3 mb-0">Veuillez indiquer les informations de l\'une des personnes séjournant dans cette chambre.</div>' +
+                '</div></div></div>';
+
+            return $content;
+        }
+    </script>
+{% endblock %}
+
+
+

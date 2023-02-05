@@ -1,0 +1,17 @@
+{% extends 'admin/layout.html.twig' %}
+
+{% block title %}Rapport Financier des remboursements | {{ parent() }}{% endblock %}
+
+{% block app_body %}
+    {% include 'admin/cancelPayout/report/_header.html.twig' %}
+
+    {% include 'admin/cancelPayout/report/_content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}

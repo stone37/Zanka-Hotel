@@ -25,7 +25,7 @@
                     </th>
                     <th scope="col" class="font-weight-stone-500 text-center">Nom</th>
                     <th scope="col" class="font-weight-stone-500 text-center">Montant en %</th>
-                    <th scope="col" class="font-weight-stone-500 text-center">Inclus dans le prix</th>
+                    {#<th scope="col" class="font-weight-stone-500 text-center">Inclus dans le prix</th>#}
                     <th scope="col" class="font-weight-stone-500 text-center">Status</th>
                     <th scope="col" class="font-weight-stone-500 text-center"></th>
                 </tr>
@@ -42,13 +42,13 @@
                         </td>
                         <td class="text-center">{{ taxe.name|capitalize }}</td>
                         <td class="text-center">{{ taxe.value }}</td>
-                        <td class="text-center">
+                        {#<td class="text-center">
                             {% if taxe.includedInPrice %}
                                 <span class="badge badge-grey">Oui</span>
                             {% else %}
                                 <span class="badge badge-grey">Non</span>
                             {% endif %}
-                        </td>
+                        </td>#}
                         <td class="text-center">
                             {% if taxe.enabled %}
                                 <span class="badge badge-success">Actif</span>
@@ -84,7 +84,7 @@
 {% else %}
     <div class="row app-user d-flex justify-content-center">
         <div class="col-12 col-md-8 text-center mt-3 mt-md-5">
-            <h3 class="h3-responsive font-weight-stone-600">
+            <h3 class="h3-responsive font-weight-stone-600 text-dark">
                 Vous n'avez aucun taux.
             </h3>
         </div>

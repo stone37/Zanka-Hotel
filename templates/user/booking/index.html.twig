@@ -1,0 +1,37 @@
+{% extends "user/layout.html.twig" %}
+
+{% block title 'Nouvelles réservations' %}
+
+{% block meta %}
+    <meta name="google" content="nositelinkssearchbox">
+{% endblock %}
+
+{% block app_booking %}{% endblock %}
+{% block app_flashes %}{% endblock %}
+
+{% block app_body %}
+    <section class="container my-lg-4 mb-4 d-lg-flex justify-content-lg-between align-items-center">
+        <h3 class="h3-responsive font-weight-stone-600 text-dark">Nouvelles réservations</h3>
+        <div>
+            <div class="btn-group title" role="group">
+                <a href="{{ path('app_user_booking_index') }}"
+                   class="btn btn-sm btn-dark waves-effect z-depth-0 px-3 px-lg-4">
+                    <span class="d-none d-md-inline">Nouvelles réservations</span>
+                    <span class="d-inline d-md-none">Nouvelles</span>
+                </a>
+                <a href="{{ path('app_user_booking_confirmed_index') }}"
+                   class="btn btn-sm btn-grey waves-effect z-depth-0 px-3 px-lg-4">
+                    <span class="d-none d-md-inline">Réservations confirmer</span>
+                    <span class="d-inline d-md-none">Confirmer</span>
+                </a>
+                <a href="{{ path('app_user_booking_cancel_index') }}"
+                   class="btn btn-sm btn-grey waves-effect px-3 z-depth-0 px-lg-4">
+                    <span class="d-none d-md-inline">Réservations annuler</span>
+                    <span class="d-inline d-md-none">Annuler</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    {{ include('user/booking/index/content.html.twig') }}
+{% endblock %}

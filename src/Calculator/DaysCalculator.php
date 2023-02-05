@@ -2,11 +2,11 @@
 
 namespace App\Calculator;
 
-use DateTime;
+use DateTimeInterface;
 
 class DaysCalculator
 {
-    public function getDays(DateTime $start, DateTime $end): int
+    public function getDays(DateTimeInterface $start, DateTimeInterface $end): int
     {
         $interval = date_diff($start, $end);
 

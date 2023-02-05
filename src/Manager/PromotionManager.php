@@ -14,6 +14,11 @@ class PromotionManager
         $this->repository = $repository;
     }
 
+    public function hasPromotion(Room $room)
+    {
+
+    }
+
     public function hasRoomPromotion(Room $room): bool
     {
         return ($this->repository->fetchRoomPromotion($room) === 0) ? false : true;

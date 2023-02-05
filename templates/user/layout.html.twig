@@ -1,0 +1,65 @@
+{% extends 'site/layout.html.twig' %}
+
+{% set dashboard = isActive('app_user_index') %}
+{% set booking_index = isActive('app_user_booking_index') %}
+{% set booking_confirm = isActive('app_user_booking_confirmed_index') %}
+{% set booking_cancel = isActive('app_user_booking_cancel_index') %}
+{% set favoris_index  = isActive('app_user_favorite_index') %}
+{% set invoice = isActive('app_user_invoice_index') %}
+{% set review = isActive('app_user_review_index') %}
+{% set profil_edit = isActive('app_user_profil_edit') %}
+{% set profil_pw = isActive('app_user_change_password') %}
+{% set profil_delete = isActive('app_user_delete') %}
+
+{% block app_intro %}
+    <nav class="navbar navbar-expand navbar-light dashboard-navbar d-none d-lg-block py-0">
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item {% if dashboard %}active{% endif %}">
+                    <a href="{{ path('app_user_index') }}" class="nav-link" aria-haspopup="true" aria-expanded="false">
+                        Tableau de bord
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item {% if booking_index or booking_confirm or booking_cancel  %}active{% endif %}">
+                    <a  href="{{ path('app_user_booking_index') }}" class="nav-link" aria-haspopup="true" aria-expanded="false">
+                        Mes reservations
+                    </a>
+                </li>
+                <li class="nav-item {% if favoris_index %}active{% endif %}">
+                    <a  href="{{ path('app_user_favorite_index') }}" class="nav-link" aria-haspopup="true" aria-expanded="false">
+                        Mes favoris
+                    </a>
+                </li>
+                <li class="nav-item {% if invoice %}active{% endif %}" >
+                    <a href="{{ path('app_user_invoice_index') }}" class="nav-link" aria-haspopup="true" aria-expanded="false">
+                        Mes factures
+                    </a>
+                </li>
+                <li class="nav-item {% if review %}active{% endif %}" >
+                    <a href="{{ path('app_user_review_index') }}" class="nav-link" aria-haspopup="true" aria-expanded="false">
+                        Mes avis
+                    </a>
+                </li>
+                <li class="nav-item {% if profil_edit or profil_pw or profil_delete %}active{% endif %}">
+                    <a href="{{ path('app_user_profil_edit') }}" class="nav-link"
+                       aria-haspopup="true" aria-expanded="false"> Modifier mon profil
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% include 'Ui/_stylesheets.html.twig' with {'path': 'assets/css/user/user.css'} %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/user/user.js'} %}
+{% endblock %}
+

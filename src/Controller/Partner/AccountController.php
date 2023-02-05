@@ -5,7 +5,6 @@ namespace App\Controller\Partner;
 use App\Controller\Traits\ControllerTrait;
 use App\Dto\ProfileUpdateDto;
 use App\Exception\TooManyEmailChangeException;
-use App\Form\UpdateAvatarForm;
 use App\Repository\UserRepository;
 use App\Service\ProfileService;
 use App\Form\UpdateProfileForm;
@@ -41,12 +40,11 @@ class AccountController extends AbstractController
     #[Route(path: '/profil/edit', name: 'app_partner_profil_edit')]
     public function edit(Request $request): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        //$this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         $user = $this->getUserOrThrow();
 
         $formUpdate = $this->createForm(UpdateProfileForm::class, new ProfileUpdateDto($user));
-        $formAvatarUpdate = $this->createForm(UpdateAvatarForm::class, $user);
 
         $formUpdate->handleRequest($request);
 
@@ -65,7 +63,7 @@ class AccountController extends AbstractController
                     $this->addFlash('success', 'Votre profil a bien été mis à jour');
                 }
 
-                return $this->redirectToRoute('app_user_profil_edit');
+                return $this->redirectToRoute('app_partner_profil_edit');
             }
         } catch (TooManyEmailChangeException) {
             $this->addFlash('error', "Vous avez déjà un changement d'email en cours.");
@@ -73,29 +71,7 @@ class AccountController extends AbstractController
 
         return $this->render('partner/account/edit.html.twig', [
             'form_update' => $formUpdate->createView(),
-            'form_avatar' => $formAvatarUpdate->createView(),
             'user' => $user
         ]);
-    }
-
-    #[Route(path: '/profil/avatar', name: 'app_user_avatar')]
-    public function avatar(Request $request)
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        $user = $this->getUserOrThrow();
-
-        $form = $this->createForm(UpdateAvatarForm::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $this->em->persist($user);
-            $this->em->flush();
-
-            $this->addFlash('success', 'Avatar mis à jour avec succès');
-        }
-
-        return $this->redirectToRoute('app_partner_profil_edit');
     }
 }

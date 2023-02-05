@@ -1,0 +1,56 @@
+{% form_theme form 'Ui/Form/partner_theme.html.twig' %}
+
+<div class="card">
+    <div class="card-body p-3">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'partner-create-form'}}) }}
+            <div class="form-row">
+                <div class="col-12">
+                    <h1 class="font-weight-bold text-dark mt-2 mb-3 text-center">
+                        <i class="fas fa-unlock d-none d-lg-inline"></i> Inscrivez-vous gratuitement
+                    </h1>
+                </div>
+                <div class="col-12 col-md-6">
+                    {{ form_row(form.lastname) }}
+                </div>
+                <div class="col-12 col-md-6">
+                    {{ form_row(form.firstname) }}
+                </div>
+                <div class="col-12">
+                    {{ form_row(form.email) }}
+                </div>
+                <div class="col-12 phone-field">
+                    {{ form_row(form.phone) }}
+                </div>
+                <div class="col-12 col-md-6">
+                    {{ form_widget(form.country) }}
+                </div>
+                <div class="col-12 col-md-6">
+                    {{ form_row(form.city) }}
+                </div>
+                <div class="col-12">
+                    {{ form_widget(form.plainPassword.first) }}
+                </div>
+                <div class="col-12">
+                    {{ form_widget(form.plainPassword.second) }}
+                </div>
+            </div>
+        {{ form_widget(form._token) }}
+
+        <div class="text-center my-3">
+            <button type="submit" class="btn btn-primary btn-lg z-depth-0 font-weight-stone-500 px-4" >Demande de création de compte</button>
+        </div>
+        <div class="mt-3 mb-1 text-center">
+            Vous avez déja un compte ? <a href="{{ path('app_login') }}" class="link font-weight-stone-500">Connectez-vous</a>
+        </div>
+        <div class="small-9 text-center mt-3">
+            En demandant, j'accepte les <a href="{{ path('app_cgu') }}" class="link font-weight-stone-500">conditions d'utilisation</a>
+            et la <a href="{{ path('app_confidentialite') }}" class="link font-weight-stone-500">politique de confidentialité</a> de {{ config.settings.name }}.com.
+        </div>
+        {{ form_end(form, {'render_rest': false}) }}
+    </div>
+</div>
+
+{#<div class="small-9 mt-3 mb-4">
+En créant un compte, j'accepte les <a href="{{ path('app_cgu') }}" class="link font-weight-stone-500">conditions d'utilisation</a>
+et la <a href="{{ path('app_confidentialite') }}" class="link font-weight-stone-500">politique de confidentialité</a> de {{ config.settings.name }}.com.
+</div>#}

@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
 use App\Entity\Traits\PositionTrait;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\RoomEquipmentRepository;
@@ -9,9 +11,21 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RoomEquipmentRepository::class)]
+#[GetCollection(
+    openapiContext: ['summary' => 'Récupère tous les équipements des chambres'],
+    paginationItemsPerPage: 20,
+    paginationMaximumItemsPerPage: 20,
+    paginationClientItemsPerPage: true,
+    normalizationContext: ['groups' => ['equipment:room:read']],
+)]
+#[Get(
+    openapiContext: ['summary' => 'Récupère un équipement'],
+    normalizationContext: ['groups' => ['equipment:room:read']]
+)]
 class RoomEquipment
 {
     use TimestampableTrait;
@@ -20,18 +34,22 @@ class RoomEquipment
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['hostel:read', 'equipment:room:read'])]
     private ?int $id = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 100)]
     #[ORM\Column(length: 180, nullable: true)]
+    #[Groups(['hostel:read', 'equipment:room:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['hostel:read', 'equipment:room:read'])]
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'equipments')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['hostel:read'])]
     private ?RoomEquipmentGroup $roomEquipmentGroup = null;
 
     #[ORM\ManyToMany(targetEntity: Room::class, mappedBy: 'equipments')]

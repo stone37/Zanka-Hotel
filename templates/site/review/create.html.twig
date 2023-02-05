@@ -1,0 +1,30 @@
+{% extends 'site/layout.html.twig' %}
+
+{% block title 'Laissez un avis sur l\'établissement ' ~ booking.hostel.name %}
+
+{% block meta %}
+    {% set content = 'Laissez un avis sur l\'établissement ' ~ booking.hostel.name %}
+    <meta name="description" content="{{ content }}"/>
+    <meta property="og:description" content="{{ content }}" />
+{% endblock %}
+
+{% block app_flashes %}{% endblock %}
+
+{% block app_intro %}
+    <section class="bc container">
+        <div>
+            {{ wo_render_breadcrumbs({viewTemplate: '_breadcrumb.html.twig', listClass: 'breadcrumb',
+                itemClass: 'breadcrumb-item', separator: '>', separatorClass: 'fas fa-long-arrow-alt-right'}) }}
+        </div>
+    </section>
+    <section class="container mb-2">
+        <a href="{{ path('app_hostel_show', {'slug': booking.hostel.slug}) }}" class="link font-weight-stone-600">
+            <i class="fas fa-reply mr-1"></i> Retour vers l'hébergement
+        </a>
+    </section>
+{% endblock %}
+
+{% block app_body %}
+    {{ include('site/review/create/content.html.twig') }}
+{% endblock %}
+

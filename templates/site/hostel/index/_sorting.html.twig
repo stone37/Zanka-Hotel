@@ -6,10 +6,15 @@
         Trier par <i class="fas fa-angle-down ml-2"></i>
     </a>
 
-    <div class="dropdown-menu dropdown-dark">
-        <a class="dropdown-item" href="{{ path(route, {'order_by': 'createdAt', 'sort': 'desc'}|merge(queryParameters)) }}">Plus récent</a>
-        <a class="dropdown-item" href="{{ path(route, {'order_by': 'createdAt', 'sort': 'asc'}|merge(queryParameters)) }}">Plus ancien</a>
-        <a class="dropdown-item" href="{{ path(route, {'order_by': 'rooms.price', 'sort': 'desc'}|merge(queryParameters)) }}">Plus cher</a>
-        <a class="dropdown-item" href="{{ path(route, {'order_by': 'rooms.price', 'sort': 'asc'}|merge(queryParameters)) }}">Moins cher</a>
+    <div class="dropdown-menu dropdown-menu-right dropdown-dark">
+        <a class="dropdown-item" href="{{ path(route, {'order_by': 'createdAt', 'sort_by': 'desc'}|merge(queryParameters)) }}">Plus récent</a>
+        <a class="dropdown-item" href="{{ path(route, {'order_by': 'createdAt', 'sort_by': 'asc'}|merge(queryParameters)) }}">Plus ancien</a>
+        <a class="dropdown-item" href="{{ path(route, {'order_by': 'rooms.price', 'sort_by': 'desc'}|merge(queryParameters)) }}">Plus cher</a>
+        <a class="dropdown-item" href="{{ path(route, {'order_by': 'rooms.price', 'sort_by': 'asc'}|merge(queryParameters)) }}">Moins cher</a>
+        <a class="dropdown-item" href="{{ path(route, {'order_by': 'averageRating', 'sort_by': 'desc'}|merge(queryParameters)) }}">Meilleure note</a>
+        <a class="dropdown-item" href="{{ path(route, {'order_by': 'starNumber', 'sort_by': 'desc'}|merge(queryParameters)) }}">Étoile décroissant</a>
+        <a class="dropdown-item" href="{{ path(route, {'order_by': 'starNumber', 'sort_by': 'asc'}|merge(queryParameters)) }}">Étoile croissant</a>
     </div>
 </div>
+
+

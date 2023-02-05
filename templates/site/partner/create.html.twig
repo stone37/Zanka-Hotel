@@ -1,0 +1,85 @@
+{% extends 'site/layout.html.twig' %}
+
+{% set settings = config.settings %}
+
+{% block title 'Développez votre activité d\'hébergement grâce à nos solutions d\'hébergement' %}
+
+{% block meta %}
+    {% set content = 'Ajoutez votre hôtel et développez votre entreprise sur '~ settings.name ~'.com avec notre
+    plateforme numérique, marketing en ligne, réservation, publicité. Des avantages tels que le paiement anticipé,
+    le portefeuille et les réservations régulières.' %}
+    <meta name="description" content="{{ content }}"/>
+    <meta property="og:description" content="{{ content }}" />
+{% endblock %}
+
+{% block app_flashes %}{% endblock %}
+
+{% block app_intro %}
+    <div id="partner-create-intro" class="view jarallax partner-create-intro" data-jarallax='{"speed": 0.2}'>
+        <div class="mask rgba-black-light">
+            <div class="container h-100">
+                <div class="row smooth-scroll my-4">
+                    <div class="col-12 col-md-8 col-lg-6">
+                        {{ include('site/partner/form.html.twig') }}
+                    </div>
+                    <div class="col-12 col-md-4 col-lg-6 text-center">
+                        <h1 class="font-weight-bold text-white d-none d-lg-block">Bienvenue dans le centre commercial de l'hôtel</h1>
+                        <h4 class="h4-responsive font-weight-bold text-white d-none d-lg-block">Ajoutez votre hôtel et augmentez votre chiffre d'affaires.</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block app_body %}
+    {% include 'site/partner/create/content.html.twig' %}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        html, body, header, .view.jarallax {
+            height: 120vh;
+            min-height: 100%;
+        }
+
+        .view.jarallax {
+            background-repeat:no-repeat;
+            background-size:cover;
+            background-position:center center;
+            background: url({{ asset('assets/img/partner_intro.jpg') }});
+        }
+
+        @media (min-width: 992px) {
+            html, body, header, .view.jarallax {
+                height: 132vh;
+                min-height: 100%;
+            }
+        }
+
+        @media (max-width: 757px) {
+            html, body, header, .view.jarallax {
+                height: 200vh;
+                min-height: 100%;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Material select
+            $('.mdb-select').materialSelect();
+            $('.select-wrapper.md-form.md-outline input.select-dropdown').bind('focus blur', function () {
+                $(this).closest('.select-outline').find('label').toggleClass('active');
+                $(this).closest('.select-outline').find('.caret').toggleClass('active');
+            });
+        });
+    </script>
+{% endblock %}
+
+

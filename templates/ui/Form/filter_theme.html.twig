@@ -258,3 +258,113 @@
         </div>
     </div>
 {% endblock %}
+
+{% block _categories_categories_row %}
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
+        {{- form_label(form) -}}
+        <div {{ block('widget_container_attributes') }}>
+            {% set first_array = [] %}
+            {% set second_array = [] %}
+
+            {%- for child in form %}
+                {% if loop.index <= 3 %}
+                    {% set first_array = first_array|merge([child]) %}
+                {% else %}
+                    {% set second_array = second_array|merge([child]) %}
+                {% endif %}
+            {% endfor -%}
+
+            {% for child in first_array %}
+                <div class="checkbox-field-bulk">
+                    {{- form_widget(child) -}}
+                    {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+                </div>
+            {% endfor %}
+
+            {% if second_array|length > 0 %}
+                <div class="collapse" id="collapseEquipment">
+                    {% for child in second_array %}
+                        <div class="checkbox-field-bulk">
+                            {{- form_widget(child) -}}
+                            {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="collapse-link">
+                    <a class="collapse-show" data-toggle="collapse" href="#collapseEquipment" aria-expanded="false" aria-controls="collapseEquipment">
+                        Afficher plus
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block _starNumber_row %}
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
+        {{- form_label(form) -}}
+        <div {{ block('widget_container_attributes') }}>
+            {% for child in form %}
+                <div class="checkbox-field-bulk">
+                    {{- form_widget(child) -}}
+                    {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block _roomEquipments_roomEquipments_row %}
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
+        {{- form_label(form) -}}
+        <div {{ block('widget_container_attributes') }}>
+            {% set first_array = [] %}
+            {% set second_array = [] %}
+
+            {%- for child in form %}
+                {% if loop.index <= 3 %}
+                    {% set first_array = first_array|merge([child]) %}
+                {% else %}
+                    {% set second_array = second_array|merge([child]) %}
+                {% endif %}
+            {% endfor -%}
+
+            {% for child in first_array %}
+                <div class="checkbox-field-bulk">
+                    {{- form_widget(child) -}}
+                    {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+                </div>
+            {% endfor %}
+
+            {% if second_array|length > 0 %}
+                <div class="collapse" id="collapseRoomEquipment">
+                    {% for child in second_array %}
+                        <div class="checkbox-field-bulk">
+                            {{- form_widget(child) -}}
+                            {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="collapse-link">
+                    <a class="collapse-show" data-toggle="collapse" href="#collapseRoomEquipment" aria-expanded="false" aria-controls="collapseRoomEquipment">
+                        Afficher plus
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+

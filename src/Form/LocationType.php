@@ -21,7 +21,7 @@ class LocationType extends AbstractType
             ->add('town', TextType::class, ['label' => 'Quartier ou commune (facultatif)'])
             ->add('detail', TextType::class, [
                 'label' => 'Detail sur l\'emplacement (facultatif)',
-                'attr' => ['placeholder' => 'Veuillez remplir l\'adresse détaillée, y compris le quartier, la rue, ...']
+                'help' => 'Veuillez remplir l\'adresse détaillée, y compris le quartier, la rue'
             ])
             ->add('latitude', TextType::class, ['label' => 'Latitude'])
             ->add('longitude', TextType::class, ['label' => 'Longitude']);

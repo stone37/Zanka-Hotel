@@ -3,13 +3,16 @@
 namespace App\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 trait SocialLoggableTrait
 {
     #[ORM\Column(type: 'string', nullable: true)]
+    #[Groups(['user:social:write', 'user:read'])]
     private ?string $googleId = null;
 
     #[ORM\Column(type: 'string', nullable: true)]
+    #[Groups(['user:social:write', 'user:read'])]
     private ?string $facebookId = null;
 
     public function getGoogleId(): ?string

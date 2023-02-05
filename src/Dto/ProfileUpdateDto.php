@@ -11,7 +11,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @Unique(entityClass="App\Entity\User", field="email")
  * @Unique(entityClass="App\Entity\User", field="phone")
- * @Unique(entityClass="App\Entity\User", field="username")
  */
 class ProfileUpdateDto
 {
@@ -34,11 +33,11 @@ class ProfileUpdateDto
     #[Assert\Length(min: 10, max: 180, minMessage: 'Le numéro de téléphone est trop court.', maxMessage: 'Le numéro de téléphone est trop long.')]
     public ?string $phone;
 
-    public ?string $address;
+    public ?string $address = null;
 
-    public ?string $country;
+    public ?string $country = null;
 
-    public ?string $city;
+    public ?string $city = null;
 
     public $user;
 

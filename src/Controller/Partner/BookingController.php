@@ -7,6 +7,7 @@ use App\Entity\Booking;
 use App\Entity\Room;
 use App\Event\BookingCancelledEvent;
 use App\Event\BookingConfirmedEvent;
+use App\Event\BookingPartnerCancelledEvent;
 use App\Form\Filter\BookingType;
 use App\Manager\BookingManager;
 use App\Model\Admin\BookingSearch;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/p')]
@@ -43,7 +45,7 @@ class BookingController extends AbstractController
     }
 
     #[Route(path: '/bookings', name: 'app_partner_booking_index')]
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $search = new BookingSearch();
 
@@ -61,7 +63,7 @@ class BookingController extends AbstractController
     }
 
     #[Route(path: '/bookings/confirmed', name: 'app_partner_booking_confirmed_index')]
-    public function confirm(Request $request)
+    public function confirm(Request $request): Response
     {
         $search = new BookingSearch();
 
@@ -79,7 +81,7 @@ class BookingController extends AbstractController
     }
 
     #[Route(path: '/bookings/cancelled', name: 'app_partner_booking_cancel_index')]
-    public function cancel(Request $request)
+    public function cancel(Request $request): Response
     {
         $search = new BookingSearch();
 
@@ -100,7 +102,7 @@ class BookingController extends AbstractController
     }
 
     #[Route(path: '/bookings/archive', name: 'app_partner_booking_archive_index')]
-    public function archive(Request $request)
+    public function archive(Request $request): Response
     {
         $search = new BookingSearch();
 
@@ -118,7 +120,7 @@ class BookingController extends AbstractController
     }
 
     #[Route(path: '/bookings/{id}/show/{type}', name: 'app_partner_booking_show', requirements: ['id' => '\d+'])]
-    public function show(Booking $booking, $type)
+    public function show(Booking $booking, $type): Response
     {
         $this->accessDeniedException($booking);
 
@@ -129,7 +131,7 @@ class BookingController extends AbstractController
     }
 
     #[Route(path: '/bookings/{id}/room', name: 'app_partner_booking_room', requirements: ['id' => '\d+'])]
-    public function room(Request $request, Room $room)
+    public function room(Request $request, Room $room): Response
     {
         if ($room->getHostel()->getOwner() !== $this->getUserOrThrow()) {
             throw $this->createAccessDeniedException();
@@ -153,7 +155,7 @@ class BookingController extends AbstractController
     }
 
     #[Route(path: '/bookings/{id}/confirmed', name: 'app_partner_booking_confirmed', requirements: ['id' => '\d+'], options: ['expose' => true])]
-    public function confirmed(Request $request, Booking $booking)
+    public function confirmed(Request $request, Booking $booking): RedirectResponse|JsonResponse
     {
         $this->accessDeniedException($booking);
 
@@ -195,7 +197,7 @@ class BookingController extends AbstractController
     }
 
     #[Route(path: '/bookings/bulk/confirmed', name: 'app_partner_booking_bulk_confirmed', options: ['expose' => true])]
-    public function confirmedBulk(Request $request)
+    public function confirmedBulk(Request $request): RedirectResponse|JsonResponse
     {
         $ids = (array) json_decode($request->query->get('data'));
 
@@ -250,7 +252,7 @@ class BookingController extends AbstractController
     }
 
     #[Route(path: '/bookings/{id}/cancelled', name: 'app_partner_booking_cancelled', requirements: ['id' => '\d+'], options: ['expose' => true])]
-    public function cancelled(Request $request, Booking $booking)
+    public function cancelled(Request $request, Booking $booking): RedirectResponse|JsonResponse
     {
         $this->accessDeniedException($booking);
 
@@ -263,7 +265,7 @@ class BookingController extends AbstractController
 
                 $this->manager->cancel($booking);
 
-                $this->dispatcher->dispatch(new BookingCancelledEvent($booking));
+                $this->dispatcher->dispatch(new BookingPartnerCancelledEvent($booking));
 
                 $this->addFlash('success', 'La reservation a été annuler');
             } else {
@@ -376,7 +378,7 @@ class BookingController extends AbstractController
 
     private function accessDeniedException(Booking $booking)
     {
-        if ($booking->getOwner() !== $this->getUserOrThrow()) {
+        if ($booking->getHostel()->getOwner() !== $this->getUserOrThrow()) {
             throw $this->createAccessDeniedException();
         }
     }

@@ -1,0 +1,115 @@
+{% import 'ui/Macro/money.html.twig' as money %}
+
+{% set btn_state = room_available <= 0 ? false : true %}
+
+<div class="card-footer">
+    {% if priceReduced %}
+        {% set promotion = priceReduced %}
+        <div class="promotion-banner">
+            {% if promotion.action.type == 'percentage_discount' %}
+                {{ app_room_promotion_data(promotion) }}
+            {% else %}
+                {{ money.convertAndFormat(app_room_promotion_data(promotion)) }}
+            {% endif %}
+        </div>
+    {% endif %}
+    <div class="d-flex justify-content-between align-items-end">
+        <div>
+            <div class="d-flex room-price">
+                {% if priceReduced %}
+                    <div class="price-promotion font-weight-stone-500">
+                        {% set price = room.price + app_room_taxe(room) %}
+                        <s>{{ money.convertAndFormat(price * night * room_nbr) }}</s>
+                    </div>
+                {% endif %}
+                <div class="price">{{ money.convertAndFormat(app_room_total_price(room) * night * room_nbr) }}</div>
+            </div>
+            <div class="detail grey-text">
+                {% if room_nbr > 1 or night > 1 %}
+                    <div>
+                        Pour {{ (room_nbr > 1) ? room_nbr ~ ' chambres' : 'une chambre' }} et
+                        {{ (night > 1) ? night ~ ' nuits' : 'une nuit' }}
+                    </div>
+                {% else %}
+                    <div>pour une nuit</div>
+                {% endif %}
+
+                {% if room_nbr > 1 or night > 1 %}
+                    <div>{{ money.convertAndFormat(app_room_total_price(room) * room_nbr) }} par nuit</div>
+                {% endif %}
+                <div>Taxes et frais compris</div>
+            </div>
+            <div class="more">
+                <a class="font-weight-stone-500" data-toggle="modal" data-target="#hostel-room-price-detail-modal-{{ room.id }}">
+                    Détails sur le prix <i class="fas fa-angle-right mr-1"></i>
+                </a>
+                <div class="modal fade" id="hostel-room-price-detail-modal-{{ room.id }}" tabindex="-1" role="dialog" aria-labelledby="hostel-room-price-detail-modal-label" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h6 class="modal-title px-0 pt-1 font-weight-stone-600 text-dark" id="hostel-room-price-detail-modal-label">
+                                    Détails sur le prix
+                                </h6>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <i class="fas fa-times text-danger"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="d-flex justify-content-between detail-price-room font-weight-stone-500">
+                                    <div class="title">
+                                        {{ room_nbr }} {{ (room_nbr > 1) ? 'chambres' : 'chambre' }} x {{ night }} {{ (night > 1) ? 'nuits' : 'nuit' }}
+                                    </div>
+                                    <div class="detail-price">
+                                        {{ money.convertAndFormat(room.price * night * room_nbr) }}
+                                    </div>
+                                </div>
+                                {% if room_nbr > 1 or night > 1 %}
+                                    <div class="detail-price-night text-default font-weight-stone-500">
+                                        {{ money.convertAndFormat(room.price) }} par nuit
+                                    </div>
+                                {% endif %}
+
+                                {% if priceReduced %}
+                                    {% set reduced = room.price - (app_room_total_price(room) - app_room_taxe(room)) %}
+                                    <div class="d-flex justify-content-between detail-price-promotion font-weight-stone-500">
+                                        <div class="title">Remise</div>
+                                        <div class="detail-price">
+                                            {{ money.convertAndFormat(reduced * night * room_nbr) }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                <div class="d-flex justify-content-between detail-price-taxe font-weight-stone-500">
+                                    <div class="title">Taxe et frais</div>
+                                    <div class="detail-price">
+                                        {{ money.convertAndFormat(app_room_taxe(room) * night * room_nbr) }}
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between detail-price-total font-weight-bold text-dark">
+                                    <div class="title">Total</div>
+                                    <div class="detail-price">
+                                        {{ money.convertAndFormat(app_room_total_price(room) * night * room_nbr) }}
+                                    </div>
+                                </div>
+
+                                <div class="mt-3">
+                                    <a href="{{ path('app_booking_check', {'id': room.id}) }}"
+                                       class="btn btn-primary btn-sm btn-block z-depth-0 {% if not btn_state %}disabled{% endif %}">
+                                        {% if btn_state %}Réserver{% else %}Complet{% endif %}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="booking-btn">
+            <a href="{{ path('app_booking_check', {'id': room.id}) }}"
+               class="btn btn-primary btn-md z-depth-0 {% if not btn_state %}disabled{% endif %}">
+                {% if btn_state %}Réserver{% else %}Complet{% endif %}
+            </a>
+        </div>
+    </div>
+</div>
+

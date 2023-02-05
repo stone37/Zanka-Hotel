@@ -2,13 +2,13 @@
     <div class="modal-dialog modal-mobile" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="heading font-weight-bold text-dark">Sélectionnez votre devise</h5>
+                <h5 class="heading font-weight-stone-600 text-dark">Sélectionnez votre devise</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="modal-body py-0">
-                {% if currencies|length > 0 %}
+                 {% if currencies|length > 0 %}
                     <ul class="list-group list-group-flush">
                         {% for code in currencies %}
                             <li class="list-group-item">

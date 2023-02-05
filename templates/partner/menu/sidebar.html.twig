@@ -4,7 +4,7 @@
         <li class="logo-sn waves-effect py-3">
             <div class="text-center">
                 <a href="{{ path('app_partner_index') }}" class="pl-0">
-                    <img src="" style="width: 180px !important;" alt="Logo du site" />
+                    <img src="{{ asset('assets/img/logo/logo_write.png') }}" style="width: 180px !important;" alt="Logo du site" />
                 </a>
             </div>
         </li>
@@ -132,12 +132,12 @@
                                     <span class="sv-normal">Tous les hébergements</span>
                                 </a>
                             </li>
-                            <li>
+                           {#<li>
                                 <a href="{{ path('app_partner_supplement_index') }}" class="waves-effect
                                     {% if supplement_index or supplement_edit or supplement_new %}active{% endif %}">
                                     <span class="sv-normal">Tous les suppléments</span>
                                 </a>
-                            </li>
+                            </li>#}
                         </ul>
                     </div>
                 </li>

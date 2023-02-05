@@ -1,4 +1,17 @@
 {
+    "api-platform/core": {
+        "version": "3.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "3.0",
+            "ref": "0330386d716d3eecc52ee5ac66976e733eb8f961"
+        },
+        "files": [
+            "./config/routes/api_platform.yaml",
+            "./src/ApiResource/.gitignore"
+        ]
+    },
     "babdev/pagerfanta-bundle": {
         "version": "v3.7.0"
     },
@@ -53,18 +66,6 @@
             "./config/packages/fos_ckeditor.yaml"
         ]
     },
-    "friendsofsymfony/elastica-bundle": {
-        "version": "6.1",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "5.0",
-            "ref": "46c9cd2c1e07f0fcfd97e96f12b03b2e0845c4cd"
-        },
-        "files": [
-            "./config/packages/fos_elastica.yaml"
-        ]
-    },
     "friendsofsymfony/jsrouting-bundle": {
         "version": "3.2",
         "recipe": {
@@ -75,6 +76,20 @@
         },
         "files": [
             "./config/routes/fos_js_routing.yaml"
+        ]
+    },
+    "gesdinet/jwt-refresh-token-bundle": {
+        "version": "1.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "13fb2b58ec6204211815eb6f4c69e4918e5af617"
+        },
+        "files": [
+            "./config/packages/gesdinet_jwt_refresh_token.yaml",
+            "./config/routes/gesdinet_jwt_refresh_token.yaml",
+            "./src/Entity/RefreshToken.php"
         ]
     },
     "google/recaptcha": {
@@ -104,8 +119,32 @@
             "./config/packages/knpu_oauth2_client.yaml"
         ]
     },
+    "lexik/jwt-authentication-bundle": {
+        "version": "2.16",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.5",
+            "ref": "5b2157bcd5778166a5696e42f552ad36529a07a6"
+        },
+        "files": [
+            "./config/packages/lexik_jwt_authentication.yaml"
+        ]
+    },
     "mhujer/breadcrumbs-bundle": {
         "version": "1.5.8"
+    },
+    "nelmio/cors-bundle": {
+        "version": "2.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.5",
+            "ref": "6bea22e6c564fba3a1391615cada1437d0bde39c"
+        },
+        "files": [
+            "./config/packages/nelmio_cors.yaml"
+        ]
     },
     "phpunit/phpunit": {
         "version": "9.5",

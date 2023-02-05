@@ -16,7 +16,7 @@ final class PasswordResetTokenCreatedEvent
 
     public function getUser(): User
     {
-        return $this->token->getUser();
+        return $this->token->getOwner();
     }
 
     public function getToken(): PasswordResetToken

@@ -8,7 +8,15 @@ class HostelSearch
 
     private ?array $equipments = [];
 
+    private ?string $category = '';
+
     private ?array $price = [];
+
+    private ?array $roomEquipments = [];
+
+    private ?array $starNumber = [];
+
+    private ?float $averageRating = null;
 
     public function getName(): ?string
     {
@@ -18,6 +26,18 @@ class HostelSearch
     public function setName(?string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getRoomEquipments(): ?array
+    {
+        return $this->roomEquipments;
+    }
+
+    public function setRoomEquipments(?array $roomEquipments): self
+    {
+        $this->roomEquipments = $roomEquipments;
 
         return $this;
     }
@@ -34,6 +54,18 @@ class HostelSearch
         return $this;
     }
 
+    public function getCategory(): ?string
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?string $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
     public function getPrice(): ?array
     {
         return $this->price;
@@ -46,12 +78,40 @@ class HostelSearch
         return $this;
     }
 
+    public function getStarNumber(): ?array
+    {
+        return $this->starNumber;
+    }
+
+    public function setStarNumber(?array $starNumber): self
+    {
+        $this->starNumber = $starNumber;
+
+        return $this;
+    }
+
+    public function getAverageRating(): ?float
+    {
+        return $this->averageRating;
+    }
+
+    public function setAverageRating(?float $averageRating): self
+    {
+        $this->averageRating = $averageRating;
+
+        return $this;
+    }
+
     public function toArray(): array
     {
         return [
             'name' => $this->getName(),
             'equipments' => $this->getEquipments(),
             'price' => $this->getPrice(),
+            'category' => $this->getCategory(),
+            'roomEquipments' => $this->getRoomEquipments(),
+            'starNumber' => $this->getStarNumber(),
+            'averageRating' => $this->getAverageRating()
         ];
     }
 

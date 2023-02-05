@@ -3,13 +3,13 @@
 
         <li class="logo-sn waves-effect py-3">
             <div class="text-center">
-                <a href="{{ path('app_admin_dashboard') }}" class="pl-0">
-                    <img src="{{ asset('images/logo/logo_write.png') }}" style="width: 180px !important;" alt="Logo du site" />
+                <a href="{{ path('app_admin_index') }}" class="pl-0">
+                    <img src="{{ asset('assets/img/logo/logo_write.png') }}" style="width: 180px !important;" alt="Logo du site" />
                 </a>
             </div>
         </li>
 
-        {% set dashboard = isActive('app_admin_dashboard') %}
+        {% set dashboard = isActive('app_admin_index') %}
 
         {# hostel #}
         {% set hostel_index = isActive('app_admin_hostel_index') %}
@@ -86,8 +86,13 @@
 
         {# payout #}
         {% set payout_index = isActive('app_admin_payout_index') %}
-        {% set payout_report   = isActive('app_admin_payout_report') %}
+        {% set payout_report = isActive('app_admin_payout_report') %}
         {# payout #}
+
+        {# cancel payout #}
+        {% set cancel_payout_index = isActive('app_admin_cancel_payout_index') %}
+        {% set cancel_payout_report = isActive('app_admin_cancel_payout_report') %}
+        {# cancel payout #}
 
         {# promotion #}
         {% set promotion_index = isActive('app_admin_promotion_index') %}
@@ -176,7 +181,7 @@
         <li>
             <ul class="collapsible collapsible-accordion">
                 <li>
-                    <a href="{{ path('app_admin_dashboard') }}" class="waves-effect {% if dashboard %}active{% endif %} mb-2">
+                    <a href="{{ path('app_admin_index') }}" class="waves-effect {% if dashboard %}active{% endif %} mb-2">
                         <i class="sv-slim-icon fas fa-th-large"></i>
                         Tableau de bord
                     </a>
@@ -546,6 +551,29 @@
                     </div>
                 </li>
 
+                <li>
+                    <a class="collapsible-header waves-effect arrow-r
+                        {% if cancel_payout_index or cancel_payout_report %}active{% endif %}">
+                        <i class="sv-slim-icon fas fa-sync"></i> Remboursement
+                        <i class="fas fa-angle-down rotate-icon"></i>
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="{{ path('app_admin_cancel_payout_index') }}" class="waves-effect
+                                    {% if cancel_payout_index %}active{% endif %}">
+                                    <span class="sv-normal">Remboursement des clients</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('app_admin_cancel_payout_report') }}" class="waves-effect
+                                    {% if cancel_payout_report %}active{% endif %}">
+                                    <span class="sv-normal">Rapport financier</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
                 <li class="mb-3">
                     <a class="collapsible-header waves-effect arrow-r
                         {% if admin_index or admin_new or admin_edit or s_index or

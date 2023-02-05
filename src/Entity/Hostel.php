@@ -2,6 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use App\Api\Filter\InFilter;
 use App\Entity\Traits\ClosedTrait;
 use App\Entity\Traits\DeletableTrait;
 use App\Entity\Traits\EnabledTrait;
@@ -18,11 +24,34 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Vich\Uploadable]
 #[ORM\Entity(repositoryClass: HostelRepository::class)]
+#[GetCollection(
+    openapiContext: ['summary' => 'Récupère tous les hotels'],
+    paginationItemsPerPage: 25,
+    paginationMaximumItemsPerPage: 25,
+    paginationClientItemsPerPage: true,
+    normalizationContext: ['groups' => ['hostel:read', 'skip_null_values' => false]],
+)]
+#[Get(
+    openapiContext: ['summary' => 'Récupère un hotel'],
+    normalizationContext: ['groups' => ['hostel:read', 'skip_null_values' => false]]
+)]
+#[ApiFilter(
+    SearchFilter::class,
+    properties: [
+        'location.city' => 'exact',
+        'category' => 'exact',
+        'averageRating' => 'exact',
+        'name' => 'partial',
+    ]
+)]
+#[ApiFilter(RangeFilter::class, properties: ['rooms.occupant', 'rooms.price'])]
+#[ApiFilter(InFilter::class, properties: ['starNumber', 'equipments.id', 'rooms.equipments.id'])]
 class Hostel
 {
     use MediaTrait;
@@ -36,29 +65,35 @@ class Hostel
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['hostel:read', 'favorite:read', 'booking:read'])]
     private ?int $id = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 4, max: 180)]
     #[ORM\Column(length: 180, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $name = null;
 
     #[Gedmo\Slug(fields: ['name'], unique: true)]
     #[ORM\Column(length: 180, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?string $slug = null;
 
     #[Assert\NotBlank(message: "Entrez une adresse e-mail s'il vous plait.")]
     #[Assert\Length(min: 2, max: 180, minMessage: "L'adresse e-mail est trop courte.", maxMessage: "L'adresse e-mail est trop longue.")]
     #[Assert\Email(message: "L'adresse e-mail est invalide.")]
     #[ORM\Column(length: 180,  unique: true, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?string $email = null;
 
     #[Assert\NotBlank(message: "Entrez un numéro de téléphone s''il vous plait.")]
     #[Assert\Length(min: 10, max: 25, minMessage: "Le numéro de téléphone est trop court.", maxMessage: "Le numéro de téléphone est trop long.", groups: ['Registration', 'Profile'])]
     #[ORM\Column(length: 25, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?string $phone = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?string $description = null;
 
     #[ORM\Column(length: 50, nullable: true)]
@@ -66,53 +101,66 @@ class Hostel
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 50, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?int $starNumber = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?string $codePostal = null;
 
     #[Assert\NotNull(message: 'Cette valeur ne doit pas être vide.')]
     #[Assert\Type(type: 'bool', message: 'Cette valeur ne doit pas être vide.')]
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?bool $parking = null;
 
     #[Assert\NotNull(message: 'Cette valeur ne doit pas être vide.')]
     #[Assert\Type(type: 'bool', message: 'Cette valeur ne doit pas être vide.')]
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?bool $breakfast = null;
 
     #[Assert\NotNull(message: 'Cette valeur ne doit pas être vide.')]
     #[Assert\Type(type: 'bool', message: 'Cette valeur ne doit pas être vide.')]
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?bool $animalsAllowed = null;
 
     #[Assert\NotNull(message: 'Cette valeur ne doit pas être vide.')]
     #[Assert\Type(type: 'bool', message: 'Cette valeur ne doit pas être vide.')]
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?bool $children = null;
 
     #[Assert\NotNull(message: 'Cette valeur ne doit pas être vide.')]
     #[Assert\Type(type: 'bool', message: 'Cette valeur ne doit pas être vide.')]
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?bool $wifi = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?bool $mobilePaymentAllowed = false;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?bool $cardPaymentAllowed = false;
 
     #[Assert\NotBlank]
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?array $spokenLanguages = [];
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?DateTimeInterface $enabledAt = null;
 
     #[ORM\Column(type: Types::FLOAT, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?float $averageRating = 0;
 
     #[Assert\File(maxSize: '8M')]
@@ -127,35 +175,44 @@ class Hostel
 
     #[ORM\OneToMany(mappedBy: 'hostel', targetEntity: HostelGallery::class, orphanRemoval: true, cascade: ['ALL'])]
     #[ORM\OrderBy(['position' => 'asc'])]
+    #[Groups(['hostel:read'])]
     private Collection $galleries;
 
     #[Assert\NotBlank]
     #[Assert\Valid]
     #[ORM\ManyToOne(inversedBy: 'hostels')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['hostel:read'])]
     private ?Category $category = null;
 
     #[Assert\Valid]
     #[ORM\ManyToOne(inversedBy: 'hostels')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['hostel:read'])]
     private ?User $owner = null;
 
     #[Assert\NotBlank]
     #[Assert\Valid]
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['hostel:read'])]
     private ?Location $location = null;
 
     #[ORM\ManyToMany(targetEntity: Equipment::class, inversedBy: 'hostels')]
+    #[Groups(['hostel:read'])]
     private Collection $equipments;
 
-    #[ORM\OneToMany(mappedBy: 'hostel', targetEntity: Favorite::class)]
+    #[ORM\OneToMany(mappedBy: 'hostel', targetEntity: Favorite::class, orphanRemoval: true, cascade: ['remove'])]
     private Collection $favorites;
 
     #[ORM\OneToMany(mappedBy: 'hostel', targetEntity: Room::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['price' => 'ASC'])]
+    #[Groups(['hostel:read'])]
     private Collection $rooms;
 
     #[ORM\OneToMany(mappedBy: 'hostel', targetEntity: Review::class, orphanRemoval: true)]
+    #[ORM\OrderBy(['rating' => 'DESC'])]
+    #[Groups(['hostel:read'])]
     private Collection $reviews;
 
     #[ORM\OneToMany(mappedBy: 'hostel', targetEntity: Booking::class, orphanRemoval: true)]
@@ -166,21 +223,29 @@ class Hostel
 
     #[Assert\NotBlank]
     #[Assert\Valid]
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['hostel:read'])]
     private ?TimeInterval $checkinTime = null;
 
     #[Assert\NotBlank]
     #[Assert\Valid]
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['hostel:read'])]
     private ?TimeInterval $checkoutTime = null;
 
     #[Assert\NotBlank]
     #[Assert\Valid]
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['hostel:read'])]
     private ?Cancelation $cancellationPolicy = null;
+
+    #[Assert\NotBlank(groups: ['Admin'])]
+    #[Assert\Valid(groups: ['Admin'])]
+    #[ORM\ManyToOne]
+    private ?Plan $plan = null;
 
     public function __construct()
     {
@@ -568,6 +633,11 @@ class Hostel
         return $this;
     }
 
+    public function getRoom(): ?Room
+    {
+        return $this->rooms->first();
+    }
+
     /**
      * @return Collection<int, Review>
      */
@@ -714,6 +784,18 @@ class Hostel
     public function setAverageRating(?float $averageRating): self
     {
         $this->averageRating = $averageRating;
+
+        return $this;
+    }
+
+    public function getPlan(): ?Plan
+    {
+        return $this->plan;
+    }
+
+    public function setPlan(?Plan $plan): self
+    {
+        $this->plan = $plan;
 
         return $this;
     }

@@ -1,4 +1,5 @@
 {% import 'Ui/Macro/buttons.html.twig' as buttons %}
+{% import 'ui/Macro/money.html.twig' as money %}
 
 <div class="row mb-4">
     <div class="col-12 d-flex justify-content-center justify-content-md-between">
@@ -25,7 +26,7 @@
                     <th scope="col" class="font-weight-stone-500 text-center">Commande</th>
                     <th scope="col" class="font-weight-stone-500 text-center">Hotel</th>
                     <th scope="col" class="font-weight-stone-500 text-center">État</th>
-                    <th scope="col" class="font-weight-stone-500 text-center">Montant (CFA)</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">Montant</th>
                     <th scope="col" class="font-weight-stone-500 text-center">Devise</th>
                 </tr>
                 </thead>
@@ -39,8 +40,8 @@
                             </a>
                         </td>
                         <td class="text-center">
-                            <a href="{{ path('app_partner_hostel_show', {'id': payout.hostel.id}) }}" class="card-link">
-                                {{ payout.hostel.name }}
+                            <a href="{{ path('app_partner_hostel_show', {'id': payout.commande.hostel.id}) }}" class="card-link">
+                                {{ payout.commande.hostel.name }}
                             </a>
                         </td>
                         <td class="text-center">
@@ -58,7 +59,8 @@
                                 </span>
                             {% endif %}
                         </td>
-                        <td class="text-center">{{ payout.amount|currency_symbol('XOF') }}</td>
+                        <td class="text-center">{{ money.convertAndFormat(payout.amount) }}</td>
+                        <td class="text-center">{{ payout.currency }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -74,7 +76,7 @@
 {% else %}
     <div class="row app-user d-flex justify-content-center">
         <div class="col-12 col-md-8 text-center mt-3 mt-md-5">
-            <h3 class="h3-responsive font-weight-stone-600">
+            <h3 class="h3-responsive font-weight-stone-600 text-dark">
                 Vous n'avez aucun paiement.
             </h3>
         </div>

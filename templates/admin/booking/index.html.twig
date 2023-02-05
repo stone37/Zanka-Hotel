@@ -18,6 +18,9 @@
 {% elseif isActive('app_admin_booking_room') %}
     {% set data = "Reservations d'un hébergement" %}
     {% set type = 7 %}
+{% elseif isActive('app_admin_booking_all_index') %}
+    {% set data = "Tous les reservations" %}
+    {% set type = 8 %}
 {% else %}
     {% set data = "Nouvelles reservations" %}
     {% set type = 1 %}

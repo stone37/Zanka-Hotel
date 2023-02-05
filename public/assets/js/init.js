@@ -103,7 +103,7 @@ function simpleModals(element, route, elementRacine) {
 
         showLoading();
 
-        let $id = $(this).attr('id'), $modal = '#confirm'+$id;
+        let $id = $(this).attr('data-id'), $modal = '#confirm'+$id;
 
         $.ajax({
             url: Routing.generate(route, {id: $id}),

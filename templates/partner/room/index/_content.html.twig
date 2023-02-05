@@ -83,9 +83,9 @@
                                     <a href="{{ path('app_partner_room_equipment', {'id': room.id}) }}" class="dropdown-item">
                                         <i class="fas fa-cog mr-1"></i> Équipements
                                     </a>
-                                    <a href="{{ path('app_partner_room_supplement', {'id': room.id}) }}" class="dropdown-item">
+                                    {#<a href="{{ path('app_partner_room_supplement', {'id': room.id}) }}" class="dropdown-item">
                                         <i class="fas fa-plus-square mr-1"></i> Supplements
-                                    </a>
+                                    </a>#}
                                     <a class="dropdown-item entity-room-delete" id="{{ room.id }}">
                                         <i class="fas fa-trash mr-1 text-danger"></i> Supprimer
                                     </a>
@@ -107,7 +107,7 @@
 {% else %}
     <div class="row app-user d-flex justify-content-center">
         <div class="col-12 col-md-8 text-center mt-3 mt-md-5">
-            <h3 class="h3-responsive font-weight-stone-600">
+            <h3 class="h3-responsive font-weight-stone-600 text-dark">
                 Vous n'avez aucun hébergement.
             </h3>
         </div>

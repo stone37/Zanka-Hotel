@@ -5,20 +5,18 @@
         <table class="table table-sm table-bordered table-responsive-sm table-responsive-md">
             <tbody>
             <tr>
-                <td class="table-dark text-center font-weight-normal">Id</td>
-                <td class="text-center font-weight-normal">{{ order.id }}</td>
                 <td class="table-dark text-center font-weight-normal">Date</td>
-                <td class="text-center font-weight-normal">{{ order.createdAt|date('d/m/Y H:i:s') }}</td>
+                <td colspan="2" class="text-center font-weight-normal">{{ order.createdAt|date('d/m/Y H:i:s') }}</td>
                 <td class="table-dark text-center font-weight-normal">Reference</td>
                 <td class="text-center font-weight-normal">
                     {% if order.reference %}
-                        {{ order.reference }}
+                        #{{ order.reference }}
                     {% else %}
                         <span class="badge badge-grey">Aucun</span>
                     {% endif %}
                 </td>
                 <td class="table-dark text-center font-weight-normal">Etat du paiement</td>
-                <td class="text-center font-weight-normal">
+                <td colspan="2" class="text-center font-weight-normal">
                     {% if order.validated %}
                         <span class="badge badge-success font-weight-stone-500">
                             <i class="fas fa-check mr-1"></i> Payée
@@ -78,7 +76,7 @@
 <div class="row mb-5">
     <div class="col-12 mb-5">
         <div class="d-flex justify-content-end mt-4">
-            {% set path = path('app_admin_commande_index') %}
+            {% set path = path('app_partner_commande_index') %}
             <div class="text-center">
                 {{ buttons.default(path, 'Retour à la liste', 'app-entity-list-btn', 'fas fa-angle-left', 'btn-outline-primary') }}
             </div>

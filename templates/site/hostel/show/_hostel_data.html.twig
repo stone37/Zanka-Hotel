@@ -1,0 +1,90 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-5">
+            <div class="card-body p-3">
+                <h3 class="h3-responsive font-weight-bold text-dark mb-3">Important - À lire</h3>
+                <div class="row mb-3">
+                    <div class="col-md-4 col-lg-3 title">
+                        <i class="far fa-calendar-check mr-1"></i> Horaire d'arrivée
+                    </div>
+                    <div class="col-md-8 col-lg-9 content">
+                        De <span class="font-weight-stone-600 text-dark">{{ hostel.checkinTime.start|date('H:i') }}</span> à
+                        <span class="font-weight-stone-600 text-dark">{{ hostel.checkinTime.end|date('H:i') }}</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 col-lg-3 title">
+                        <i class="far fa-calendar-times mr-1"></i> Horaire de départ
+                    </div>
+                    <div class="col-md-8 col-lg-9 content">
+                        De <span class="font-weight-stone-600 text-dark">{{ hostel.checkoutTime.start|date('H:i') }}</span> à
+                        <span class="font-weight-stone-600 text-dark">{{ hostel.checkoutTime.end|date('H:i') }}</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 col-lg-3 title">
+                        <i class="far fa-comments mr-1"></i> Langues du personnel
+                    </div>
+                    <div class="col-md-8 col-lg-9 content">
+                        {% for language in hostel.spokenLanguages %}
+                            {{ language }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 col-lg-3 title">
+                        <i class="fas fa-exclamation-circle mr-1"></i> Annulations
+                    </div>
+                    <div class="col-md-8 col-lg-9 content">
+                        Annulez votre réservation avant le
+                        <span class="font-weight-stone-600 text-dark">{{ cancelation_date|format_datetime(pattern="EEE dd MMM") }}</span>
+                        <span class="font-weight-stone-600 text-dark">{% if hostel.cancellationPolicy.state == 0 %}à 18h00{% endif %}</span>
+                        et recevez un <span class="font-weight-stone-600 text-dark">remboursement complet</span>.
+                        <br>
+                        Après cela, <span class="font-weight-stone-600 text-dark">{% if hostel.cancellationPolicy.result == 0 %}la première nuit du séjour
+                            {% else %}la totalité du séjour{% endif %}</span> ainsi que les taxes et les frais vous seront facturés. <br>
+                        Les heures correspondent à l’heure locale de l’établissement.
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4 col-lg-3 title">
+                        <i class="fas fa-paw mr-1"></i> Animaux domestiques
+                    </div>
+                    <div class="col-md-8 col-lg-9 content">
+                        {% if hostel.animalsAllowed %}
+                            Les animaux de compagnie sont admis au sein de l'établissement.
+                        {% else %}
+                            Les animaux de compagnie ne sont pas admis au sein de l'établissement.
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 col-lg-3 title d-flex">
+                        <div><i class="fas fa-credit-card mr-1"></i></div>
+                        <div class="ml-1">Methode de paiement acceptées par cet établissement</div>
+                    </div>
+                    <div class="col-md-8 col-lg-9 content">
+                        {% if hostel.mobilePaymentAllowed or hostel.cardPaymentAllowed %}
+                            <div class="payment-method">
+                                {% if hostel.cardPaymentAllowed %}
+                                    <div class="mr-1 mb-2"><img src="{{ asset('assets/img/payment/orange.png') }}" class="img-fluid orange" alt="Orange money logo"></div>
+                                    {#<div class="mr-1 mb-2"><img src="{{ asset('assets/img/payment/wave.png') }}" class="img-fluid wave" alt="Wave money logo"></div>#}
+                                    <div class="mr-1 mb-2 mtn-bulk"><img src="{{ asset('assets/img/payment/mtn.png') }}" class="img-fluid mtn" alt="MTN mobile money logo"></div>
+                                    {#<div class="mr-1 mb-2 moov-bulk"><img src="{{ asset('assets/img/payment/moov.png') }}" class="img-fluid moov" alt="Moov money logo"></div>
+                                    <div class="mr-1 mb-2 wari-bulk"><img src="{{ asset('assets/img/payment/wari.png') }}" class="img-fluid wari" alt="wari logo"></div>#}
+                                {% endif %}
+                                {% if hostel.mobilePaymentAllowed %}
+                                    <div class="mr-1 mb-2"><img src="{{ asset('assets/img/payment/visa.png') }}" class="img-fluid visa" alt="Visa logo"></div>
+                                    <div class="mr-1 mb-2"><img src="{{ asset('assets/img/payment/masterCard.png') }}" class="img-fluid mastercard" alt="Mastercard logo"></div>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            Cet établissement n'accepte pas de carte bancaire et ni de paiement mobile.
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

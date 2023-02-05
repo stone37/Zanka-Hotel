@@ -49,9 +49,11 @@ class FavoriteRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('f')
             ->leftJoin('f.hostel', 'hostel')
+            ->leftJoin('f.owner', 'owner')
             ->addSelect('hostel')
-            ->where('f.user = :user')
-            ->setParameter('user', $user)
+            ->addSelect('owner')
+            ->where('f.owner = :owner')
+            ->setParameter('owner', $user)
             ->orderBy('f.createdAt', 'desc');
 
         return $qb->getQuery()->getResult();

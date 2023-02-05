@@ -143,7 +143,52 @@ $(document).ready(function() {
     // Payout
     simpleModals($('.entity-payout-pay'), 'app_admin_payout_pay', $container);
     simpleModals($('.entity-payout-cancel'), 'app_admin_payout_cancel', $container);
-    bulkModals($('#app-vendor-payout'), $checkbook_container, 'app_admin_payout_bulk_pay', $container);
+    $('#app-vendor-payout').click(function (e) {
+        e.preventDefault();
+
+        showLoading();
+
+        $.ajax({
+            url: Routing.generate('app_admin_payout_bulk_pay'),
+            type: 'GET',
+            success: function(data) {
+                hideLoading();
+
+                if (data === 0) {
+                    notification('', 'Aucun paiement disponible')
+                } else {
+                    $($container).html(data.html);
+                    $('#confirmPayoutModal').modal();
+                }
+            },
+        });
+    });
+
+    //bulkModals($('#app-vendor-payout'), $checkbook_container, 'app_admin_payout_bulk_pay', $container);
+
+    // Payout
+    simpleModals($('.entity-cancel-payout-pay'), 'app_admin_cancel_payout_pay', $container);
+    simpleModals($('.entity-cancel-payout-cancel'), 'app_admin_cancel_payout_cancel', $container);
+    $('#app-vendor-cancel-payout').click(function (e) {
+        e.preventDefault();
+
+        showLoading();
+
+        $.ajax({
+            url: Routing.generate('app_admin_cancel_payout_bulk_pay'),
+            type: 'GET',
+            success: function(data) {
+                hideLoading();
+
+                if (data === 0) {
+                    notification('', 'Aucun remboursement disponible')
+                } else {
+                    $($container).html(data.html);
+                    $('#confirmPayoutModal').modal();
+                }
+            },
+        });
+    });
 
     // Plan
     simpleModals($('.entity-plan-delete'), 'app_admin_plan_delete', $container);
@@ -177,13 +222,91 @@ $(document).ready(function() {
     simpleModals($('.entity-banner-delete'), 'app_admin_banner_delete', $container);
     bulkModals($('.entity-banner-delete-bulk-btn a.btn-danger'), $checkbook_container, 'app_admin_banner_bulk_delete', $container);
 
+    // Notification
+    if (window.hostel.USER) {
+        setInterval(function(){
+            getNotification($('#notification-bulk'), 'app_notification_unread');
+        }, 180000);
 
-
-
-
+        $('.skin-light .dropdown.notification').on('show.bs.dropdown', function () {
+            readAll('app_notification_read');
+        });
+    }
 });
 
+function getNotification(container, route) {
+    $.ajax({
+        url: Routing.generate(route),
+        type: 'GET',
+        success: function(data) {
+            let $result = $.parseJSON(data);
 
+            if ($result.length) {
+                $('.skin-light .dropdown.notification .dropdown-menu .not-notification-bulk').addClass('d-none');
+                $('.skin-light .dropdown.notification > .icon').removeClass('d-none')
+
+                $.each($result, function(index, element) {
+                    container.prepend(notificationItemView(element))
+                });
+            }
+        },
+    });
+}
+
+function readAll(route) {
+    $.ajax({
+        url: Routing.generate(route),
+        type: 'GET',
+        success: function() {
+            $('.skin-light .dropdown.notification > .icon').addClass('d-none');
+        },
+    });
+}
+
+function notificationItemView(notification) {
+    return $('<a class="dropdown-item d-flex" href="' + notification.url + '">' +
+        '<div class="content">' +
+        '<div class="data">' + notification.message + '</div>' +
+        '<div class="time">' + jsDateFormater(new Date(notification.createdAt)) + '</div>' +
+        '</div>' +
+        '<div class="icon-notification ml-auto d-flex align-items-center pl-3"><i class="fas fa-circle"></i></div>' +
+        '</a>');
+}
+
+function jsDateFormater(date) {
+    const seconds = (new Date().getTime() - date.getTime()) / 1000;
+    let term = null;
+
+    for (term of terms) {
+        if (Math.abs(seconds) < term.time) {
+            break
+        }
+    }
+
+    if (seconds >= 0) {
+        return `Il y a ${term.text.replace('%d', Math.round(seconds / term.divide))}`;
+    } else {
+        return `Dans ${term.text.replace('%d', Math.round(seconds / term.divide))}`;
+    }
+}
+
+function updateText(date, element, terms) {
+    const seconds = (new Date().getTime() - date.getTime()) / 1000;
+    let term = null;
+    const prefix = element.getAttribute('prefix');
+
+    for (term of terms) {
+        if (Math.abs(seconds) < term.time) {
+            break
+        }
+    }
+
+    if (seconds >= 0) {
+        element.innerHTML = `${prefix || 'Il y a'} ${term.text.replace('%d', Math.round(seconds / term.divide))}`
+    } else {
+        element.innerHTML = `${prefix || 'Dans'} ${term.text.replace('%d', Math.round(Math.abs(seconds) / term.divide))}`
+    }
+}
 
 
 

@@ -38,7 +38,7 @@ class FavoriteController extends AbstractController
         }
 
         $user = $this->getUserOrThrow();
-        $favorite = $this->repository->findOneBy(['hostel' => $hostel, 'user' => $user]);
+        $favorite = $this->repository->findOneBy(['hostel' => $hostel, 'owner' => $user]);
 
         if ($favorite) {
             return $this->json(['code' => Response::HTTP_UNPROCESSABLE_ENTITY, 'message' => 'Cet établissement est déjà dans vos favoris'], Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -64,7 +64,7 @@ class FavoriteController extends AbstractController
         }
 
         $user = $this->getUserOrThrow();
-        $favorite = $this->repository->findOneBy(['hostel' => $hostel, 'user' => $user]);
+        $favorite = $this->repository->findOneBy(['hostel' => $hostel, 'owner' => $user]);
 
         if (!$favorite) {
             return $this->json(['code' => Response::HTTP_UNPROCESSABLE_ENTITY, 'message' => 'Une erreur est survenu, le favoris n\'existe pas'], Response::HTTP_UNPROCESSABLE_ENTITY);

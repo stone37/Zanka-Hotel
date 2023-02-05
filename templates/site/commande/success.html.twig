@@ -1,0 +1,26 @@
+{% extends 'site/layout.html.twig' %}
+
+{% block title 'Felicitation, votre paiement a été effectué avec succès' %}
+
+{% block meta %}
+    {% set content = "Felicitation, votre paiement a été effectué avec succès" %}
+    <meta name="description" content="{{ content }}"/>
+    <meta property="og:description" content="{{ content }}" />
+{% endblock %}
+
+{% block app_flashes %}{% endblock %}
+
+{% block app_intro %}
+    <section class="bc container">
+        <div>
+            {{ wo_render_breadcrumbs({viewTemplate: '_breadcrumb.html.twig', listClass: 'breadcrumb',
+                itemClass: 'breadcrumb-item', separator: '>', separatorClass: 'fas fa-long-arrow-alt-right'}) }}
+        </div>
+    </section>
+{% endblock %}
+
+{% block app_body %}
+    {{ include('site/commande/success/content.html.twig') }}
+{% endblock %}
+
+

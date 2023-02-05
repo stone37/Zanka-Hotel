@@ -1,0 +1,28 @@
+{% extends layout %}
+
+{% import "mails/macros.twig" as e %}
+
+{% block body %}
+
+    {% apply markdown_email %}
+
+        Cher {{ partner.firstname }},
+        ============================
+
+        Nous sommes heureux de vous informer que votre compte a été créé avec succès. Vous pouvez maintenant
+        accéder à votre compte en utilisant votre **adresse e-mail** et **mot de passe** choisis lors de
+        l'inscription.
+
+        Il est important de conserver ces informations en lieu sûr, vous pouvez également changer votre mot
+        de passe à tout moment.
+
+        En vous connectant à votre compte, vous aurez accès à toutes les fonctionnalités et avantages de notre
+        service. N'hésitez pas à nous contacter si vous avez des questions ou des problèmes lors de l'utilisation
+        de votre compte.
+
+        Nous espérons que vous apprécierez votre expérience sur notre plateforme.
+
+    {% endapply %}
+
+    {{ e.button('Se connecter', url('app_login')) }}
+{% endblock %}

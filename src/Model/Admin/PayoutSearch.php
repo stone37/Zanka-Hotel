@@ -2,16 +2,18 @@
 
 namespace App\Model\Admin;
 
+use App\Entity\Hostel;
+
 class PayoutSearch
 {
-    private ?string $hostel = null;
+    private ?Hostel $hostel = null;
 
-    public function getHostel(): ?string
+    public function getHostel(): ?Hostel
     {
         return $this->hostel;
     }
 
-    public function setHostel(?string $hostel): void
+    public function setHostel(?Hostel $hostel): void
     {
         $this->hostel = $hostel;
     }

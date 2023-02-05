@@ -3,64 +3,80 @@
 namespace App\Service;
 
 use App\Calculator\DaysCalculator;
+use App\Calculator\RoomPriceCalculator;
 use App\Data\BookingData;
-//use App\Entity\Option;
+use App\Data\BookingSearchRequestData;
+use App\Entity\BookingSearchToken;
 use App\Entity\Room;
-use App\Entity\TimeInterval;
 use App\Entity\User;
-use App\Repository\BookingRepository;
+use App\Event\BookingSearchTokenCreatedEvent;
+use App\Exception\OngoingBookingSearchException;
+use App\Repository\BookingSearchTokenRepository;
 use App\Storage\BookingStorage;
-//use App\Util\PromotionPriceCalculator;
+use App\Util\StringToDateUtil;
 use DateTime;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class BookerService
 {
+    public const EXPIRE_IN = 30; // Temps d'expiration d'un token
     public const INIT_ADULT = 2;
     public const INIT_CHILDREN = 0;
     public const INIT_ROOM = 1;
 
-    private BookingRepository $repository;
     private Security $security;
     private BookingStorage $storage;
     private DaysCalculator $daysCalculator;
     private RoomService $roomService;
-    private PromotionPriceCalculator $promotionPriceCalculator;
+    private RoomPriceCalculator $priceCalculator;
+    private StringToDateUtil $dateUtil;
+    private BookingSearchTokenRepository $tokenRepository;
+    private EventDispatcherInterface $dispatcher;
+    private UniqueNumberGenerator $generator;
 
     public function __construct(
-        BookingRepository $repository,
         BookingStorage $storage,
         Security $security,
         DaysCalculator $daysCalculator,
         RoomService $roomService,
-       // PromotionPriceCalculator $promotionPriceCalculator
+        RoomPriceCalculator $priceCalculator,
+        StringToDateUtil $dateUtil,
+        BookingSearchTokenRepository $tokenRepository,
+        EventDispatcherInterface $dispatcher,
+        UniqueNumberGenerator $generator
     ) {
-        $this->repository = $repository;
         $this->storage = $storage;
         $this->security = $security;
         $this->daysCalculator = $daysCalculator;
         $this->roomService = $roomService;
-        //$this->promotionPriceCalculator = $promotionPriceCalculator;
+        $this->priceCalculator = $priceCalculator;
+        $this->dateUtil = $dateUtil;
+        $this->tokenRepository = $tokenRepository;
+        $this->dispatcher = $dispatcher;
+        $this->generator = $generator;
     }
 
     public function createData(Room $room): BookingData
     {
         $data = $this->storage->getBookingData();
+        $night = $this->daysCalculator->getDays($this->getStartDate(), $this->getEndDate());
+        $reduced = $room->getPrice() - ($this->getTotalPrice($room) - $this->roomService->getTaxe($room));
+
         $data->roomId = $room->getId();
-        $data->days = $this->daysCalculator->getDays($data->checkin, $data->checkout);
-        //$data->amount = $this->roomPrice($room, $option);
-        //$data->taxeAmount = $this->roomTaxe($room, $option);
-        //$data->discountAmount = $data->amount - $this->discountCalculate($data->amount, $this->roomDiscount($room));
-        $data->optionId = null;
+        $data->night = $night;
+        $data->amount = $this->priceCalculator->calculate($room) * $night * $data->roomNumber;
+        $data->taxeAmount = $this->roomService->getTaxe($room) * $night * $data->roomNumber;
+        $data->discountAmount = $reduced * $night * $data->roomNumber;
 
         if ($this->security->getUser()) {
 
             /** @var User|UserInterface $user */
             $user = $this->security->getUser();
 
-            $data->firstname = (string) $user->getFirstName();
-            $data->lastname = (string) $user->getLastName();
+            $data->firstname = (string) $user->getFirstname();
+            $data->lastname = (string) $user->getLastname();
             $data->email = (string) $user->getEmail();
             $data->phone = (string) $user->getPhone();
             $data->country = (string) $user->getCountry();
@@ -72,90 +88,52 @@ class BookerService
 
     public function add(BookingData $bookingData)
     {
-        $this->storage->set($bookingData);
+        $this->storage->setData($bookingData);
     }
 
-    public function roomAvailableForPeriod(array $rooms)
+    public function getTotalPrice(Room $room): int
     {
-        $data = $this->storage->init();
+        return $this->roomService->getPrice($room, $this->getStartDate(), $this->getEndDate()) + $this->roomService->getTaxe($room);
+    }
 
-        if (empty($rooms) || !$data) {
-            return $rooms;
+    private function getStartDate(): DateTime
+    {
+        return $this->dateUtil->converter($this->storage->getBookingData()->duration['checkin']);
+    }
+
+    private function getEndDate(): DateTime
+    {
+        return $this->dateUtil->converter($this->storage->getBookingData()->duration['checkout']);
+    }
+
+    public function searchBooking(BookingSearchRequestData $data)
+    {
+        /** @var BookingSearchToken|null $token */
+        $token = $this->tokenRepository->findOneBy(['email' => $data->getEmail()]);
+
+        if (null !== $token && !$this->isExpired($token)) {
+            throw new OngoingBookingSearchException();
         }
 
-        $results = [];
-
-        /** @var Room $room */
-        foreach ($rooms as $room) {
-            if ($this->isAvailableForPeriod($room, $data->checkin, $data->checkout)) {
-                $results[] = $room;
-            }
+        if (null === $token) {
+            $token = new BookingSearchToken();
+            $this->tokenRepository->add($token, false);
         }
 
-        return $results;
+        $token->setEmail($data->getEmail())
+            ->setCreatedAt(new DateTime())
+            ->setCode($this->generator->generate(6, false));
+
+        $this->tokenRepository->flush();
+
+        $this->dispatcher->dispatch(new BookingSearchTokenCreatedEvent($token));
     }
 
-    public function isAvailableForPeriod(Room $room, DateTime $start, DateTime $end)
+    public function isExpired(BookingSearchToken $token): bool
     {
-        $results = $this->repository->availableForPeriod($room, $start, $end);
+        $expirationDate = new DateTime('-'.self::EXPIRE_IN.' minutes');
 
-        //return count($results) === 0;
-
-        return ($room->getRoomNumber() > $results);
-    }
-
-    public function today(): DateTime
-    {
-        return new DateTime();
-    }
-
-    public function tomorrow(): DateTime
-    {
-        return (new DateTime())->modify('+1 day');
-    }
-
-    public function adjustDate(BookingData $data): BookingData
-    {
-        $data->checkin->modify("+{$this->storage->getCheckinMin()} minutes");
-        $data->checkout->modify("+{$this->storage->getCheckoutMin()} minutes");
-
-        return $data;
-    }
-
-    private function roomPrice(Room $room, Option $option = null): int
-    {
-        return $this->roomService->getRoomPrice($room, $option);
-    }
-
-    private function roomTaxe(Room $room, Option $option = null): int
-    {
-        return $this->roomService->getTaxePrice($room, $option);
-    }
-
-    private function roomDiscount(Room $room): int
-    {
-        return $this->roomService->getDiscount($room);
-    }
-
-    private function discountCalculate(int $amount, int $discount)
-    {
-        return $this->promotionPriceCalculator->calculate($amount, $discount);
-    }
-
-    public function getTimeMin(TimeInterval $interval)
-    {
-        $hour = (int) $interval->getStart()->format('H') * 60;
-        $minutes = (int) $interval->getStart()->format('i');
-
-        return $hour + $minutes;
-    }
-
-    public function getTimeMax(TimeInterval $interval)
-    {
-        $hour = (int) $interval->getEnd()->format('H') * 60;
-        $minutes = (int) $interval->getEnd()->format('i');
-
-        return $hour + $minutes;
+        return $token->getCreatedAt() < $expirationDate;
     }
 }
 

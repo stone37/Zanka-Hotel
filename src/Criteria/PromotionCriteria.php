@@ -6,7 +6,7 @@ use DateTime;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\Promotion;
 
-class PromotionCriteria implements CriteriaInterface
+class PromotionCriteria
 {
     public function filterQueryBuilder(QueryBuilder $queryBuilder): QueryBuilder
     {
@@ -22,12 +22,20 @@ class PromotionCriteria implements CriteriaInterface
         return $queryBuilder;
     }
 
-    public function verify(Promotion $promotion): bool
+    public function verify(Promotion $promotion, DateTime $start, DateTime $end): bool
+    {
+        return
+            ($promotion->getStartDate() === null || $promotion->getStartDate() <= $start) &&
+            ($promotion->getEndDate() === null || $promotion->getEndDate() > $end) &&
+            $promotion->isEnabled();
+    }
+
+    /*public function verify(Promotion $promotion): bool
     {
         return
             ($promotion->getStartDate() === null || $promotion->getStartDate() <=  new DateTime()) &&
             ($promotion->getEndDate() === null || $promotion->getEndDate() > new DateTime()) &&
             $promotion->isEnabled()
         ;
-    }
+    }*/
 }

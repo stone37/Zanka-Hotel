@@ -1,0 +1,63 @@
+{% if hostel.galleries|length > 0 %}
+    <div id="mdb-lightbox-ui"></div>
+
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <div class="mdb-lightbox">
+                <div class="row">
+                    <figure class="col-12 principale">
+                        <a href="{{ asset(hostel.galleries.first.webPath) }}" data-size="1400x1067">
+                            <img id="principale" src="{{ asset(hostel.galleries.first.webPath) }}" class="img-fluid z-depth-1" alt="{{ hostel.galleries.first.name }}" >
+                        </a>
+                    </figure>
+                    {% for gallery in hostel.galleries %}
+                        {% if gallery != hostel.galleries.first %}
+                            <figure class="col-12 col-md-6 d-none">
+                                <a href="{{ asset(gallery.webPath) }}" data-size="1400x1067">
+                                    <img {% if loop.index == 5 %} id="hostel-img-plus"{% endif %} src="{{ asset(gallery.webPath) }}" class="img-fluid" alt="{{ gallery.name }}" >
+                                </a>
+                            </figure>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                {% if hostel.galleries|length > 5 %}
+                    <div class="lightbox-plus z-depth-1">
+                        <div>
+                            <i class="fas fa-th-large mr-2"></i>
+                            <span>Afficher tous les photos</span>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="mdb-lightbox">
+                <div class="row">
+                    <figure class="col-6 d-none">
+                        <a href="{{ asset(hostel.galleries.first.webPath) }}" data-size="1400x1067">
+                            <img src="{{ asset(hostel.galleries.first.webPath) }}" class="img-fluid z-depth-2" alt="{{ hostel.galleries.first.name }}" />
+                        </a>
+                    </figure>
+                    {% for key, gallery in hostel.galleries %}
+                        {% if gallery != hostel.galleries.first %}
+                            {% if key <= 4 %}
+                                <figure class="col-6 children">
+                                    <a href="{{ asset(gallery.webPath) }}" data-size="1400x1067">
+                                        <img src="{{ asset(gallery.webPath) }}" class="img-fluid z-depth-2" alt="{{ gallery.name }}" >
+                                    </a>
+                                </figure>
+                            {% else %}
+                                <figure class="col-6 d-none">
+                                    <a href="{{ asset(gallery.webPath) }}" data-size="1400x1067">
+                                        <img src="{{ asset(gallery.webPath) }}" class="img-fluid" alt="{{ gallery.name }}" >
+                                    </a>
+                                </figure>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+

@@ -15,7 +15,7 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {#<script>
+    <script>
         let $oDaily = '{{ days|json_encode|raw }}',
             $oMonthly = '{{ months|json_encode|raw }}',
             $roomInactif = '{{ roomTotal - roomEnabledTotal }}',
@@ -23,5 +23,5 @@
             $roomBookingTotal = '{{ roomBookingTotal }}';
     </script>
 
-    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/admin/stats.js'} %}#}
+    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/admin/stats.js'} %}
 {% endblock %}

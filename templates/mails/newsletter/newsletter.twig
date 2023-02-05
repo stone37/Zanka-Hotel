@@ -1,0 +1,17 @@
+{% extends layout %}
+
+{% import "mails/macros.twig" as e %}
+
+{% block body %}
+
+    {% apply markdown_email %}
+
+        {{ emailing.subject }}
+        ===============================
+
+        {% if format == 'html' %}
+            {{ e.section(emailing.content|markdown_untrusted) }}
+        {% endif %}
+
+    {% endapply %}
+{% endblock %}

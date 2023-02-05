@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EquipmentGroupRepository::class)]
@@ -20,17 +21,20 @@ class EquipmentGroup
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['hostel:read'])]
     private ?int $id = null;
 
     #[Assert\NotBlank]
     #[Assert\Length(min: 2, max: 180)]
     #[ORM\Column(length: 180, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?string $description = null;
 
-    #[ORM\OneToMany(mappedBy: 'equipmentGroup', targetEntity: Equipment::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'equipmentGroup', targetEntity: Equipment::class, cascade: ['remove'], orphanRemoval: true)]
     private Collection $equipments;
 
     public function __construct()

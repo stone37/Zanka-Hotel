@@ -1,0 +1,38 @@
+{% set hostel = room.hostel %}
+
+<div class="row no-gutters py-0 room-info">
+    <div class="col-lg-5 img-bulk">
+        {% if room.galleries|length > 0 %}
+            {{ include('site/hostel/show/room/_carousel.html.twig') }}
+        {% else %}
+            {% set img_url = asset('assets/img/no-image.png') %}
+            <img src="{{ image_asset(img_url, 350, 350) }}" class="img-fluid" alt="Banner not image" />
+        {% endif %}
+    </div>
+    <div class="col-lg-7">
+        <div class="card-body px-0 py-3">
+            <div class="header">
+                <div class="d-flex justify-content-start align-content-center">
+                    <h5 class="h5-responsive font-weight-stone-500 text-dark mb-1">{{ room.name|u.truncate(22, '...') }}</h5>
+                </div>
+                <div class="location font-weight-stone-500 small-8">
+                    {{ hostel.location.city }} {% if hostel.location.town %}({{ hostel.location.town }}){% endif %}
+                </div>
+            </div>
+            <div class="footer d-flex justify-content-between">
+                <div class="hostel-review">
+                    {% if hostel.averageRating %}
+                        <div class="number">
+                            <span class="d-inline-block font-weight-bold">{{ hostel.averageRating }}</span>/10
+                        </div>
+                        <div class="title font-weight-bold text-primary">{{ app_review_observation(hostel.averageRating) }}</div>
+                        <div class="review-nbr">({{ hostel.reviews|length }} avis)</div>
+                    {% else %}
+                        <div class="no-data small-8 font-weight-stone-500 text-primary">Aucune note</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

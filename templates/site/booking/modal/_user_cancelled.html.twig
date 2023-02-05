@@ -1,0 +1,86 @@
+{% form_theme form 'Ui/Form/theme.html.twig' %}
+
+{% set cancelation_date = app_hostel_cancellation(booking.cancelation, booking.checkin) %}
+
+<div class="modal fade" id="modalBookingUserCancelledForm{{ booking.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h5 class="modal-title w-100 font-weight-bold h5-responsive text-dark">Confirmer l'annulation</h5>
+                <button type="button" class="close text-danger" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-3">
+                {{ form_start(form) }}
+                    <div class="text-dark font-weight-stone-500 small-9">
+                        Vous êtes sur le point d'annuler votre réservation sur
+                        <span class="text-primary font-weight-stone-500">{{ config.settings.name }}</span>.
+                        <br />
+                        {% if cancelation_date %}
+                            <div class="cancellation-condition my-2">
+                                Si vous annulez cette réservation <span class="font-weight-stone-500 text-primary">maintenant</span>
+                                vous recevez un <span class="font-weight-stone-500 text-primary">remboursement complet</span>.
+                                A partir du <span class="font-weight-stone-500 text-primary">{{ cancelation_date|format_datetime(pattern="EEE dd MMM") }}</span>
+                                <span class="font-weight-stone-600 text-danger">{% if booking.cancelation.result == 0 %}la première nuit du séjour
+                                    {% else %}la totalité du séjour{% endif %}</span> ainsi que les taxes et les frais vous seront facturés.
+                            </div>
+                        {% else %}
+                            <div class="cancellation-condition my-2">
+                                Si vous annulez cette réservation <span class="font-weight-stone-500">maintenant</span>
+                                <span class="font-weight-stone-600 text-danger">{% if booking.cancelation.result == 0 %}la première nuit du séjour
+                                    {% else %}la totalité du séjour{% endif %}</span> ainsi que les taxes et les frais vous seront facturés.
+                            </div>
+                        {% endif %}
+
+                        Pour confirmer cette demande merci de rentrer votre mot de passe.
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-12">
+                                    {{ form_widget(form.password) }}
+                                </div>
+                            </div>
+
+                            {#{{ form_row(form.password) }}#}
+                            {#<div class="md-form md-outline input-with-post-icon mb-0">
+                                <i class="fas fa-eye input-prefix"></i>
+
+                            </div>
+                            {{ form_widget(form.password) }}#}
+                            <input type="hidden" name="referer" value="{{app.request.headers.get('referer')}}" />
+                        </div>
+                    </div>
+
+                    {{ form_widget(form._token) }}
+
+                    <div class="d-flex justify-content-center z-depth-0 mt-4">
+                        <button class="btn btn-danger">Confirmer l'annulation</button>
+                    </div>
+                {{ form_end(form, {'render_rest': false}) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.input-prefix.fa-eye').click(function () {
+            passwordView($(this));
+        });
+    });
+
+    function passwordView(element) {
+        if (element.hasClass('fa-eye')) {
+            element.removeClass('fa-eye').addClass('fa-eye-slash view');
+
+            element.siblings('input').get(0).type = 'text';
+        } else {
+            element.removeClass('fa-eye-slash view').addClass('fa-eye');
+
+            element.siblings('input').get(0).type = 'password';
+        }
+    }
+</script>

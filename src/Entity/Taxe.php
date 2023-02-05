@@ -8,6 +8,7 @@ use App\Repository\TaxeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: TaxeRepository::class)]
@@ -19,20 +20,23 @@ class Taxe
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $id = null;
 
     #[Assert\NotBlank]
-    #[ORM\Column(length: 100, unique: true, nullable: true)]
+    #[ORM\Column(length: 100, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $name = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private float $value = 0.0;
 
     #[ORM\Column(nullable: true)]
     private ?bool $includedInPrice = false;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'taxes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
 

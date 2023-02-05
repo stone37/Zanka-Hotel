@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\LocationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LocationRepository::class)]
@@ -12,25 +13,30 @@ class Location
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['hostel:read'])]
     private ?int $id = null;
 
     #[Assert\NotBlank]
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?City $city = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read'])]
+    private ?string $city = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?string $town = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?string $detail = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?string $latitude = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?string $longitude = null;
 
     public function getId(): ?int
@@ -38,12 +44,12 @@ class Location
         return $this->id;
     }
 
-    public function getCity(): ?City
+    public function getCity(): ?string
     {
         return $this->city;
     }
 
-    public function setCity(City $city): self
+    public function setCity(?string $city): self
     {
         $this->city = $city;
 

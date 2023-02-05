@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PromotionActionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PromotionActionRepository::class)]
@@ -13,14 +14,17 @@ class PromotionAction
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['hostel:read'])]
     private ?int $id = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?string $type = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    #[Groups(['hostel:read'])]
     private ?array $configuration = [];
 
     #[ORM\OneToOne(inversedBy: 'action', cascade: ['persist', 'remove'])]

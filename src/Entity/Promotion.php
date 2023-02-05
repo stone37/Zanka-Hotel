@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -29,25 +30,31 @@ class Promotion
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $id = null;
 
     #[Assert\NotBlank(message: 'Veuillez entrer le nom de la promotion.')]
     #[Assert\Length(min: 2, max: 180, minMessage: 'Le nom de la promotion catalogue doit contenir au moins {{ limit }} caractères.', maxMessage: 'Le nom de la promotion catalogue ne peut pas dépasser les {{ limit }} caractères.')]
     #[ORM\Column(length: 180, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $name = null;
 
     #[Gedmo\Slug(fields: ['name'], unique: true)]
     #[ORM\Column(length: 180, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $slug = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?DateTimeInterface $startDate = null;
 
     #[Assert\GreaterThan(propertyPath: 'startDate')]
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?DateTimeInterface $endDate = null;
 
     #[ORM\Column(nullable: true, options: ['default' => 0])]
@@ -55,11 +62,12 @@ class Promotion
 
     private string $state = self::STATE_INACTIVE;
 
-    #[ORM\ManyToOne]
+    #[ORM\ManyToOne(inversedBy: 'promotions')]
     private ?User $owner = null;
 
     #[Assert\Valid]
     #[ORM\OneToOne(mappedBy: 'promotion', cascade: ['persist', 'remove'])]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?PromotionAction $action = null;
 
     #[ORM\ManyToMany(targetEntity: Room::class, inversedBy: 'promotions')]

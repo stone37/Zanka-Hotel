@@ -16,17 +16,11 @@ class PaymentEvent
         $this->commande = $commande;
     }
 
-    /**
-     * @return BookingData
-     */
     public function getData(): BookingData
     {
         return $this->data;
     }
 
-    /**
-     * @return Commande
-     */
     public function getCommande(): Commande
     {
         return $this->commande;

@@ -8,8 +8,14 @@
     {{- format(amount|app_convert_money(config.defaultCurrencyCode, config.currencyCode), config.currencyCode) }}
 {%- endmacro -%}
 
-{%- macro calculatePrice(variant) -%}
+{%- macro calculatePrice(room, room_nbr) -%}
     {% from _self import convertAndFormat %}
 
-    {#{{- convertAndFormat(variant|sylius_calculate_price({'channel': sylius.channel})) }}#}
+    {{- convertAndFormat((room|app_calculate_price) * room_nbr) }}
+{%- endmacro -%}
+
+{%- macro calculatePriceByData(room, night, room_nbr) -%}
+    {% from _self import convertAndFormat %}
+
+    {{- convertAndFormat((room|app_calculate_price) * night * room_nbr) }}
 {%- endmacro -%}

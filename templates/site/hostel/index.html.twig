@@ -1,5 +1,9 @@
 {% extends 'site/layout.html.twig' %}
 
+{% form_theme form 'ui/Form/filter_theme.html.twig' %}
+
+{% set data = config.booker.bookingData %}
+
 {% block title 'Hôtels à ' ~ city  %}
 
 {% block meta %}
@@ -16,8 +20,12 @@
         </div>
     </section>
 
-    <section class="hostel-list">
-        {{ render(controller('App\\Controller\\BookingController::search')) }}
+    <section class="hostel-list hostel-show">
+        {{ include('site/hostel/_formMobileIcon.html.twig') }}
+
+        {{ render(controller('App\\Controller\\BookingController::search', {'request': app.request})) }}
+
+        {{ include('site/hostel/_formMobileSwitch.html.twig') }}
     </section>
 {% endblock %}
 

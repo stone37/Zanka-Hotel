@@ -1,0 +1,26 @@
+<section class="container">
+    <div class="container d-block d-md-none search-form-data bg-primary">
+        <div class="d-flex align-items-center text-white">
+            <div class="icon"><i class="fas fa-search"></i></div>
+            <div class="content">
+                <div class="location">
+                    <div class="city d-inline-block font-weight-stone-500">{{ city|capitalize }}, </div>
+                    <div class="country d-inline-block font-weight-stone-500">{{ country|country_name }}</div>
+                </div>
+                <div class="data small-8 mt-1">
+                    <div class="date d-inline-block font-weight-stone-500">
+                        {{ date(data.duration.checkin)|format_datetime(pattern="dd") }}
+                        {{ date(data.duration.checkin)|format_datetime(pattern="MMM") }} -
+                        {{ date(data.duration.checkout)|format_datetime(pattern="dd") }}
+                        {{ date(data.duration.checkout)|format_datetime(pattern="MMM") }}
+                    </div>
+                    <div class="user d-inline-block font-weight-stone-500 ml-1">
+                        {% set guest = data.adult + data.children %}
+                        {{ (guest > 1) ? guest ~ ' voyageurs' : guest ~ ' voyageur' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

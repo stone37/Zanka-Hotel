@@ -124,8 +124,7 @@ class RoomType extends AbstractType
                 'required' => false
             ])
             ->add('roomNumber', IntegerType::class, [
-                'label' => 'Nombre d\'hébergements (de ce type)',
-                'data' => 1
+                'label' => 'Nombre d\'hébergements (de ce type)'
             ])
             ->add('price', IntegerType::class, [
                 'label' => false,

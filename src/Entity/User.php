@@ -2,6 +2,17 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Put;
+use App\Api\Controller\UserAccount;
+use App\Api\Controller\UserAccountCancel;
+use App\Api\Controller\UserAccountDelete;
+use App\Api\Controller\UserAccountProfilPhoto;
+use App\Api\State\UserStateProcessor;
 use App\Entity\Traits\DeletableTrait;
 use App\Entity\Traits\MediaTrait;
 use App\Entity\Traits\Notifiable;
@@ -14,10 +25,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Serializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -28,7 +41,108 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[UniqueEntity(fields: ['email'], repositoryMethod: 'findByCaseInsensitive', message: 'Il existe déjà un compte avec cet e-mail.')]
 #[UniqueEntity(fields: ['username'], repositoryMethod: 'findByCaseInsensitive')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+#[GetCollection(
+    openapiContext: ['summary' => 'Récupère tous les utilisateurs', 'security' => [['bearerAuth' => []]]],
+    paginationClientItemsPerPage: true,
+    normalizationContext: ['groups' => ['user:read']],
+    security: 'is_granted("ROLE_ADMIN")'
+)]
+#[Get(
+    openapiContext: ['summary' => 'Récupère un utilisateur', 'security' => [['bearerAuth' => []]]],
+    normalizationContext: ['groups' => ['user:read']],
+    security: 'is_granted("ROLE_USER")'
+)]
+#[Post(
+    openapiContext: ['summary' => 'Créer un nouveau utilisateur'],
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:write'], 'swagger_definition_name' => 'UserCreated'],
+    validationContext: ['groups' => ['Default', 'Registration', 'Api']],
+    processor: UserStateProcessor::class
+)]
+#[Put(
+    openapiContext: ['summary' => 'Met à jour un utilisateur', 'security' => [['bearerAuth' => []]]],
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:edit']],
+    security: 'is_granted("ROLE_USER")',
+    validationContext: ['groups' => ['Registration', 'Profile']],
+    processor: UserStateProcessor::class
+)]
+#[Post(
+    uriTemplate: '/users/social/register',
+    openapiContext: ['summary' => 'Créer un nouveau utilisateur à partie des comptes Google et Facebook'],
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:social:write'], 'swagger_definition_name' => 'UserCreated'],
+    validationContext: ['groups' => ['Registration']],
+    processor: UserStateProcessor::class
+)]
+#[GetCollection(
+    uriTemplate: '/users/enabled',
+    controller: UserAccount::class,
+    openapiContext: ['summary' => 'Récupère d\'utilisateur connecter', 'security' => [['bearerAuth' => []]]],
+    paginationEnabled: false,
+    normalizationContext: ['groups' => ['user:read'], 'skip_null_values' => false],
+    security: 'is_granted("ROLE_USER")',
+    name: 'get_owner'
+)]
+#[Patch(
+    uriTemplate: '/users/{id}/password-change',
+    requirements: ['id' => '\d+'],
+    openapiContext: ['summary' => 'Modifie le mot de passe d\'un utilisateur', 'security' => [['bearerAuth' => []]]],
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:delete']],
+    security: 'is_granted("ROLE_USER")',
+    name: 'change_password',
+    processor: UserStateProcessor::class
+)]
+#[Put(
+    uriTemplate: '/users/{id}/delete/cancel',
+    requirements: ['id' => '\d+'],
+    controller: UserAccountCancel::class,
+    openapiContext: ['summary' => 'Annule la suppression d\'un utilisateur', 'security' => [['bearerAuth' => []]]],
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:cancel'], 'skip_null_values' => false],
+    security: 'is_granted("ROLE_USER")',
+    name: 'soft_delete_cancel',
+)]
+#[Patch(
+    uriTemplate: '/users/{id}/delete',
+    requirements: ['id' => '\d+'],
+    controller: UserAccountDelete::class,
+    openapiContext: ['summary' => 'Supprime un utilisateur', 'security' => [['bearerAuth' => []]]],
+    normalizationContext: ['groups' => ['user:read']],
+    denormalizationContext: ['groups' => ['user:delete']],
+    security: 'is_granted("ROLE_USER")',
+    name: 'soft_delete',
+)]
+#[Post(
+    uriTemplate: '/users/{id}/profil-photo',
+    requirements: ['id' => '\d+'],
+    controller: UserAccountProfilPhoto::class,
+    openapiContext: [
+        'summary' => 'Supprime un utilisateur',
+        'security' => [['bearerAuth' => []]],
+        'requestBody' => [
+            'content' => [
+                'multipart/form-data' => [
+                    'schema' => [
+                        'type' => 'object',
+                        'properties' => [
+                            'file' => [
+                                'type' => 'string',
+                                'format' => 'binary'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]
+    ],
+    normalizationContext: ['groups' => ['user:read']],
+    security: 'is_granted("ROLE_USER")',
+    deserialize: false,
+    name: 'profil_photo'
+)]
+class User implements UserInterface, PasswordAuthenticatedUserInterface, Serializable
 {
     use MediaTrait;
     use Notifiable;
@@ -39,15 +153,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:read', 'hostel:read'])]
     private ?int $id = null;
 
     #[Assert\NotBlank(message: "Entrez une adresse e-mail s'il vous plait.", groups: ['Registration', 'Profile'])]
     #[Assert\Length(min: 2, max: 180, minMessage: "L'adresse e-mail est trop courte.", maxMessage: "L'adresse e-mail est trop longue.", groups: ['Registration', 'Profile'])]
     #[Assert\Email(message: "L'adresse e-mail est invalide.", groups: ['Registration', 'Profile'])]
     #[ORM\Column(length: 180, unique: true)]
+    #[Groups(['user:write', 'user:social:write', 'user:read', 'user:edit', 'hostel:read'])]
     private ?string $email = null;
 
     #[ORM\Column]
+    #[Groups(['user:read', 'hostel:read'])]
     private array $roles = [];
 
     /**
@@ -56,29 +173,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    /*#[Assert\NotBlank]
-    #[Assert\Length(min: 8, max: 4096, minMessage: 'Votre mot de passe doit comporter au moins {{ limit }} caractères')]*/
+    #[Assert\NotBlank(groups: ['Api'])]
+    #[Assert\Length(min: 8, max: 4096, groups: ['Api'])]
     #[SerializedName('password')]
+    #[Groups(['user:write', 'user:edit', 'user:delete'])]
     private $plainPassword;
 
-    /*#[Assert\NotBlank(message: "Entrez un nom d'utilisateur s'il vous plait.", groups: ['Registration', 'Profile'])]
-    #[Assert\Length(min: 2, max: 180, minMessage: "Le nom d'utilisateur est trop courte.", maxMessage: "Le nom d'utilisateur est trop longue.", groups: ['Registration', 'Profile'])]*/
     #[ORM\Column(length: 180, nullable: true)]
+    #[Groups(['user:read', 'user:edit', 'hostel:read'])]
     private ?string $username = null;
 
     #[Assert\NotBlank(message: "Entrez un prénom s'il vous plait.", groups: ['Registration', 'Profile'])]
     #[Assert\Length(min: 2, max: 180, minMessage: "Le prénom est trop court", maxMessage: "Le prénom est trop long.", groups: ['Registration', 'Profile'])]
     #[ORM\Column(length: 180, nullable: true)]
+    #[Groups(['user:write', 'user:social:write', 'user:read', 'user:edit', 'hostel:read'])]
     private ?string $firstname = null;
 
     #[Assert\NotBlank(message: "Entrez un nom s'il vous plait.", groups: ['Registration', 'Profile'])]
     #[Assert\Length(min: 2, max: 180, minMessage: "Le nom est trop court", maxMessage: "Le nom est trop long.", groups: ['Registration', 'Profile'])]
     #[ORM\Column(length: 180, nullable: true)]
+    #[Groups(['user:write', 'user:social:write', 'user:read', 'user:edit', 'hostel:read'])]
     private ?string $lastname = null;
 
     #[Assert\NotBlank(message: "Entrez un numéro de téléphone s''il vous plait.", groups: ['Registration', 'Profile'])]
-    #[Assert\Length(min: 10, max: 25, minMessage: "Le numéro de téléphone est trop court.", maxMessage: "Le numéro de téléphone est trop long.", groups: ['Registration', 'Profile'])]
+    #[Assert\Length(min: 10, max: 13, minMessage: "Le numéro de téléphone est trop court.", maxMessage: "Le numéro de téléphone est trop long.", groups: ['Registration', 'Profile'])]
     #[ORM\Column(length: 25, nullable: true)]
+    #[Groups(['user:write', 'user:social:write', 'user:read', 'user:edit', 'hostel:read'])]
     private ?string $phone = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -88,31 +208,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?DateTimeInterface $birthDay = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read', 'user:edit', 'hostel:read'])]
     private ?string $country = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read', 'user:edit', 'hostel:read'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read', 'user:edit', 'hostel:read'])]
     private ?string $address = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTimeInterface $bannedAt = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read', 'hostel:read'])]
     private ?string $lastLoginIp = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['user:read', 'hostel:read'])]
     private ?DateTimeInterface $lastLoginAt = null;
 
     #[ORM\Column(nullable: true)]
     private ?bool $isVerified = false;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['user:read', 'hostel:read'])]
     private ?bool $subscribedToNewsletter = false;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:read', 'hostel:read'])]
     private ?string $confirmationToken;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['user:read', 'hostel:read'])]
+    private ?int $hostelNumber = 3;
 
     #[Assert\File(maxSize: '8M')]
     #[Vich\UploadableField(
@@ -123,6 +254,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         originalName: 'fileOriginalName'
     )]
     private ?File $file = null;
+
+    #[ApiProperty(types: ['https://schema.org/fileUrl'])]
+    #[Groups(['user:read', 'hostel:read'])]
+    private ?string $fileUrl;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Hostel::class, orphanRemoval: true)]
     private Collection $hostels;
@@ -142,6 +277,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Payout::class)]
     private Collection $payouts;
 
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Supplement::class, cascade: ['remove'])]
+    private Collection $supplements;
+
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Taxe::class, cascade: ['remove'])]
+    private Collection $taxes;
+
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Promotion::class, cascade: ['remove'])]
+    private Collection $promotions;
+
     public function __construct()
     {
         $this->hostels = new ArrayCollection();
@@ -150,6 +294,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->bookings = new ArrayCollection();
         $this->commandes = new ArrayCollection();
         $this->payouts = new ArrayCollection();
+        $this->supplements = new ArrayCollection();
+        $this->taxes = new ArrayCollection();
+        $this->promotions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -187,7 +334,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-        $roles[] = 'ROLE_PARTNER';
+        //$roles[] = 'ROLE_PARTNER';
 
         return array_unique($roles);
     }
@@ -436,6 +583,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getFileUrl(): ?string
+    {
+        return $this->fileUrl;
+    }
+
+    public function setFileUrl(?string $fileUrl): self
+    {
+        $this->fileUrl = $fileUrl;
+
+        return $this;
+    }
+
+    public function getHostelNumber(): ?int
+    {
+        return $this->hostelNumber;
+    }
+
+    public function setHostelNumber(?int $hostelNumber): self
+    {
+        $this->hostelNumber = $hostelNumber;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Hostel>
      */
@@ -614,5 +785,115 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Supplement>
+     */
+    public function getSupplements(): Collection
+    {
+        return $this->supplements;
+    }
+
+    public function addSupplement(Supplement $supplement): self
+    {
+        if (!$this->supplements->contains($supplement)) {
+            $this->supplements[] = $supplement;
+            $supplement->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSupplement(Supplement $supplement): self
+    {
+        if ($this->supplements->removeElement($supplement)) {
+            // set the owning side to null (unless already changed)
+            if ($supplement->getOwner() === $this) {
+                $supplement->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Taxe>
+     */
+    public function getTaxes(): Collection
+    {
+        return $this->taxes;
+    }
+
+    public function addTaxe(Taxe $taxe): self
+    {
+        if (!$this->taxes->contains($taxe)) {
+            $this->taxes[] = $taxe;
+            $taxe->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTaxe(Taxe $taxe): self
+    {
+        if ($this->taxes->removeElement($taxe)) {
+            // set the owning side to null (unless already changed)
+            if ($taxe->getOwner() === $this) {
+                $taxe->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Promotion>
+     */
+    public function getPromotions(): Collection
+    {
+        return $this->promotions;
+    }
+
+    public function addPromotion(Promotion $promotion): self
+    {
+        if (!$this->promotions->contains($promotion)) {
+            $this->promotions[] = $promotion;
+            $promotion->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromotion(Promotion $promotion): self
+    {
+        if ($this->promotions->removeElement($promotion)) {
+            // set the owning side to null (unless already changed)
+            if ($promotion->getOwner() === $this) {
+                $promotion->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function serialize()
+    {
+        return serialize(array(
+            $this->id,
+            $this->username,
+            $this->email,
+            $this->password
+        ));
+    }
+
+    public function unserialize($serialized)
+    {
+        list (
+            $this->id,
+            $this->username,
+            $this->email,
+            $this->password
+        ) = unserialize($serialized);
     }
 }

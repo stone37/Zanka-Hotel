@@ -1,19 +1,19 @@
 <section class="mt-3 my-lg-4 home-location-data">
     {% if cities|length > 0 %}
         <h3 class="h3-responsive title wow fadeIn mb-0" data-wow-delay="0.2s">
-            <strong class="font-weight-stone-600">Partez à la rencontre de la Côte d'Ivoire</strong>
+            <strong class="font-weight-stone-600 text-dark">Partez à la rencontre de la Côte d'Ivoire</strong>
         </h3>
-        <div class="grey-text w-responsive wow fadeIn mb-4" data-wow-delay="0.2s">
+        <div class="w-responsive wow fadeIn mb-4 grey-text" data-wow-delay="0.2s">
             Ces destinations populaires ont plein de choses à offrir.
         </div>
         <div class="row">
-            <div id="home-location-carousel" class="carousel slide w-100" data-ride="carousel">
+            <div id="home-location-carousel" class="carousel slide w-100" data-interval="20000" data-ride="carousel">
                 <div class="carousel-inner w-100 vv-3" role="listbox">
                     {% for city in cities %}
                         <div class="carousel-item {% if loop.first %}active{% endif %}">
                             <div class="col-12 col-md-4 col-lg-3">
-                                <a href="" class="">
-                                    <div class="view zoom rgba-white-slight z-depth-1">
+                                <a href="{{ path('app_hostel_index', {'location': city.name}) }}" class="">
+                                    <div class="view zoom rgba-white-slight z-depth-0">
                                         {% if city.fileName %}
                                             <img src="{{ image_url(city, 500, 718) }}" class="img-fluid" alt="City image">
                                         {% else %}

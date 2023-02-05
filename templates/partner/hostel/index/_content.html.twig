@@ -1,13 +1,15 @@
 {% import 'Ui/Macro/buttons.html.twig' as buttons %}
 
-<div class="row mb-4">
-    <div class="col-12 d-flex justify-content-end">
-        <div class="d-flex ml-auto">
-            {% set path = path('app_partner_hostel_create') %}
-            {% include 'Ui/Grid/Action/create.html.twig' with {'path': path, 'action': {'label': 'Créer'}} %}
+{% if app_has_created(app.user) %}
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-end">
+            <div class="d-flex ml-auto">
+                {% set path = path('app_partner_hostel_create') %}
+                {% include 'Ui/Grid/Action/create.html.twig' with {'path': path, 'action': {'label': 'Créer'}} %}
+            </div>
         </div>
     </div>
-</div>
+{% endif %}
 
 {% if hostels|length > 0 %}
     <div class="row app-user mb-5">
@@ -31,7 +33,7 @@
                         <td class="text-center">{{ hostel.email }}</td>
                         <td class="text-center">{{ hostel.phone }}</td>
                         <td class="text-center">{{ hostel.starNumber }}</td>
-                        <td class="text-center">{{ hostel.location.city.name }}</td>
+                        <td class="text-center">{{ hostel.location.city }}</td>
                         <td class="text-center">
                             {% if hostel.enabled %}
                                 {% if not hostel.closed %}
@@ -84,7 +86,7 @@
 {% else %}
     <div class="row app-user d-flex justify-content-center">
         <div class="col-12 col-md-8 text-center mt-3 mt-md-5">
-            <h3 class="h3-responsive font-weight-stone-600">
+            <h3 class="h3-responsive font-weight-stone-600 text-dark">
                 Vous n'avez aucun établissements.
             </h3>
         </div>

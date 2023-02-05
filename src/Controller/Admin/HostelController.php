@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\Hostel;
 use App\Event\AdminCRUDEvent;
+use App\Event\HostelConfirmedEvent;
 use App\Form\HostelAdminType;
 use App\Form\Filter\AdminHostelType;
 use App\Model\Admin\HostelAdminSearch;
@@ -62,17 +63,13 @@ class HostelController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            $event = new AdminCRUDEvent($hostel);
-
-            $this->dispatcher->dispatch($event, AdminCRUDEvent::PRE_EDIT);
-
             if ($hostel->isEnabled() && $hostel->getEnabledAt() == null) {
                 $hostel->setEnabledAt(new DateTime());
             }
 
             $this->repository->flush();
 
-            $this->dispatcher->dispatch($event, AdminCRUDEvent::POST_EDIT);
+            $this->dispatcher->dispatch(new HostelConfirmedEvent($hostel));
 
             $this->addFlash('success', 'L\'établissement a été mise à jour');
 
@@ -132,7 +129,8 @@ class HostelController extends AbstractController
 
             $url = $request->request->get('referer');
 
-            $response = new RedirectResponse($url);
+            $response = new RedirectResponse($url); // Lit simple (largeur: 90-130 cm)
+
 
             return $response;
         }
@@ -178,7 +176,7 @@ class HostelController extends AbstractController
 
                 $this->repository->flush();
 
-                $this->addFlash('success', 'Les établissements ont été supprimé');
+                $this->addFlash('success', 'Les établissements ont été supprimés');
             } else {
                 $this->addFlash('error', 'Désolé, les établissements n\'ont pas pu être supprimée !');
             }

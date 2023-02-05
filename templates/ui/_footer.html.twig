@@ -4,10 +4,10 @@
 <section class="sup-footer py-4 d-none d-lg-block">
     <div class="row d-flex justify-content-center mx-md-5">
         <div class="col-lg-8 text-center">
-            <a href="" class="btn btn-outline-white btn-sm z-depth-0 mr-2">Ajouter votre établissement</a>
+            <a href="{{ path('app_partner_create') }}" class="btn btn-outline-white btn-sm z-depth-0 mr-2">Ajouter votre établissement</a>
 
             {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                <a href="" class="btn btn-outline-white btn-sm z-depth-0 ml-2">Rechercher des réservations</a>
+                <a href="{{ path('app_booking_search') }}" class="btn btn-outline-white btn-sm z-depth-0 ml-2">Rechercher des réservations</a>
             {% endif %}
         </div>
     </div>
@@ -103,13 +103,13 @@
                     <strong>Méthodes de payement</strong>
                 </h6>
                 <div class="payment-method mt-3">
-                    <div class="mr-1 mb-2"><img src="{{ asset('assets/img/payment/orange.png') }}" class="img-fluid orange" alt="Orange money logo"></div>
-                    <div class="mr-1 mb-2"><img src="{{ asset('assets/img/payment/wave.png') }}" class="img-fluid wave" alt="Wave money logo"></div>
+                   <div class="mr-1 mb-2"><img src="{{ asset('assets/img/payment/orange.png') }}" class="img-fluid orange" alt="Orange money logo"></div>
+                    {#<div class="mr-1 mb-2"><img src="{{ asset('assets/img/payment/wave.png') }}" class="img-fluid wave" alt="Wave money logo"></div>#}
                     <div class="mr-1 mb-2 mtn-bulk"><img src="{{ asset('assets/img/payment/mtn.png') }}" class="img-fluid mtn" alt="MTN mobile money logo"></div>
-                    <div class="mr-1 mb-2 moov-bulk"><img src="{{ asset('assets/img/payment/moov.png') }}" class="img-fluid moov" alt="Moov money logo"></div>
+                   {#<div class="mr-1 mb-2 moov-bulk"><img src="{{ asset('assets/img/payment/moov.png') }}" class="img-fluid moov" alt="Moov money logo"></div>#}
                     <div class="mr-1 mb-2"><img src="{{ asset('assets/img/payment/visa.png') }}" class="img-fluid visa" alt="Visa logo"></div>
                     <div class="mr-1 mb-2"><img src="{{ asset('assets/img/payment/masterCard.png') }}" class="img-fluid mastercard" alt="Mastercard logo"></div>
-                    <div class="mr-1 mb-2 wari-bulk"><img src="{{ asset('assets/img/payment/wari.png') }}" class="img-fluid wari" alt="wari logo"></div>
+                    {#<div class="mr-1 mb-2 wari-bulk"><img src="{{ asset('assets/img/payment/wari.png') }}" class="img-fluid wari" alt="wari logo"></div>#}
                 </div>
             </div>
         </div>

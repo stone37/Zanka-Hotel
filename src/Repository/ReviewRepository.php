@@ -101,12 +101,15 @@ class ReviewRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('r')
             ->leftJoin('r.hostel', 'hostel')
             ->leftJoin('r.owner', 'owner')
+            ->leftJoin('r.booking', 'booking')
             ->addSelect('hostel')
             ->addSelect('owner')
+            ->addSelect('booking')
             ->where('r.hostel = :hostel')
+            ->andWhere('r.enabled = 1')
             ->setParameter('hostel', $hostel)
-            ->orderBy('r.createdAt', 'desc');
+            ->orderBy('r.rating', 'desc');
 
-        return $qb;
+        return $qb->getQuery()->getResult();
     }
 }

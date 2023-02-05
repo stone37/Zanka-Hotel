@@ -1,0 +1,30 @@
+{% extends layout %}
+
+{% import "mails/macros.twig" as e %}
+
+{% set settings = config.settings %}
+
+{% block body %}
+
+    {% apply markdown_email %}
+
+        Cher {{ booking.hostel.name }},
+        ==============================
+
+        Nous vous informons que vous aviez une **nouvelle réservation**.
+
+        Détails de la réservation
+        -------------------------
+
+        Type de chambre: **{{ booking.room.name }}**
+        Nombre de nuits: **{{ booking.days }}**
+        Nombre de personnes: **{{ booking.adult + booking.children }}**
+
+        Arrivée prévue: **{{ booking.checkin|format_datetime(pattern="EE dd MMM yyyy") }}**
+        Départ prévu: **{{ booking.checkout|format_datetime(pattern="EE dd MMM yyyy") }}**
+
+        Veuillez confirmer cette réservation au plus vite s'il vous plait.
+    {% endapply %}
+
+    {{ e.button('Voir la réservation ', url('app_partner_booking_show', {'id': booking.id, 'type': 1})) }}
+{% endblock %}

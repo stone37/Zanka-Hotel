@@ -16,11 +16,9 @@ class CitiesFinder
     private ?string $enabledProperty;
 
     public function __construct(
-        FinderInterface $citiesFinder,
         GenericQueryBuilder $genericQueryBuilder,
         ParameterBagInterface $parameterBag
     ) {
-        $this->citiesFinder = $citiesFinder;
         $this->genericQueryBuilder = $genericQueryBuilder;
         $this->positionPrefix = $parameterBag->get('app_position_property_prefix');
         $this->enabledProperty = $parameterBag->get('app_enabled_property');
@@ -31,7 +29,7 @@ class CitiesFinder
         $boolQuery = $this->genericQueryBuilder->buildQuery();
 
         $enabledQuery = new Term();
-        $enabledQuery->setTerm($this->enabledProperty, false);
+        $enabledQuery->setTerm($this->enabledProperty, true);
         $boolQuery->addMust($enabledQuery);
 
         $query = new Query($boolQuery);

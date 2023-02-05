@@ -1,0 +1,111 @@
+{% import 'Ui/Macro/buttons.html.twig' as buttons %}
+{% import 'ui/Macro/money.html.twig' as money %}
+
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-center justify-content-md-between">
+        <div class="d-flex ml-auto">
+            <div class="">
+                {% include 'admin/payout/filter.html.twig' with {'form': searchForm}  %}
+            </div>
+            <div class="mr-3">
+                <a href="" class="btn btn-grey" data-toggle="modal" data-target="#entity-search">
+                    <i class="fas fa-filter mr-1" aria-hidden="true"></i> Filtres
+                </a>
+            </div>
+
+            {% if payouts|length > 0 %}
+                {% set path = path('app_admin_cancel_payout_bulk_pay') %}
+                {{ buttons.default(path, 'Rembourser tous les clients', 'app-vendor-cancel-payout', 'fas fa-credit-card', '', 'btn-default') }}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if payouts|length > 0 %}
+    <div class="row app-user mb-5">
+        <div class="col-12">
+            <table class="table table-responsive-sm">
+                <thead class="text-primary">
+                <tr>
+                    <th scope="col" class="font-weight-stone-500 text-center">Date</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">Commande</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">Client</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">Fautif</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">État</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">Montant</th>
+                    <th scope="col" class="font-weight-stone-500 text-center">Devise</th>
+                    <th scope="col" class="font-weight-stone-500 text-center"></th>
+                </tr>
+                </thead>
+                <tbody id="list-checkbook-container">
+                {% for payout in payouts %}
+                    <tr>
+                        <td class="text-center">{{ payout.createdAt|date('d/m/Y H:i') }}</td>
+                        <td class="text-center">
+                            <a href="{{ path('app_admin_commande_show', {'id': payout.commande.id}) }}" class="card-link">#{{ payout.commande.id }}</a>
+                        </td>
+                        <td class="text-center">
+                            {{ payout.commande.payment.firstname }} {{ payout.commande.payment.lastname }}
+                        </td>
+                        <td class="text-center">
+                            {% if payout.role == 'partner' %}
+                                <div class="badge badge-primary"><i class="fas fa-briefcase mr-1"></i> Partenaire</div>
+                            {% else %}
+                                <span class="badge badge-primary"><i class="fas fa-user mr-1"></i>  Client</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">
+                            {% if payout.state == 2 %}
+                                <span class="badge badge-success">
+                                    <i class="fas fa-adjust mr-1"></i> Complete
+                                </span>
+                            {% elseif payout.state == 3 %}
+                                <span class="badge badge-grey">
+                                    <i class="fas fa-times mr-1"></i> Annuler
+                                </span>
+                            {% else %}
+                                <span class="badge badge-danger">
+                                    <i class="fas fa-check mr-1"></i> Nouveau
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="text-center">{{ money.convertAndFormat(payout.amount) }}</td>
+                        <td class="text-center">
+                            <div class="dropdown">
+                                <a class="dropdown-toggle" type="button" data-toggle="dropdown"><i class="fas fa-ellipsis-h text-primary"></i></a>
+                                <div class="dropdown-menu dropdown-primary dropdown-menu-right mt-0">
+                                    {% if payout.state == 1 or payout.state == 3 %}
+                                        <a class="dropdown-item entity-cancel-payout-pay" data-id="{{ payout.id }}">
+                                            <i class="fas fa-credit-card mr-1"></i> Rembourser
+                                        </a>
+                                    {% endif %}
+
+                                    {% if payout.state == 1 %}
+                                        <a class="dropdown-item entity-cancel-payout-cancel" data-id="{{ payout.id }}">
+                                            <i class="fas fa-ban mr-1"></i> Annuler
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="col-12 d-flex justify-content-start mt-2">
+            <div class="font-weight-stone-500 text-secondary">{{ payouts.totalItemCount }} résultats</div>
+        </div>
+        <div class="col-12 d-flex justify-content-center mt-2 mb-5">
+            {{ knp_pagination_render(payouts, 'Ui/_pagination.html.twig') }}
+        </div>
+    </div>
+{% else %}
+    <div class="row app-user d-flex justify-content-center">
+        <div class="col-12 col-md-8 text-center mt-3 mt-md-5">
+            <h3 class="h3-responsive font-weight-stone-600 text-dark">
+                Vous n'avez aucun remboursement.
+            </h3>
+        </div>
+    </div>
+{% endif %}

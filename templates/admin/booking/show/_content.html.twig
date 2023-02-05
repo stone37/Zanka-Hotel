@@ -21,7 +21,7 @@
                     <td class="text-center font-weight-normal">{{ booking.checkin|format_datetime('medium', 'none', locale='fr') }}</td>
                     <td class="table-dark text-center font-weight-normal">Départ</td>
                     <td class="text-center font-weight-normal">{{ booking.checkout|format_datetime('medium', 'none', locale='fr') }}</td>
-                    <td class="table-dark text-center">Hébergement</td>
+                    <td class="table-dark text-center font-weight-normal">Hébergement</td>
                     <td class="text-center font-weight-normal">
                         <a href="{{ path('app_admin_room_show', {'id': booking.room.id}) }}" class="card-link">{{ booking.room.name }}</a>
                     </td>
@@ -131,7 +131,7 @@
             {% endif %}
 
             <div class="text-center">
-                {{ buttons.default(path('app_admin_commande_user', {'id': booking.commande.id}), 'Commande',
+                {{ buttons.default(path('app_admin_commande_show', {'id': booking.commande.id}), 'Commande',
                     'app-entity-list-order-btn', 'fas fa-shopping-cart', 'btn-grey') }}
             </div>
         </div>

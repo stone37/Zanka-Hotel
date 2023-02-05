@@ -25,13 +25,27 @@
         </header>
         {% block app_navbar_three %}{% endblock %}
 
-        <main class="px-2 px-md-1">
+        <main class="px-3 px-md-1">
             {% block app_body %}{% endblock %}
         </main>
 
         {% include 'ui/_confirmation.html.twig' %}
 
-       <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
+        <script>
+
+            window.hostel = {
+                ...(window.hostel || {}),
+                ADMIN: {{ is_granted('ROLE_SUPER_ADMIN') ? 'true' : 'false' }},
+                USER: {{ app.user ? app.user.id : 'null' }},
+                APP_NAME: '{{ config.name ? config.name : 'null' }}',
+                BASE_CURRENCY_CODE: '{{ config.defaultCurrencyCode ? config.defaultCurrencyCode : 'null' }}',
+                CURRENCY_CODE: '{{ config.currencyCode ? config.currencyCode : 'null' }}',
+                CURRENCY_SYMBOL: '{{ config.currencyCode ? config.currencyCode|currency_symbol : 'null' }}',
+                DEFAULT_LOCALE_CODE: '{{ config.defaultLocaleCode ? config.defaultLocaleCode : 'null' }}',
+                LOCALE_CODE: '{{ config.localeCode ? config.localeCode : 'null' }}'
+            }
+        </script>
+        <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
         {% block javascripts %}
             {% include 'ui/_javascripts.html.twig' with {'path': 'assets/js/jquery.min.js'} %}

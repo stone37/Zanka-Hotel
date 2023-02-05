@@ -3,28 +3,33 @@
 namespace App\Manager;
 
 use App\Entity\Booking;
+use App\Entity\Hostel;
+use App\Entity\User;
+use App\Event\BookingPartnerCancelledEvent;
+use App\Repository\BookingRepository;
 use DateTime;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class BookingManager
 {
-    private EntityManagerInterface $em;
-
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(
+        private BookingRepository $repository,
+        private EventDispatcherInterface $dispatcher
+    )
     {
-        $this->em = $em;
     }
 
     public function confirm(Booking $booking)
     {
         $this->confirmed($booking);
-        $this->em->flush();
+        $this->repository->flush();
     }
 
     public function cancel(Booking $booking)
     {
         $this->cancelled($booking);
-        $this->em->flush();
+        $this->repository->flush();
     }
 
     public function cancelledAjustement(array $bookings)
@@ -37,10 +42,22 @@ class BookingManager
         foreach($bookings as $booking) {
             if (!($booking->getStatus() === Booking::CANCELLED)) {
                 $this->cancelled($booking);
+
+                $this->dispatcher->dispatch(new BookingPartnerCancelledEvent($booking));
             }
         }
 
-        $this->em->flush();
+        $this->repository->flush();
+    }
+
+    public function getBookingByUserAndHostel(Hostel $hostel, User|UserInterface $user): ?Booking
+    {
+        return $this->repository->getByUserAndHostel($user, $hostel);
+    }
+
+    public function getBookingByReferenceAndHostel(Hostel $hostel, String $reference): ?Booking
+    {
+        return $this->repository->getByReferenceAndHostel($hostel, $reference);
     }
 
     private function confirmed(Booking $booking)

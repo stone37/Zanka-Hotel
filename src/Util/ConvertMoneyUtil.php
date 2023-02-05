@@ -18,4 +18,3 @@ class ConvertMoneyUtil
         return (string) $this->converter->convert($amount, $sourceCurrencyCode, $targetCurrencyCode);
     }
 }
-

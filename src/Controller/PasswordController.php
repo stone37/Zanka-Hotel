@@ -51,11 +51,11 @@ class PasswordController extends AbstractController
         ?PasswordResetToken $token,
         PasswordService $service): Response
     {
-        /*if (!$token || $service->isExpired($token) || $token->getOwner() !== $user) {
+        if (!$token || $service->isExpired($token) || $token->getOwner() !== $user) {
             $this->addFlash('error', 'Ce token a expiré');
 
             return $this->redirectToRoute('app_login');
-        }*/
+        }
 
         $error = null;
         $data = new PasswordResetConfirmData();

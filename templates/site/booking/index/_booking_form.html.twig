@@ -1,0 +1,228 @@
+<section>
+    <div class="row">
+        <div class="col-12">
+            {{ form_start(booking_form, {'attr': {'novalidate': 'novalidate', 'class': 'booking-data-form'}}) }}
+            <div class="row">
+                <div class="col-12">
+                    {% if not (booking_form.lastname is defined) or (booking_form.firstname is defined) or
+                        (booking_form.email is defined) or (booking_form.phone is defined) or
+                        (booking_form.country is defined) or (booking_form.city is defined) %}
+                        <div class="card mb-4">
+                            <div class="card-body p-3">
+                                <h4 class="h4-responsive font-weight-stone-600 text-dark">Saisissez vos informations</h4>
+                                <div class="small-8 success-color text-white px-2 py-1 d-inline-block mb-1">
+                                    Vous y êtes presque ! Complétez simplement les informations requises.
+                                </div>
+
+                                <div class="form-row">
+                                    {% if booking_form.lastname is defined %}
+                                        <div class="col-12 col-md-6 mb-2">
+                                            {{ form_row(booking_form.lastname) }}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if booking_form.firstname is defined %}
+                                        <div class="col-12 col-md-6 mb-2">
+                                            {{ form_row(booking_form.firstname) }}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if booking_form.email is defined %}
+                                        <div class="col-12 col-md-6">
+                                            <small class="form-text text-primary font-weight-stone-500 sup-help" >
+                                                L'email de confirmation sera envoyée à cette adresse.
+                                            </small>
+                                            {{ form_row(booking_form.email) }}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if booking_form.phone is defined %}
+                                        <div class="col-12 col-md-6 phone-field">
+                                            <small class="form-text text-primary font-weight-stone-500 sup-help">
+                                                Nous ne vous contacterons qu'en cas d'urgence.
+                                            </small>
+                                            {{ form_row(booking_form.phone) }}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if booking_form.country is defined %}
+                                        <div class="col-12 col-md-6">
+                                            {{ form_widget(booking_form.country) }}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if booking_form.city is defined %}
+                                        <div class="col-12 col-md-6">
+                                            {{ form_row(booking_form.city) }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-12">
+                    <div id="booking-form-occupant-wrapper" class="row booking-form-occupant-wrapper"
+                         data-prototype="{{ form_widget(booking_form.occupants.vars.prototype)|e('html_attr') }}"
+                         data-index="{{ booking_form.occupants|length }}">
+                        {% for field in booking_form.occupants %}
+                            <div class="col-12">
+                                <div class="card mb-4">
+                                    <div class="card-body p-3">
+                                        <h4 class="h4-responsive font-weight-stone-600 text-dark">{{ room.name }}</h4>
+                                        <ul class="list-unstyled dark-grey-text list-inline small-8 mb-1">
+                                            {% if room.area %}
+                                                <li class="list-inline-item mr-3">
+                                                    <i class="fas fa-border-style mr-1 my-1"></i> {{ room.area }} m²
+                                                </li>
+                                            {% endif %}
+                                            <li class="list-inline-item mr-3">
+                                                <i class="fas fa-user-friends mr-1 my-1"></i> {{ room.occupant > 1 ? room.occupant ~ ' personnes' : room.occupant ~ ' personne' }}
+                                            </li>
+                                            {% if room.beddings|length > 0 %}
+                                                <li class="list-inline-item mr-3">
+                                                    <i class="fas fa-bed mr-1 my-1"></i> {% for bedding in room.beddings %}{{ bedding.number }} {{ bedding.name }} {% if not loop.last %}, {% endif %}{% endfor %}
+                                                </li>
+                                            {% endif %}
+                                            {% if room.smoker %}
+                                                {% if room.smoker == 1 %}
+                                                    <li class="list-inline-item mr-3"><i class="fas fa-smoking-ban mr-1 my-1"></i> Non-fumeurs</li>
+                                                {% elseif room.smoker == 2 %}
+                                                   <li class="list-inline-item mr-3"><i class="fas fa-smoking mr-1 my-1"></i> Fumeurs</li>
+                                                {% elseif room.smoker == 3 %}
+                                                    <li class="list-inline-item mr-3"><i class="fas fa-smoking-ban mr-1"></i><i class="fas fa-smoking mr-1"></i> Fumeurs et non-fumeurs</li>
+                                                {% endif %}
+                                            {% endif %}
+                                            {% if room.hostel.wifi %}
+                                                <li class="list-inline-item mr-3"><i class="fas fa-wifi mr-1 my-1"></i> Accès Wi-Fi gratuit</li>
+                                            {% endif %}
+                                            {% if room.hostel.parking %}
+                                                <li class="list-inline-item mr-3"><i class="fas fa-parking mr-1 my-1"></i> Parking gratuit</li>
+                                            {% endif %}
+                                        </ul>
+                                        {% if room.equipments|length > 0 %}
+                                            {% for equipment in room.equipments %}
+                                                {% if loop.index <= 10 %}
+                                                    <div class="badge badge-primary font-weight-normal mr-2 z-depth-0">{{ equipment.name }}</div>
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% endif %}
+                                        <div class="font-weight-normal dark-grey-text small-9 mt-3 mb-0">Veuillez indiquer les informations de l'une des personnes séjournant dans cette chambre.</div>
+
+                                        <div class="row">
+                                            <div class="col-12 col-md-6 booker-wrap">{{ form_row(field.name) }}</div>
+                                            <div class="col-12 col-md-6 booker-wrap">
+                                                {{ form_row(field.email) }}
+                                                <small class="form-text text-primary font-weight-stone-500" style="margin-top: -5px">Nous envoyons des e-mails uniquement pour communiquer des informations relatives aux reservations.</small>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card mb-4">
+                        <div class="card-body p-3">
+                            <h4 class="h4-responsive font-weight-stone-600 text-dark">Demande spéciales</h4>
+                            <div class="small-9">
+                                Les demandes spéciales ne peuvent pas être garanties mais nous ferons tout nos possible pour
+                                vous satisfaire.
+                            </div>
+                            <div class="">
+                                <div class="md-form md-outline">
+                                    {{ form_widget(booking_form.message) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card mb-4">
+                        <div class="card-body p-3">
+                            {% set cancelation_date = app_hostel_cancellation(room.hostel.cancellationPolicy, date(booking.duration.checkin)) %}
+
+                            <h4 class="h4-responsive font-weight-stone-600 text-dark">Conditions d'annulation</h4>
+                            {% if room.beddings|length > 0 %}
+                                <div class="small-9 font-weight-stone-600">
+                                    Chambre avec  {% for bedding in room.beddings %}{{ bedding.number }} {{ bedding.name }} {% if not loop.last %}, {% endif %}{% endfor %}
+                                </div>
+                            {% endif %}
+
+                            {% if cancelation_date|length > 0 %}
+                                <div class="font-weight-stone-600 text-primary mt-3">Tarif remboursable</div>
+                                <div class="small-9">
+                                    Annulez votre réservation avant le
+                                    <span class="font-weight-stone-600 text-dark">{{ cancelation_date|format_datetime(pattern="EEE dd MMM") }}</span>
+                                    <span class="font-weight-stone-600 text-dark">{% if room.hostel.cancellationPolicy.state == 0 %}à 18h00{% endif %}</span>
+                                    et recevez un <span class="font-weight-stone-600 text-dark">remboursement complet</span>.
+                                    <br>
+                                    Après cela, <span class="font-weight-stone-600 text-dark">{% if room.hostel.cancellationPolicy.result == 0 %}la première nuit du séjour
+                                        {% else %}la totalité du séjour{% endif %}</span> ainsi que les taxes et les frais vous seront facturés. <br>
+                                    Les heures correspondent à l’heure locale de l’établissement.
+                                </div>
+                            {% else %}
+                                <div class="font-weight-stone-600 text-primary mt-3">Tarif non remboursable</div>
+                                <div class="small-9">
+                                    En cas d'annulation de votre réservation, vous payerez
+                                    <span class="font-weight-stone-600 text-dark">{% if room.hostel.cancellationPolicy.result == 0 %}la première nuit du séjour
+                                    {% else %}la totalité du séjour{% endif %}</span> ainsi que les taxes et les frais liés à votre reservation. <br>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="card mb-3">
+                        <div class="card-body p-3">
+                            <h4 class="h4-responsive font-weight-stone-600 text-dark">Méthodes de paiement</h4>
+                            <div class="small-9 mb-2">Nous acceptons les modes de paiement suivants</div>
+                            <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="payment-method">
+                                        <div class="mr-1 mb-2"><img src="{{ asset('assets/img/payment/orange.png') }}" class="img-fluid orange" alt="Orange money logo"></div>
+                                        {#<div class="mr-1 mb-2"><img src="{{ asset('assets/img/payment/wave.png') }}" class="img-fluid wave" alt="Wave money logo"></div>#}
+                                        <div class="mr-1 mb-2 mtn-bulk"><img src="{{ asset('assets/img/payment/mtn.png') }}" class="img-fluid mtn" alt="MTN mobile money logo"></div>
+                                       {# <div class="mr-1 mb-2 moov-bulk"><img src="{{ asset('assets/img/payment/moov.png') }}" class="img-fluid moov" alt="Moov money logo"></div>#}
+                                        <div class="mr-1 mb-2"><img src="{{ asset('assets/img/payment/visa.png') }}" class="img-fluid visa" alt="Visa logo"></div>
+                                        <div class="mr-1 mb-2"><img src="{{ asset('assets/img/payment/masterCard.png') }}" class="img-fluid mastercard" alt="Mastercard logo"></div>
+                                        {#<div class="mr-1 mb-2 wari-bulk"><img src="{{ asset('assets/img/payment/wari.png') }}" class="img-fluid wari" alt="wari logo"></div>#}
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="border rounded px-2 pt-2 pb-0">
+                                        <h6 class="font-weight-stone-600 text-dark">Comptez sur nous</h6>
+                                        <div class="">
+                                            <ul class="list-unstyled small-8">
+                                                <li class="mb-2"><i class="fas fa-check mx-2  text-success"></i> Nous utilisons une transmission sécurisée</li>
+                                                <li class="dark-grey-text"><i class="fas fa-check mx-2 text-success"></i> Nous protégeons vos informations personnelles</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mb-3">
+                    <div class="mx-1 mx-md-3 small-9 dark-grey-text mb-3">
+                        En cliquant sur "Confirmer et payer", vous confirmer avoir lu et accepté nos
+                        <a href="{{ path('app_cgu') }}" class="font-weight-stone-600 link">conditions d'utilisation</a>,
+                        notre <a href="" class="font-weight-stone-600 link">politique de confidentialité</a> et nos
+                        <a href="" class="font-weight-stone-600 link pl-0">conditions de réservation</a>.
+                    </div>
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary font-weight-stone-500 mb-3">
+                            <i class="fas fa-lock mr-2"></i> Confirmer et payer
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {{ form_widget(booking_form._token) }}
+            {{ form_end(booking_form, {'render_rest': false}) }}
+        </div>
+    </div>
+</section>

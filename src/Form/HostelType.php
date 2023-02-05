@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Hostel;
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -17,9 +18,23 @@ class HostelType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class, ['label' => 'Nom de l\'établissement'])
-            ->add('email', EmailType::class, ['label' => 'Adresse email'])
-            ->add('phone', TextType::class, ['label' => 'Téléphone'])
+            ->add('name', TextType::class, [
+                'label' => 'Nom de l\'établissement',
+                'help' => 'C\'est le nom que les clients verront lorsqu\'ils rechercheront un hébergement'
+            ])
+            ->add('email', EmailType::class, [
+                'label' => 'Adresse email',
+                'help' => 'Nous vous communiquerons des informations importantes comme vos réservations au moyen de ce courriel'
+            ])
+            ->add('phone', TextType::class, [
+                'label' => 'Téléphone',
+                'help' => 'Nous vous communiquerons des informations importantes comme vos réservations au moyen de ce numéro de téléphone'
+            ])
+            ->add('description', CKEditorType::class, [
+                'label' => false,
+                'config' => ['height' => '100', 'uiColor' => '#ffffff', 'toolbar' => 'basic'],
+                'required' => false
+            ])
             ->add('parking', ChoiceType::class, [
                 'choices' => ['Oui' => true, 'Non' => false],
                 'label' => 'Y a t\'il un parking dans ou près de l\'établissement ?',
@@ -65,7 +80,7 @@ class HostelType extends AbstractType
             ])
             ->add('animalsAllowed', ChoiceType::class, [
                 'choices' => ['Oui' => true, 'Non' => false],
-                'label' => 'Les animaux sont-ils admis dans l\'établissement ?',
+                'label' => 'Votre établissement accepte-t-il les animaux domestiques ?',
                 'expanded' => true,
                 'multiple' => false
             ])

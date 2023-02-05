@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/admin')]
@@ -66,7 +67,7 @@ class CommandeController extends AbstractController
     }
 
     #[Route(path: '/commandes/{id}/user', name: 'app_admin_commande_user', requirements: ['id' => '\d+'])]
-    public function byUser(Request $request, User $user)
+    public function byUser(Request $request, User $user): Response
     {
         $qb = $this->repository->findBy(['owner' => $user], ['createdAt' => 'desc']);
 

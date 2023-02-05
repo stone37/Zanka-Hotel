@@ -29,7 +29,7 @@ class Payout
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $currency = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Commande $commande = null;
 

@@ -13,7 +13,7 @@ class RoomSupplementType extends AbstractType
     {
         $builder
             ->add('supplements', SupplementChoiceType::class, [
-                'choice_attr' => function($choice, $key, $value) {
+                'choice_attr' => function() {
                     return ['class' => 'form-check-input filled-in'];
                 },
                 'label' => 'Sélectionner les supplements de l\'hébergement',

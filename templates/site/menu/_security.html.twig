@@ -5,7 +5,7 @@
         {% if vich_uploader_asset(app.user, 'file') %}
             <a class="nav-link dropdown-toggle py-0" id="navbarDropdownUserMenuLink" data-toggle="dropdown"
                aria-haspopup="true" aria-expanded="false">
-                <img src="{{ image_url(user, 110, 110) }}" class="rounded-circle" alt="avatar image">
+                <img src="{{ image_url(app.user, 110, 110) }}" class="rounded-circle" alt="avatar image">
             </a>
         {% else %}
             <a class="nav-link dropdown-toggle py-0" id="navbarDropdownUserMenuLink" data-toggle="dropdown"
@@ -15,27 +15,39 @@
         {% endif %}
 
         <div class="dropdown-menu dropdown-primary dropdown-menu-right" aria-labelledby="navbarDropdownUserMenuLink">
-            <a class="dropdown-item" href="#">
-                <i class="fas fa-th-large mr-2"></i>
-                Tableau de bord
-            </a>
-            <a class="dropdown-item" href="#">
-                <i class="fas fa-calendar mr-2"></i>
-                Reservations
-            </a>
-            <a class="dropdown-item" href="#">
-                <i class="far fa-heart mr-2"></i>
-                Favoris
-            </a>
-            <a class="dropdown-item" href="#">
-                <i class="fas fa-user-circle mr-2"></i>
-                Profil
-            </a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">
-                <i class="far fa-life-ring mr-2"></i>
-                Aide
-            </a>
+            {% if is_granted("ROLE_ADMIN") %}
+                <a class="dropdown-item" href="{{ path('app_admin_index') }}">
+                    <i class="fas fa-user-secret mr-2"></i>
+                    Administration
+                </a>
+            {#{% elseif is_granted("ROLE_PARTNER") %}
+                <a class="dropdown-item" href="{{ path('app_partner_index') }}">
+                    <i class="fas fa-user-secret mr-2"></i>
+                    Administration
+                </a>#}
+            {% else %}
+                <a class="dropdown-item" href="{{ path('app_user_index') }}">
+                    <i class="fas fa-th-large mr-2"></i>
+                    Tableau de bord
+                </a>
+                <a class="dropdown-item" href="{{ path('app_user_booking_index') }}">
+                    <i class="fas fa-calendar mr-2"></i>
+                    Reservations
+                </a>
+                <a class="dropdown-item" href="{{ path('app_user_favorite_index') }}">
+                    <i class="far fa-heart mr-2"></i>
+                    Favoris
+                </a>
+                <a class="dropdown-item" href="{{ path('app_user_profil_edit') }}">
+                    <i class="fas fa-user-circle mr-2"></i>
+                    Profil
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="">
+                    <i class="far fa-life-ring mr-2"></i>
+                    Aide
+                </a>
+            {% endif %}
             <a class="dropdown-item" href="{{ path('app_logout') }}">
                 <i class="fas fa-power-off mr-2"></i>
                 Déconnexion

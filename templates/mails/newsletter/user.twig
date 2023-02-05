@@ -1,0 +1,21 @@
+{% extends layout %}
+
+{% import "mails/macros.twig" as e %}
+
+{% set settings = config.settings %}
+
+{% block body %}
+
+    {% apply markdown_email %}
+
+        Bonjour {{ user.username ? user.username : user.firstnane }}
+        ===============================
+
+        {% if format == 'html' %}
+            {{ e.section(emailing.content|markdown_untrusted) }}
+        {% endif %}
+
+    {% endapply %}
+
+    {{ e.button('Tableau de bord', url('app_user_index')) }}
+{% endblock %}

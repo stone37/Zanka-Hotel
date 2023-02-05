@@ -1,4 +1,5 @@
 {% import 'Ui/Macro/buttons.html.twig' as buttons %}
+{% import 'ui/Macro/money.html.twig' as money %}
 
 <div class="row mb-4">
     <div class="col-12 d-flex justify-content-center justify-content-md-between">
@@ -14,7 +15,7 @@
 
             {% if payouts|length > 0 %}
                 {% set path = path('app_admin_payout_bulk_pay') %}
-                {{ buttons.default(path, 'Payer tous les partenaires', 'app-vendor-payout', 'fas fa-money-bill', '', 'btn-success') }}
+                {{ buttons.default(path, 'Payer tous les partenaires', 'app-vendor-payout', 'fas fa-credit-card', '', 'btn-default') }}
             {% endif %}
         </div>
     </div>
@@ -30,7 +31,7 @@
                         <th scope="col" class="font-weight-stone-500 text-center">Commande</th>
                         <th scope="col" class="font-weight-stone-500 text-center">Partenaire</th>
                         <th scope="col" class="font-weight-stone-500 text-center">État</th>
-                        <th scope="col" class="font-weight-stone-500 text-center">Montant (CFA)</th>
+                        <th scope="col" class="font-weight-stone-500 text-center">Montant</th>
                         <th scope="col" class="font-weight-stone-500 text-center">Devise</th>
                         <th scope="col" class="font-weight-stone-500 text-center"></th>
                     </tr>
@@ -43,7 +44,7 @@
                             <a href="{{ path('app_admin_commande_show', {'id': payout.commande.id}) }}" class="card-link">#{{ payout.commande.id }}</a>
                         </td>
                         <td class="text-center">
-                            <a href="{{ path('app_admin_partner_show', {'id': payout.owner.id}) }}" class="card-link">
+                            <a href="{{ path('app_admin_partner_show', {'id': payout.owner.id, 'type': 1}) }}" class="card-link">
                                 {{ payout.owner.firstname }} {{ payout.owner.lastname }}
                             </a>
                         </td>
@@ -62,23 +63,23 @@
                                 </span>
                             {% endif %}
                         </td>
-                        <td class="text-center">{{ payout.amount|currency_symbol('XOF') }}</td>
+                        <td class="text-center">{{ money.convertAndFormat(payout.amount) }}</td>
+                        <td class="text-center">{{ payout.currency }}</td>
                         <td class="text-center">
                             <div class="dropdown">
                                 <a class="dropdown-toggle" type="button" data-toggle="dropdown"><i class="fas fa-ellipsis-h text-primary"></i></a>
                                 <div class="dropdown-menu dropdown-primary dropdown-menu-right mt-0">
-                                    <a class="dropdown-item entity-payout-pay" id="{{ payment.id }}">
-                                        <i class="fas fa-credit-card mr-1"></i> Payer
-                                    </a>
-                                    <a class="dropdown-item entity-payout-cancel" id="{{ payment.id }}">
-                                        <i class="fas fa-ban mr-1"></i> Annuler
-                                    </a>
-                                    {#<a href="{{ path('app_admin_payout_pay', {'id': payout.id}) }}" class="dropdown-item">
-                                        <i class="fas fa-credit-card mr-1"></i> Payer
-                                    </a>
-                                    <a href="{{ path('app_admin_payout_cancel', {'id': payout.id}) }}" class="dropdown-item">
-                                        <i class="fas fa-ban mr-1"></i> Annuler
-                                    </a>#}
+                                    {% if payout.state == 1 or payout.state == 3 %}
+                                        <a class="dropdown-item entity-payout-pay" data-id="{{ payout.id }}">
+                                            <i class="fas fa-credit-card mr-1"></i> Payer
+                                        </a>
+                                    {% endif %}
+
+                                    {% if payout.state == 1 %}
+                                        <a class="dropdown-item entity-payout-cancel" data-id="{{ payout.id }}">
+                                            <i class="fas fa-ban mr-1"></i> Annuler
+                                        </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </td>
@@ -88,7 +89,7 @@
             </table>
         </div>
         <div class="col-12 d-flex justify-content-start mt-2">
-            <div class="font-weight-stone-500 text-secondary">{{ payouts.totalItemCount }} resultats</div>
+            <div class="font-weight-stone-500 text-secondary">{{ payouts.totalItemCount }} résultats</div>
         </div>
         <div class="col-12 d-flex justify-content-center mt-2 mb-5">
             {{ knp_pagination_render(payouts, 'Ui/_pagination.html.twig') }}
@@ -97,7 +98,7 @@
 {% else %}
     <div class="row app-user d-flex justify-content-center">
         <div class="col-12 col-md-8 text-center mt-3 mt-md-5">
-            <h3 class="h3-responsive font-weight-stone-600">
+            <h3 class="h3-responsive font-weight-stone-600 text-dark">
                 Vous n'avez aucun paiement.
             </h3>
         </div>

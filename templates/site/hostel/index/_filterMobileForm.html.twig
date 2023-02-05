@@ -1,0 +1,120 @@
+{% form_theme form_mobile 'ui/Form/filter_theme.html.twig' %}
+{% import 'ui/Macro/money.html.twig' as money %}
+
+{% set route = app.request.attributes.get('_route') %}
+{% set queryParameters = app.request.query.all|unset_elements(['order_by', 'sort', 'page']) %}
+
+<div>
+    <a href="" class="btn btn-dark btn-sm btn-block z-depth-0" data-toggle="modal" data-target="#hostel-mobile-filter-modal">
+        <i class="fas fa-filter mr-2"></i> Trier et filter
+    </a>
+    <div class="modal fade hostel-mobile-filter-modal" id="hostel-mobile-filter-modal" tabindex="-1" role="dialog" aria-labelledby="hostel-mobile-filter-modal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title px-0 pt-1 font-weight-stone-600 text-dark" id="hostel-equipment-modal-label">
+                        Trier et filter
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times text-danger"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="dropdown sorting">
+                                <a class="btn btn-outline-dark btn-sm btn-block dropdown-toggle z-depth-0" type="button" data-toggle="dropdown">
+                                    <span class="d-flex justify-content-between">
+                                        <span class="">Trier par</span>
+                                        <i class="fas fa-angle-down ml-2"></i>
+                                    </span>
+                                </a>
+
+                                <div class="dropdown-menu dropdown-dark">
+                                    <a class="dropdown-item" href="{{ path(route, {'order_by': 'createdAt', 'sort_by': 'desc'}|merge(queryParameters)) }}">Plus récent</a>
+                                    <a class="dropdown-item" href="{{ path(route, {'order_by': 'createdAt', 'sort_by': 'asc'}|merge(queryParameters)) }}">Plus ancien</a>
+                                    <a class="dropdown-item" href="{{ path(route, {'order_by': 'rooms.price', 'sort_by': 'desc'}|merge(queryParameters)) }}">Plus cher</a>
+                                    <a class="dropdown-item" href="{{ path(route, {'order_by': 'rooms.price', 'sort_by': 'asc'}|merge(queryParameters)) }}">Moins cher</a>
+                                    <a class="dropdown-item" href="{{ path(route, {'order_by': 'averageRating', 'sort_by': 'desc'}|merge(queryParameters)) }}">Meilleure note</a>
+                                    <a class="dropdown-item" href="{{ path(route, {'order_by': 'starNumber', 'sort_by': 'desc'}|merge(queryParameters)) }}">Étoile décroissant</a>
+                                    <a class="dropdown-item" href="{{ path(route, {'order_by': 'starNumber', 'sort_by': 'asc'}|merge(queryParameters)) }}">Étoile croissant</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="mt-4 mb-3">
+
+                    {{ form_start(form_mobile, {'method': 'GET', 'attr': {'class': 'hostel-filter-form-sm'}}) }}
+                        <h5 class="h5-responsive font-weight-stone-600 text-dark mb-4">Filtrer les résultats</h5>
+                        <div class="row">
+                            <div class="col-12 name-field">
+                                {{ form_row(form_mobile.name) }}
+                            </div>
+                            <div class="col-12 price-field my-4">
+                                <div class="title text-dark font-weight-stone-500">Prix total</div>
+                                <div class="data-price d-flex justify-content-between mb-1">
+                                    <div class="min dark-grey-text pr-1">
+                                        {{ form_row(form_mobile.price.min_price) }}
+                                    </div>
+                                    <div class="max dark-grey-text pl-1">
+                                        {{ form_row(form_mobile.price.max_price) }}
+                                    </div>
+                                </div>
+                                <div class="multi-range-field mb-3">
+                                    <input id="multi-filter-price" class="multi-range" type="range" />
+                                </div>
+                            </div>
+                            <div class="col-12 type-field mt-4">
+                                <div class="type-label text-dark">{{ form_mobile.category.vars.label }}</div>
+                                {% for choices in form_mobile.category.vars.choices %}
+                                    <div class="form-check pl-0">
+                                        <input type="radio" class="form-check-input with-gap" id="{{ form_mobile.category.vars.id }}_{{ loop.index0 }}_sm"
+                                               value="{{ form_mobile.category.vars.choices[loop.index0].value }}" name="{{ form_mobile.category.vars.full_name }}"
+                                               {% if search.category == form_mobile.category.vars.choices[loop.index0].value %}checked{% endif %}>
+                                        <label class="form-check-label" for="{{ form_mobile.category.vars.id }}_{{ loop.index0 }}_sm">
+                                            {{ form_mobile.category.vars.choices[loop.index0].label }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            {% if is_mobile() %}
+                                <div class="col-12 star-field mt-4">
+                                    {{ form_row(form_mobile.starNumber) }}
+                                </div>
+                                <div class="col-12 equipment-field mt-4">
+                                    {{ form_row(form_mobile.equipments.equipments) }}
+                                </div>
+                                <div class="col-12 room-equipment-field mt-4">
+                                    {{ form_row(form_mobile.roomEquipments.roomEquipments) }}
+                                </div>
+                            {% endif %}
+                            <div class="col-12 rating-field mt-4">
+                                <div class="rating-label text-dark">{{ form_mobile.averageRating.vars.label }}</div>
+                                {% for choices in form_mobile.averageRating.vars.choices %}
+                                    <div class="form-check pl-0">
+                                        <input type="radio" class="form-check-input with-gap" id="{{ form_mobile.averageRating.vars.id }}_{{ loop.index0 }}_sm"
+                                               value="{{ form_mobile.averageRating.vars.choices[loop.index0].value }}" name="{{ form_mobile.averageRating.vars.full_name }}"
+                                               {% if search.averageRating == form_mobile.averageRating.vars.choices[loop.index0].value %}checked{% endif %}>
+                                        <label class="form-check-label" for="{{ form_mobile.averageRating.vars.id }}_{{ loop.index0 }}_sm">
+                                            {{ form_mobile.averageRating.vars.choices[loop.index0].label }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-primary btn-md btn-block">
+                                    <i class="fas fa-search mr-1"></i> Filtrer maintenant
+                                </button>
+                            </div>
+                        </div>
+
+
+                    {{ form_end(form_mobile, {'render_rest': false}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

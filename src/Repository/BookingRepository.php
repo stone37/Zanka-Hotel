@@ -61,6 +61,7 @@ class BookingRepository extends ServiceEntityRepository
             ->addSelect('user')
             ->addSelect('room')
             ->where($qb->expr()->isNull('b.confirmedAt'))
+            ->andWhere($qb->expr()->isNull('b.cancelledAt'))
             ->andWhere('b.checkout >= :date')
             ->setParameter('date', new DateTime())
             ->orderBy('b.createdAt', 'desc');
@@ -165,6 +166,32 @@ class BookingRepository extends ServiceEntityRepository
         return $qb;
     }
 
+    public function getAllAdmins(BookingSearch $search): ?QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('b');
+        $qb->leftJoin('b.hostel', 'hostel')
+            ->leftJoin('b.owner', 'user')
+            ->leftJoin('b.room', 'room')
+            ->addSelect('hostel')
+            ->addSelect('user')
+            ->addSelect('room')
+            ->orderBy('b.createdAt', 'desc');
+
+        if ($search->getHostel()) {
+            $qb->andWhere('b.hostel = :hostel')->setParameter('hostel', $search->getHostel());
+        }
+
+        if ($search->getCode()) {
+            $qb->andWhere('b.reference = :reference')->setParameter('reference', $search->getCode());
+        }
+
+        if ($search->getRoom()) {
+            $qb->andWhere('b.room = :room')->setParameter('room', $search->getRoom());
+        }
+
+        return $qb;
+    }
+
     public function  getAdminByHostel(Hostel $hostel, BookingSearch $search): ?QueryBuilder
     {
         $qb = $this->createQueryBuilder('b');
@@ -198,7 +225,7 @@ class BookingRepository extends ServiceEntityRepository
             ->addSelect('hostel')
             ->addSelect('user')
             ->addSelect('room')
-            ->andWhere('b.user = :user')
+            ->andWhere('b.owner = :user')
             ->setParameter('user', $user)
             ->orderBy('b.createdAt', 'desc');
 
@@ -265,6 +292,7 @@ class BookingRepository extends ServiceEntityRepository
             ->addSelect('owner')
             ->addSelect('room')
             ->where($qb->expr()->isNull('b.confirmedAt'))
+            ->andWhere($qb->expr()->isNull('b.cancelledAt'))
             ->andWhere('b.checkout >= :date')
             ->andWhere('hostel.owner = :owner')
             ->setParameter('date', new DateTime())
@@ -442,6 +470,7 @@ class BookingRepository extends ServiceEntityRepository
             ->select('count(b.id)');
 
         $qb->where('b.status = :status')
+            ->andWhere($qb->expr()->isNotNull('b.cancelledAt'))
             ->setParameter('status', Booking::CANCELLED);
 
         if ($user) {
@@ -484,12 +513,28 @@ class BookingRepository extends ServiceEntityRepository
         return (int) $query->getQuery()->getSingleScalarResult();
     }
 
+    public function getRoomBookingTotalByPartnerNumber(User $user, DateTime $start, DateTime $end): ?int
+    {
+        $qb = $this->createQueryBuilder('b')
+                    ->leftJoin('b.hostel', 'hostel');
+        $query = $qb->select('SUM(b.roomNumber)')
+            ->where('b.checkin <= :start AND b.checkout >= :end')
+            ->andWhere('hostel.owner = :owner')
+            ->orWhere('b.checkin >= :start AND b.checkout <= :end')
+            ->orWhere('b.checkin >= :start AND b.checkout >= :end AND b.checkin <= :end')
+            ->orWhere('b.checkin <= :start AND b.checkout <= :end AND b.checkout >= :start')
+            ->setParameters(['owner' => $user, 'start'=> $start, 'end'  => $end]);
+
+        return (int) $query->getQuery()->getSingleScalarResult();
+    }
+
     public function getNewNumber(User $user = null): ?int
     {
         $qb = $this->createQueryBuilder('b')
             ->select('count(b.id)');
 
         $qb->where($qb->expr()->isNull('b.confirmedAt'))
+            ->andWhere($qb->expr()->isNull('b.cancelledAt'))
             ->andWhere('b.checkout >= :date')
             ->setParameter('date', new DateTime());
 
@@ -500,5 +545,179 @@ class BookingRepository extends ServiceEntityRepository
         }
 
         return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getEnabled(int $id): ?Booking
+    {
+        return $this->createQueryBuilder('b')
+            ->leftJoin('b.hostel', 'hostel')
+            ->leftJoin('b.owner', 'owner')
+            ->leftJoin('b.room', 'room')
+            ->leftJoin('hostel.location', 'location')
+            ->leftJoin('room.galleries', 'galleries')
+            ->addSelect('hostel')
+            ->addSelect('owner')
+            ->addSelect('room')
+            ->addSelect('location')
+            ->addSelect('galleries')
+            ->where('b.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function getByUser(\App\Model\BookingSearch $search, User $user, $state = null)
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->leftJoin('b.hostel', 'hostel')
+            ->leftJoin('b.owner', 'owner')
+            ->leftJoin('b.room', 'room')
+            ->leftJoin('b.commande', 'commande')
+            ->leftJoin('commande.payment', 'payment')
+            ->addSelect('hostel')
+            ->addSelect('owner')
+            ->addSelect('room')
+            ->addSelect('commande')
+            ->addSelect('payment')
+            ->where('b.owner = :owner')
+            ->setParameter('owner', $user)
+            ->orderBy('b.createdAt', 'desc');
+
+        if ($state === Booking::NEW) {
+            $qb->andWhere($qb->expr()->isNull('b.confirmedAt'))
+                ->andWhere('b.checkout >= :date')
+                ->setParameter('date', new DateTime());
+        } elseif ($state === Booking::CONFIRMED) {
+            $qb->andWhere($qb->expr()->isNotNull('b.confirmedAt'))
+                ->andWhere('b.checkout > :date')
+                ->setParameter('date', new DateTime());
+        }  elseif ($state === Booking::CANCELLED) {
+            $qb->andWhere($qb->expr()->isNotNull('b.cancelledAt'));
+        } else {
+            $qb->andWhere($qb->expr()->isNotNull('b.confirmedAt'))
+                ->andWhere('b.checkout < :date')
+                ->setParameter('date', new DateTime());
+        }
+
+        if ($search->getCode()) {
+            $qb->andWhere('b.reference = :reference')->setParameter('reference', $search->getCode());
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getByApi(User $user, $state = null)
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->leftJoin('b.hostel', 'hostel')
+            ->leftJoin('b.owner', 'owner')
+            ->leftJoin('b.room', 'room')
+            ->leftJoin('room.equipments', 'roomEquipments')
+            ->addSelect('hostel')
+            ->addSelect('owner')
+            ->addSelect('room')
+            ->addSelect('roomEquipments')
+            ->where('b.owner = :owner')
+            ->setParameter('owner', $user)
+            ->orderBy('b.createdAt', 'desc');
+
+        if ($state === Booking::NEW) {
+            $qb->andWhere($qb->expr()->isNull('b.confirmedAt'))
+                ->andWhere($qb->expr()->isNull('b.cancelledAt'))
+                ->andWhere('b.checkout >= :date')
+                ->setParameter('date', new DateTime());
+        } elseif ($state === Booking::CONFIRMED) {
+            $qb->andWhere($qb->expr()->isNotNull('b.confirmedAt'))
+                ->andWhere('b.checkout > :date')
+                ->setParameter('date', new DateTime());
+        }  elseif ($state === Booking::CANCELLED) {
+            $qb->andWhere($qb->expr()->isNotNull('b.cancelledAt'));
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function availableForPeriod(Room $room, DateTime $start, DateTime $end): int
+    {
+        $qb = $this->createQueryBuilder('b');
+        $query = $qb->select('SUM(b.roomNumber)')
+            ->where('b.checkin <= :start AND b.checkout >= :end')
+            ->orWhere('b.checkin >= :start AND b.checkout <= :end')
+            ->orWhere('b.checkin >= :start AND b.checkout >= :end AND b.checkin <= :end')
+            ->orWhere('b.checkin <= :start AND b.checkout <= :end AND b.checkout >= :start')
+            ->andWhere('b.room = :room')
+            ->setParameters(['start'=> $start, 'end'  => $end, 'room' => $room]);
+
+        return (int) $query->getQuery()->getSingleScalarResult();
+    }
+
+    public function getByUserAndHostel(User $user, Hostel $hostel): ?Booking
+    {
+        $qb = $this->createQueryBuilder('b');
+
+        return $qb->where('b.owner = :owner')
+            ->andWhere('b.hostel = :hostel')
+            ->andWhere('b.status = :status')
+            ->andWhere('b.checkout < :date')
+            ->andWhere($qb->expr()->isNotNull('b.confirmedAt'))
+            ->setParameter('owner', $user)
+            ->setParameter('hostel', $hostel)
+            ->setParameter('status', Booking::CONFIRMED)
+            ->setParameter('date', new DateTime())
+            ->orderBy('b.createdAt', 'desc')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function getByReferenceAndHostel(Hostel $hostel, string $reference): ?Booking
+    {
+        $qb = $this->createQueryBuilder('b');
+
+        return $qb
+            ->where('b.reference = :reference')
+            ->andWhere('b.hostel = :hostel')
+            ->andWhere('b.status = :status')
+            ->andWhere('b.checkout < :date')
+            ->andWhere($qb->expr()->isNotNull('b.confirmedAt'))
+            ->setParameter('reference', $reference)
+            ->setParameter('hostel', $hostel)
+            ->setParameter('status', Booking::CONFIRMED)
+            ->setParameter('date', new DateTime())
+            ->orderBy('b.createdAt', 'desc')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    public function getByEmail(string $email)
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->leftJoin('b.hostel', 'hostel')
+            ->leftJoin('b.owner', 'owner')
+            ->leftJoin('b.room', 'room')
+            ->leftJoin('b.commande', 'commande')
+            ->leftJoin('b.cancelation', 'cancelation')
+            ->leftJoin('commande.payment', 'payment')
+            ->addSelect('hostel')
+            ->addSelect('owner')
+            ->addSelect('room')
+            ->addSelect('commande')
+            ->addSelect('payment')
+            ->where('b.email = :email')
+            ->setParameter('email', $email)
+            ->orderBy('b.createdAt', 'desc');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function deleteForUser(User $user): void
+    {
+        $this->createQueryBuilder('b')
+            ->where('b.owner = :user')
+            ->setParameter('user', $user)
+            ->delete()
+            ->getQuery()
+            ->execute();
     }
 }

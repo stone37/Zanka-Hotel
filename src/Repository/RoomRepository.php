@@ -159,6 +159,17 @@ class RoomRepository extends ServiceEntityRepository
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
+    public function getRoomByPartnerTotalNumber(User $user): ?int
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('SUM(r.roomNumber)')
+            ->leftJoin('r.hostel', 'hostel')
+            ->where('hostel.owner = :owner')
+            ->setParameter('owner', $user);
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
     public function getRoomEnabledTotalNumber(): ?int
     {
         $qb = $this->createQueryBuilder('r')
@@ -166,5 +177,42 @@ class RoomRepository extends ServiceEntityRepository
             ->where('r.enabled = 1');
 
         return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getRoomEnabledByPartnerTotalNumber(User $user): ?int
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->select('SUM(r.roomNumber)')
+            ->leftJoin('r.hostel', 'hostel')
+            ->where('r.enabled = 1')
+            ->andWhere('hostel.owner = :owner')
+            ->setParameter('owner', $user);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getEnabled(int $id): ?Room
+    {
+        return $this->createQueryBuilder('r')
+            ->leftJoin('r.hostel', 'hostel')
+            ->leftJoin('hostel.location', 'location')
+            ->leftJoin('hostel.cancellationPolicy', 'cancellationPolicy')
+            ->leftJoin('r.galleries', 'galleries')
+            ->leftJoin('r.equipments', 'equipments')
+            ->leftJoin('r.supplements', 'supplements')
+            ->leftJoin('r.promotions', 'promotions')
+            ->leftJoin('r.taxes', 'taxes')
+            ->addSelect('hostel')
+            ->addSelect('location')
+            ->addSelect('cancellationPolicy')
+            ->addSelect('galleries')
+            ->addSelect('equipments')
+            ->addSelect('supplements')
+            ->addSelect('promotions')
+            ->addSelect('taxes')
+            ->where('r.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }

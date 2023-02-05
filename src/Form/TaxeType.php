@@ -16,7 +16,7 @@ class TaxeType extends AbstractType
         $builder
             ->add('name', TextType::class, ['label' => 'Nom'])
             ->add('value', TextType::class, ['label' => 'Valeur (en %)'])
-            ->add('includedInPrice', CheckboxType::class, ['label' => 'Inclus dans le prix'])
+            //->add('includedInPrice', CheckboxType::class, ['label' => 'Inclus dans le prix'])
             ->add('enabled', CheckboxType::class, ['label' => 'Activée']);
     }
 

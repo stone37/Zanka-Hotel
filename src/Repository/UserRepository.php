@@ -68,6 +68,7 @@ class UserRepository extends AbstractRepository implements PasswordUpgraderInter
         return $this->createQueryBuilder('u')
             ->where('LOWER(u.email) = :username')
             ->orWhere('LOWER(u.username) = :username')
+            ->andWhere('u.isVerified = 1')
             ->setMaxResults(1)
             ->setParameter('username', mb_strtolower($username))
             ->getQuery()
@@ -88,11 +89,9 @@ class UserRepository extends AbstractRepository implements PasswordUpgraderInter
         return $this->createQueryBuilder('u')
             ->where('u.email = :email')
             ->orWhere("u.{$service}Id = :serviceId")
+            ->andWhere('u.isVerified = 1')
             ->setMaxResults(1)
-            ->setParameters([
-                'email' => $email,
-                'serviceId' => $serviceId,
-            ])
+            ->setParameters(['email' => $email, 'serviceId' => $serviceId])
             ->getQuery()
             ->getOneOrNullResult();
     }
@@ -166,7 +165,7 @@ class UserRepository extends AbstractRepository implements PasswordUpgraderInter
         }
 
         if ($search->getCity()) {
-            $qb->andWhere('location.name = :city')->setParameter('city', $search->getCity());
+            $qb->andWhere('u.city = :city')->setParameter('city', $search->getCity());
         }
 
         return $qb;
@@ -196,7 +195,7 @@ class UserRepository extends AbstractRepository implements PasswordUpgraderInter
         }
 
         if ($search->getCity()) {
-            $qb->andWhere('location.name = :city')->setParameter('city', $search->getCity());
+            $qb->andWhere('u.city = :city')->setParameter('city', $search->getCity());
         }
 
         return $qb;
@@ -225,7 +224,7 @@ class UserRepository extends AbstractRepository implements PasswordUpgraderInter
         }
 
         if ($search->getCity()) {
-            $qb->andWhere('location.name = :city')->setParameter('city', $search->getCity());
+            $qb->andWhere('u.city = :city')->setParameter('city', $search->getCity());
         }
 
         return $qb;
@@ -238,6 +237,7 @@ class UserRepository extends AbstractRepository implements PasswordUpgraderInter
             ->addSelect('hostels')
             ->where('u.deleteAt IS NULL')
             ->andWhere('u.confirmationToken IS NULL')
+            ->andWhere('u.isVerified = 1')
             ->andWhere('u.roles LIKE :roles')
             ->setParameter('roles', '%'."ROLE_PARTNER".'%')
             ->orderBy('u.createdAt', 'desc');
@@ -251,7 +251,7 @@ class UserRepository extends AbstractRepository implements PasswordUpgraderInter
         }
 
         if ($search->getCity()) {
-            $qb->andWhere('location.name = :city')->setParameter('city', $search->getCity());
+            $qb->andWhere('u.city = :city')->setParameter('city', $search->getCity());
         }
 
         return $qb;
@@ -261,7 +261,8 @@ class UserRepository extends AbstractRepository implements PasswordUpgraderInter
     {
         $qb = $this->createQueryBuilder('u')
             ->where('u.deleteAt IS NULL')
-            ->andWhere('u.confirmationToken IS NOT NULL')
+            ->andWhere('u.confirmationToken IS NULL')
+            ->andWhere('u.isVerified = 0')
             ->andWhere('u.roles LIKE :roles')
             ->setParameter('roles', '%'."ROLE_PARTNER".'%')
             ->orderBy('u.createdAt', 'desc');
@@ -275,7 +276,7 @@ class UserRepository extends AbstractRepository implements PasswordUpgraderInter
         }
 
         if ($search->getCity()) {
-            $qb->andWhere('location.name = :city')->setParameter('city', $search->getCity());
+            $qb->andWhere('u.city = :city')->setParameter('city', $search->getCity());
         }
 
         return $qb;
@@ -299,7 +300,7 @@ class UserRepository extends AbstractRepository implements PasswordUpgraderInter
         }
 
         if ($search->getCity()) {
-            $qb->andWhere('location.name = :city')->setParameter('city', $search->getCity());
+            $qb->andWhere('u.city = :city')->setParameter('city', $search->getCity());
         }
 
         return $qb;

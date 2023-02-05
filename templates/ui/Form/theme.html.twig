@@ -395,5 +395,92 @@
     </div>
 {%- endblock -%}
 
+{%- block _update_password_form_password_first_widget -%}
+    {% set errorState = (not compound or force_error|default(false)) and not valid %}
+    <div class="md-form form-lg md-outline input-with-post-icon mb-0 {% if errorState %}invalid{% endif %}">
+        <i class="fas fa-eye input-prefix"></i>
+        {{- form_widget(form, {'attr': {'class': 'form-control form-control-lg'}}) -}}
+        {{- form_label(form) -}}
+        {{- form_errors(form) -}}
+        {% if not errorState %}{{ form_help(form) }}{% endif %}
+    </div>
+{%- endblock -%}
+
+{%- block _update_password_form_password_second_widget -%}
+    {% set errorState = (not compound or force_error|default(false)) and not valid %}
+    <div class="md-form form-lg md-outline input-with-post-icon mb-0 {% if errorState %}invalid{% endif %}">
+        <i class="fas fa-eye input-prefix"></i>
+        {{- form_widget(form, {'attr': {'class': 'form-control form-control-lg'}}) -}}
+        {{- form_label(form) -}}
+        {{- form_errors(form) -}}
+        {% if not errorState %}{{ form_help(form) }}{% endif %}
+    </div>
+{%- endblock -%}
+
+{%- block _form_password_widget -%}
+    {% set errorState = (not compound or force_error|default(false)) and not valid %}
+    <div class="md-form md-outline input-with-post-icon mb-0 {% if errorState %}invalid{% endif %}">
+        <i class="fas fa-eye input-prefix"></i>
+        {{- form_widget(form, {'attr': {'class': 'form-control form-control-app'}}) -}}
+        {{- form_label(form) -}}
+        {{- form_errors(form) -}}
+        {% if not errorState %}{{ form_help(form) }}{% endif %}
+    </div>
+{%- endblock -%}
+
+{%- block _registration_admin_partner_add_plainPassword_first_widget -%}
+    {% set errorState = (not compound or force_error|default(false)) and not valid %}
+    <div class="md-form md-outline input-with-post-icon mb-0 {% if errorState %}invalid{% endif %}">
+        <i class="fas fa-eye input-prefix"></i>
+        {{- form_widget(form, {'attr': {'class': 'form-control'}}) -}}
+        {{- form_label(form) -}}
+        {{- form_errors(form) -}}
+        {% if not errorState %}{{ form_help(form) }}{% endif %}
+    </div>
+{%- endblock -%}
+
+{%- block _registration_admin_partner_add_plainPassword_second_widget -%}
+    {% set errorState = (not compound or force_error|default(false)) and not valid %}
+    <div class="md-form md-outline input-with-post-icon mb-0 {% if errorState %}invalid{% endif %}">
+        <i class="fas fa-eye input-prefix"></i>
+        {{- form_widget(form, {'attr': {'class': 'form-control'}}) -}}
+        {{- form_label(form) -}}
+        {{- form_errors(form) -}}
+        {% if not errorState %}{{ form_help(form) }}{% endif %}
+    </div>
+{%- endblock -%}
+
+{%- block _registration_admin_partner_password_plainPassword_first_widget -%}
+    {% set errorState = (not compound or force_error|default(false)) and not valid %}
+    <div class="md-form md-outline input-with-post-icon mb-0 {% if errorState %}invalid{% endif %}">
+        <i class="fas fa-eye input-prefix"></i>
+        {{- form_widget(form, {'attr': {'class': 'form-control'}}) -}}
+        {{- form_label(form) -}}
+        {{- form_errors(form) -}}
+        {% if not errorState %}{{ form_help(form) }}{% endif %}
+    </div>
+{%- endblock -%}
+
+{%- block _registration_admin_partner_password_plainPassword_second_widget -%}
+    {% set errorState = (not compound or force_error|default(false)) and not valid %}
+    <div class="md-form md-outline input-with-post-icon mb-0 {% if errorState %}invalid{% endif %}">
+        <i class="fas fa-eye input-prefix"></i>
+        {{- form_widget(form, {'attr': {'class': 'form-control'}}) -}}
+        {{- form_label(form) -}}
+        {{- form_errors(form) -}}
+        {% if not errorState %}{{ form_help(form) }}{% endif %}
+    </div>
+{%- endblock -%}
+
+{%- block _user_booking_cancelled_password_widget -%}
+    {% set errorState = (not compound or force_error|default(false)) and not valid %}
+    <div class="md-form md-outline input-with-post-icon mb-0 {% if errorState %}invalid{% endif %}">
+        <i class="fas fa-eye input-prefix"></i>
+        {{- form_widget(form, {'attr': {'class': 'form-control form-control-app'}}) -}}
+        {{- form_label(form) -}}
+        {{- form_errors(form) -}}
+        {% if not errorState %}{{ form_help(form) }}{% endif %}
+    </div>
+{%- endblock -%}
 
 

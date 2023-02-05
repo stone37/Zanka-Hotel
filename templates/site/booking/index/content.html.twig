@@ -1,0 +1,20 @@
+{% form_theme booking_form 'Ui/Form/theme.html.twig' %}
+{% form_theme discount_form 'Ui/Form/theme.html.twig' %}
+
+{% set priceReduced = app_room_promotion(room) %}
+
+<section class="container mb-5">
+    <div class="row">
+        <div class="col-12">
+            {{ include('ui/_flashes_message.html.twig') }}
+        </div>
+        <div class="col-md-8">
+            {{ include('site/booking/index/_booking_form.html.twig') }}
+        </div>
+        <div class="col-md-4">
+            {{ include('site/booking/index/_info.html.twig') }}
+            {{ include('site/booking/index/_discount.html.twig') }}
+        </div>
+    </div>
+</section>
+

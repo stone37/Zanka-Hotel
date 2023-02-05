@@ -38,7 +38,6 @@ class PriceFilterType extends AbstractFilterType
                 'label' => 'Prix min',
                 'required' => false,
                 'attr' => ['class' => 'hostel_filter_price_min'],
-                //'currency' => $this->currencyContext->getCurrencyCode($this->settings),
                 'constraints' => [
                     new Type([
                         'type' => 'numeric',
@@ -53,7 +52,6 @@ class PriceFilterType extends AbstractFilterType
                 'label' => 'Prix max',
                 'required' => false,
                 'attr' => ['class' => 'hostel_filter_price_max'],
-                //'currency' => $this->currencyContext->getCurrencyCode($this->settings),
                 'constraints' => [
                     new Type([
                         'type' => 'numeric',

@@ -38,6 +38,12 @@ class HostelAdminType extends AbstractType
             ])
             ->add('address', TextType::class, ['label' => 'Adresse (facultatif)', 'required' => false])
             ->add('codePostal', TextType::class, ['label' => 'Code postal (facultatif)', 'required' => false])
+            ->add('plan', PlanChoiceType::class, [
+                'label' => 'Plan',
+                'attr' => ['class' => 'mdb-select md-outline md-form dropdown-primary'],
+                'required' => false,
+                'placeholder' => 'Plan',
+            ])
             ->add('enabled', CheckboxType::class, ['label' => 'Activé']);
     }
 
@@ -45,8 +51,8 @@ class HostelAdminType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Hostel::class,
+            'validation_groups' => ['Default', 'Admin']
         ]);
     }
 }
-
 

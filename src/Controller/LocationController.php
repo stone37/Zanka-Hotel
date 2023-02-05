@@ -61,7 +61,7 @@ class LocationController extends AbstractController
     public function home()
     {
         return $this->render('site/location/_homePopular.html.twig', [
-            'cities' => $this->repository->getPartial(10)
+            'cities' => $this->repository->getPartial(12)
         ]);
     }
 }

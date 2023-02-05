@@ -23,7 +23,7 @@ class NewsletterService
             ->to($emailing->getDestinataire())
             ->subject($this->manager->get()->getName() . ' | '. $emailing->getSubject());
 
-        $this->mailer->sendNow($sender);
+        $this->mailer->send($sender);
     }
 
     public function sendUserEmailing(Emailing $emailing, array $users)
@@ -32,10 +32,11 @@ class NewsletterService
             $sender = $this->mailer->createEmail('mails/newsletter/user.twig', [
                 'emailing' => $emailing,
                 'user' => $user
-            ])->to($user->getEmail())
+            ])
+                ->to($user->getEmail())
                 ->subject($this->manager->get()->getName() . ' | ' . $emailing->getSubject());
 
-            $this->mailer->sendNow($sender);
+            $this->mailer->send($sender);
         }
     }
 
@@ -48,20 +49,18 @@ class NewsletterService
             ])->to($partner->getEmail())
                 ->subject($this->manager->get()->getName() . ' | ' . $emailing->getSubject());
 
-            $this->mailer->sendNow($sender);
+            $this->mailer->send($sender);
         }
     }
 
     public function sendNewsletterEmailing(Emailing $emailing, array $newsletters)
     {
         foreach ($newsletters as $newsletter) {
-            $sender = $this->mailer->createEmail('mails/newsletter/newsletter.twig', [
-                'emailing' => $emailing,
-                'newsletter' => $newsletter])
+            $sender = $this->mailer->createEmail('mails/newsletter/newsletter.twig', ['emailing' => $emailing])
                 ->to($newsletter->getEmail())
                 ->subject($this->manager->get()->getName() . ' | ' . $emailing->getSubject());
 
-            $this->mailer->sendNow($sender);
+            $this->mailer->send($sender);
         }
     }
 }

@@ -1,7 +1,6 @@
 {% if pageCount > 1 %}
     <nav>
-        <ul class="pagination pg-primary mb-0 {{ (align is not defined) ? '' : align=='center' ? ' justify-content-center' : (align=='right' ? ' justify-content-end' : '') }}">
-
+        <ul class="pagination pg-primary {{ (align is not defined) ? '' : align=='center' ? ' justify-content-center' : (align=='right' ? ' justify-content-end' : '') }}">
             {% if previous is defined %}
                 <li class="page-item">
                     <a class="page-link" rel="prev" aria-label="Previous" href="{{ path(route, query|merge({(pageParameterName): previous})) }}">
@@ -77,9 +76,9 @@
                         <span class="sr-only">Previous</span>
                     </a>
                 </li>
-                <li class="page-item disabled">
+                {#<li class="page-item disabled">
                     <span class="page-link">{{ 'label_next'|trans({}, 'KnpPaginatorBundle') }}</span>
-                </li>
+                </li>#}
             {% endif %}
         </ul>
     </nav>

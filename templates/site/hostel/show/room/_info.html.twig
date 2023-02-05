@@ -1,0 +1,91 @@
+{% set roomEquipments = room|app_room_equipment %}
+
+<div class="room-detail mb-4 mt-2">
+    <a href="" class="card-link font-weight-stone-500" data-toggle="modal" data-target="#hostel-room-info-modal-{{ room.id }}">
+        Plus de detail <i class="fas fa-angle-right"></i>
+    </a>
+    <div class="modal fade" id="hostel-room-info-modal-{{ room.id }}" tabindex="-1" role="dialog" aria-labelledby="hostel-equipment-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title px-0 pt-1 font-weight-stone-600 text-dark" id="hostel-room-info-modal-label">
+                        Informations sur la chambre
+                    </h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times text-danger"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 room-carousel">
+                            {% if room.galleries|length %}
+                                {{ include('site/hostel/show/room/_carousel_modal.html.twig') }}
+                            {% else %}
+                                {% set img_url = asset('assets/img/no-image.png') %}
+                                <div><img class="img-fluid" src="{{ image_asset(img_url, 350, 350) }}" alt="Hostel room image"></div>
+                            {% endif %}
+                        </div>
+                        <div class="col-12">
+                            <h4 class="h4-responsive font-weight-bold text-dark mt-3">{{ room.name }}</h4>
+                            <div class="data">
+                                <ul class="list-unstyled dark-grey-text mb-0">
+                                    {% if room.area %}
+                                        <li><i class="fas fa-border-style mr-2"></i> {{ room.area }} m²</li>
+                                    {% endif %}
+                                    <li>
+                                        <i class="fas fa-user-friends mr-2"></i>
+                                        {{ room.occupant > 1 ? room.occupant ~ ' personnes' : room.occupant ~ ' personne' }}
+                                    </li>
+                                    {% if room.beddings|length > 0 %}
+                                        <li>
+                                            <i class="fas fa-bed mr-2"></i>
+                                            {% for bedding in room.beddings %}{{ bedding.number }} {{ bedding.name }} {% if not loop.last %}, {% endif %}{% endfor %}
+                                        </li>
+                                    {% endif %}
+                                    {% if room.smoker %}
+                                        {% if room.smoker == 1 %}
+                                            <li><i class="fas fa-smoking-ban mr-2"></i> Non-fumeurs</li>
+                                        {% elseif room.smoker == 2 %}
+                                            <li><i class="fas fa-smoking mr-2"></i> Fumeurs</li>
+                                        {% elseif room.smoker == 3 %}
+                                            <li>
+                                                <i class="fas fa-smoking-ban mr-1"></i>
+                                                <i class="fas fa-smoking mr-2"></i> Fumeurs et non-fumeurs
+                                            </li>
+                                        {% endif %}
+                                    {% endif %}
+                                    {% if hostel.wifi %}
+                                        <li><i class="fas fa-wifi mr-2"></i> Accès Wi-Fi gratuit</li>
+                                    {% endif %}
+                                    {% if hostel.parking %}
+                                        <li><i class="fas fa-parking mr-2"></i> Parking gratuit</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                        {% if roomEquipments|length > 0 %}
+                            <div class="col-12 room-equipment">
+                                <h4 class="h4-responsive font-weight-bold text-dark mt-4 mb-3">Équipements de la chambre</h4>
+                                <div class="row data">
+                                    {% for key, equipment in roomEquipments %}
+                                        <div class="col-md-6">
+                                            <h5 class="font-weight-stone-600 h5-responsive text-dark mt-2">{{ key }}</h5>
+                                            <div class="">
+                                                <ul class="list-unstyled">
+                                                    {% for item in equipment %}
+                                                        <li><i class="fas fa-circle mr-2"></i> {{ item }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

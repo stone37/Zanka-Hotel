@@ -7,7 +7,6 @@
                      Lisez les avis impartiaux des voyageurs, localisez les hôtels sur une carte et
                      consultez des photos de qualité. Réservez dès maintenant votre chambre d'hôtel
                      et économisez grâce à notre garantie de prix." %}
-
     <meta name="description" content="{{ content }}"/>
     <meta property="og:description" content="{{ content }}" />
 {% endblock %}
@@ -27,7 +26,7 @@
                     <div class="col-lg-12 wow fadeIn mb-5">
                         <h4 class="h4-responsive font-weight-stone-500 dark-grey-text">
                             Votre voyage ne manque pas d'expériences. Avec {{ config.name }},
-                            réserver des hôtels, des hébergements indépendants et plus encore
+                            réserver des chambres hôtels, des hébergements indépendants et plus encore
                         </h4>
                     </div>
                 </div>
@@ -57,6 +56,7 @@
 
     {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/fecha.min.js'} %}
     {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/hotel-datepicker.min.js'} %}
+    {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/multi-range.min.js'} %}
     {% include 'Ui/_javascripts.html.twig' with {'path': 'assets/js/site/booking.js'} %}
 {% endblock %}
 

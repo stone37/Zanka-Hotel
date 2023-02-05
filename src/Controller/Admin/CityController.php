@@ -53,7 +53,7 @@ class CityController extends AbstractController
     }
 
     #[Route(path: '/cities/create', name: 'app_admin_city_create')]
-    public function create(Request $request)
+    public function create(Request $request): RedirectResponse|Response
     {
         $city = new City();
         $form = $this->createForm(CityType::class, $city);

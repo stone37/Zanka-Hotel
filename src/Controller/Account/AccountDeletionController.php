@@ -38,8 +38,9 @@ class AccountDeletionController extends AbstractController
 
         $form = $this->deleteForm();
 
-        if ($request->getMethod() == 'DELETE') {
+        if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
+
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $data = $form->getData();
@@ -52,10 +53,10 @@ class AccountDeletionController extends AbstractController
 
                 $this->service->deleteUser($user, $request);
 
-                $this->addFlash('error', 'Votre demande de suppression de compte a bien été prise en compte. 
+                $this->addFlash('success', 'Votre demande de suppression de compte a bien été prise en compte. 
             Votre compte sera supprimé automatiquement au bout de '.DeleteAccountService::DAYS.' jours');
 
-                return $this->redirectToRoute('app_home');
+                return $this->redirectToRoute('app_user_delete');
             }
         }
 
@@ -74,9 +75,7 @@ class AccountDeletionController extends AbstractController
         $data = json_decode($request->getContent(), true);
 
         if (!$this->isCsrfTokenValid('delete-account', $data['csrf'] ?? '')) {
-            return new JsonResponse([
-                'title' => 'Token CSRF invalide',
-            ], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['title' => 'Token CSRF invalide'], Response::HTTP_BAD_REQUEST);
         }
 
         if (!$this->passwordHasher->isPasswordValid($user, $data['password'] ?? '')) {
@@ -111,7 +110,7 @@ class AccountDeletionController extends AbstractController
     {
         return $this->createFormBuilder([])
             ->setAction($this->generateUrl('app_user_delete'))
-            ->setMethod('DELETE')
+            ->setMethod('POST')
             ->add('password', PasswordType::class, [
                 'attr' => ['placeholder' => 'Entrez votre mot de passer pour confirmer']
             ])

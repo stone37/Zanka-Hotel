@@ -1,4 +1,28 @@
 $(document).ready(function() {
+    // Time js
+    const terms = [
+        { time: 45, divide: 60, text: "moins d'une minute" },
+        { time: 90, divide: 60, text: 'environ une minute' },
+        { time: 45 * 60, divide: 60, text: '%d minutes' },
+        { time: 90 * 60, divide: 60 * 60, text: 'environ une heure' },
+        { time: 24 * 60 * 60, divide: 60 * 60, text: '%d heures' },
+        { time: 42 * 60 * 60, divide: 24 * 60 * 60, text: 'environ un jour' },
+        { time: 30 * 24 * 60 * 60, divide: 24 * 60 * 60, text: '%d jours' },
+        { time: 45 * 24 * 60 * 60, divide: 24 * 60 * 60 * 30, text: 'environ un mois' },
+        { time: 365 * 24 * 60 * 60, divide: 24 * 60 * 60 * 30, text: '%d mois' },
+        { time: 365 * 1.5 * 24 * 60 * 60, divide: 24 * 60 * 60 * 365, text: 'environ un an' },
+        { time: Infinity, divide: 24 * 60 * 60 * 365, text: '%d ans' }
+    ];
+
+    let $dataTime = $('[data-time]');
+
+    $dataTime.each(function (index, element) {
+        const timestamp = parseInt(element.getAttribute('data-time'), 10) * 1000;
+        const date = new Date(timestamp);
+
+        updateText(date, element, terms);
+    });
+
     let $partner_form_card = $('.partner-form .card'),
         $partner_radio = $('.partner-form .card .form-check.data');
 
@@ -20,9 +44,6 @@ $(document).ready(function() {
         $this.find('input[type="radio"]').prop('checked', true);
         $this.addClass('active');
     });
-
-
-
 
     // Gestion des checkbox dans la liste
     let $principalCheckbox = $('#principal-checkbox'),
@@ -166,9 +187,9 @@ $(document).ready(function() {
         $room_name_value_type.text($this.val());
 
         if ($this.val() && ($this.val() === 'Suite' || $this.val() === 'Appartement')) {
-            $room_sub_info.show();
+            $room_sub_info.removeClass('d-none')
         } else {
-            $room_sub_info.hide();
+            $room_sub_info.addClass('d-none');
         }
     });
 
@@ -211,6 +232,23 @@ $(document).ready(function() {
             $promotion_action_amount_title.text('Pourcentage');
         }
     })
+
+
+    // Notification
+    if (window.hostel.USER) {
+        setInterval(function(){
+            getNotification($('#notification-bulk'), 'app_notification_unread');
+        }, 180000);
+
+        $('.skin-light .dropdown.notification').on('show.bs.dropdown', function () {
+            readAll('app_notification_read');
+        });
+    }
+
+    // Password view
+    $('.input-prefix.fa-eye').click(function () {
+        passwordView($(this));
+    });
 });
 
 const addBedFormToCollection = (container) => {
@@ -254,6 +292,79 @@ const readUrl = (input) => {
     }
 }
 
+function getNotification(container, route) {
+    $.ajax({
+        url: Routing.generate(route),
+        type: 'GET',
+        success: function(data) {
+            let $result = $.parseJSON(data);
+
+            if ($result.length) {
+                $('.skin-light .dropdown.notification .dropdown-menu .not-notification-bulk').addClass('d-none');
+                $('.skin-light .dropdown.notification > .icon').removeClass('d-none')
+
+                $.each($result, function(index, element) {
+                    container.prepend(notificationItemView(element))
+                });
+            }
+        },
+    });
+}
+
+function readAll(route) {
+    $.ajax({
+        url: Routing.generate(route),
+        type: 'GET',
+        success: function() {
+            $('.skin-light .dropdown.notification > .icon').addClass('d-none');
+        },
+    });
+}
+
+function notificationItemView(notification) {
+    return $('<a class="dropdown-item d-flex" href="' + notification.url + '">' +
+        '<div class="content">' +
+        '<div class="data">' + notification.message + '</div>' +
+        '<div class="time">' + jsDateFormater(new Date(notification.createdAt)) + '</div>' +
+        '</div>' +
+        '<div class="icon-notification ml-auto d-flex align-items-center pl-3"><i class="fas fa-circle"></i></div>' +
+        '</a>');
+}
+
+function jsDateFormater(date) {
+    const seconds = (new Date().getTime() - date.getTime()) / 1000;
+    let term = null;
+
+    for (term of terms) {
+        if (Math.abs(seconds) < term.time) {
+            break
+        }
+    }
+
+    if (seconds >= 0) {
+        return `Il y a ${term.text.replace('%d', Math.round(seconds / term.divide))}`;
+    } else {
+        return `Dans ${term.text.replace('%d', Math.round(seconds / term.divide))}`;
+    }
+}
+
+function updateText(date, element, terms) {
+    const seconds = (new Date().getTime() - date.getTime()) / 1000;
+    let term = null;
+    const prefix = element.getAttribute('prefix');
+
+    for (term of terms) {
+        if (Math.abs(seconds) < term.time) {
+            break
+        }
+    }
+
+    if (seconds >= 0) {
+        element.innerHTML = `${prefix || 'Il y a'} ${term.text.replace('%d', Math.round(seconds / term.divide))}`
+    } else {
+        element.innerHTML = `${prefix || 'Dans'} ${term.text.replace('%d', Math.round(Math.abs(seconds) / term.divide))}`
+    }
+}
 
 
 

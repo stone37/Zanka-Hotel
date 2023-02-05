@@ -45,7 +45,7 @@ class AccountDeletionController extends AbstractController
                 if (!$this->passwordHasher->isPasswordValid($user, $data['password'] ?? '')) {
                     $this->addFlash('error', 'Impossible de supprimer le compte, mot de passe invalide');
 
-                    return $this->redirectToRoute('app_user_delete');
+                    return $this->redirectToRoute('app_partner_delete');
                 }
 
                 $this->service->deleteUser($user, $request);
@@ -53,7 +53,7 @@ class AccountDeletionController extends AbstractController
                 $this->addFlash('error', 'Votre demande de suppression de compte a bien été prise en compte. 
             Votre compte sera supprimé automatiquement au bout de '.DeleteAccountService::DAYS.' jours');
 
-                return $this->redirectToRoute('app_home');
+                return $this->redirectToRoute('app_partner_delete');
             }
         }
 

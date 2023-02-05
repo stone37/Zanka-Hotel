@@ -21,7 +21,7 @@ class UploadController extends AbstractController
     use UploadTrait;
 
 
-    #[Route(path: '/admin/upload/image', name: 'app_image_upload_add', options: ['expose' => true])]
+    #[Route(path: '/upload/image', name: 'app_image_upload_add', options: ['expose' => true])]
     public function add(Request $request): JsonResponse
     {
         if (!$request->isXmlHttpRequest()) $this->createNotFoundException('Mauvais requête');

@@ -1,3 +1,17 @@
 controllers:
     resource: ../src/Controller/
     type: attribute
+
+api_token:
+    path: /api/login
+    methods: [POST]
+
+api_password_reset:
+    path: /api/password-reset
+    controller: App\Api\Controller\AuthController::reset
+    methods: [POST]
+
+api_social_login:
+    path: /api/login/social
+    controller: App\Api\Controller\AuthController::socialLogin
+    methods: [POST]

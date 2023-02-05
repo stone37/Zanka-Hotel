@@ -1,0 +1,44 @@
+{% extends layout %}
+
+{% import "mails/macros.twig" as e %}
+{% import 'ui/Macro/money.html.twig' as money %}
+
+{% set settings = config.settings %}
+
+{% block body %}
+
+    {% apply markdown_email %}
+
+        Cher {{ payout.commande.hostel.name }},
+        ======================================
+
+        Nous sommes heureux de vous informer que le paiement pour vos ventes sur notre plateforme **{{ settings.name }}**
+        est maintenant **effectif**.
+
+        Détails de votre commande payé
+        ------------------------------
+
+        Numéro de commande: **#{{ payout.commande.reference }}**
+        Date de commande: **{{ payout.commande.createdAt|date('d/m/Y') }}**
+        Montant du paiement: **{{ money.convertAndFormat(payout.amount) }}**
+
+        Détails de votre réservation payé
+        ---------------------------------
+
+        Date de réservation: **{{ payout.commande.booking.createdAt|date('d/m/Y') }}**
+
+        Nom de l'établissement: **{{ payout.commande.booking.hostel.name }}**
+        Type de chambre: **{{ payout.commande.booking.room.name }}**
+        Nombre de nuits: **{{ payout.commande.booking.days }}**
+        Nombre de personnes: **{{ payout.commande.booking.adult + payout.commande.booking.children }}**
+
+        Arrivée: **{{ payout.commande.booking.checkin|format_datetime(pattern="EE dd MMM yyyy") }}**
+        Départ: **{{ payout.commande.booking.checkout|format_datetime(pattern="EE dd MMM yyyy") }}**
+
+        Nous espérons que votre expérience en tant que partenaire sur notre marketplace a été positive
+        et nous remercions pour votre engagement. Si vous avez des questions concernant ce paiement,
+        n'hésitez pas à nous contacter.
+
+    {% endapply %}
+
+{% endblock %}

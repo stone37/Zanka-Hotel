@@ -19,15 +19,6 @@
             <table class="table table-responsive-sm">
                 <thead class="text-primary">
                 <tr>
-                    <th scope="col" class="text-center">
-                        <div class="" style="position: relative; right: 10px; top: 2px">
-                            <input type="checkbox" name="principal" class="form-check-input filled-in" id="principal-checkbox" value="" style="margin: 0 !important;" />
-                            <label class="form-check-label" for="principal-checkbox"
-                                   style="padding-left: 0!important; "></label>
-                        </div>
-                    </th>
-                    <th scope="col" class="font-weight-stone-500 text-center">Titre</th>
-                    <th scope="col" class="font-weight-stone-500 text-center">Commentaire</th>
                     <th scope="col" class="font-weight-stone-500 text-center">Clients</th>
                     <th scope="col" class="font-weight-stone-500 text-center">Hotel</th>
                     <th scope="col" class="font-weight-stone-500 text-center">Note</th>
@@ -37,29 +28,11 @@
                 <tbody id="list-checkbook-container">
                 {% for review in reviews %}
                     <tr>
-                        <td class="text-center">
-                            <div class="" style="position: relative; right: 10px; top: 2px">
-                                <input type="checkbox" name="checkbox{{ loop.index }}" class="form-check-input filled-in list-checkbook"
-                                       id="checkbox{{ loop.index }}" value="{{ review.id }}" style="margin: 0 !important;" />
-                                <label class="form-check-label" for="checkbox{{ loop.index }}" style="padding-left: 0!important; "></label>
-                            </div>
-                        </td>
-                        <td class="text-center">{{ review.title }}</td>
-                        <td class="text-center">{{ review.comment }}</td>
                         <td class="text-center">{{ review.firstname }} {{ review.lastName }}</td>
                         <td class="text-center">
-                            <a href="{{ path('app_partner_hostel_show', {'id': review.hostel.id}) }}"
-                               class="font-weight-stone-600 card-link">{{ review.hostel.name }}</a><br>
+                            <a href="{{ path('app_partner_hostel_show', {'id': review.hostel.id}) }}" class="font-weight-stone-500 card-link">{{ review.hostel.name }}</a><br>
                         </td>
-
-                        <td class="text-center">
-                            Personnel: <span class="badge badge-primary">{{ review.personalRating }}</span><br>
-                            Equipement: <span class="badge badge-primary">{{ review.equipmentRating }}</span><br>
-                            Propriété: <span class="badge badge-primary">{{ review.propertyRating }}</span><br>
-                            Confort: <span class="badge badge-primary">{{ review.priceRating }}</span><br>
-                            Prix: <span class="badge badge-primary">{{ review.priceRating }}</span><br>
-                            Localisation: <span class="badge badge-primary">{{ review.locationRating }}</span>
-                        </td>
+                        <td class="text-center">{{ review.rating }}</td>
                         <td class="text-center">
                             <div class="dropdown">
                                 <a class="dropdown-toggle" type="button" data-toggle="dropdown"><i class="fas fa-ellipsis-h text-primary"></i></a>
@@ -85,7 +58,7 @@
 {% else %}
     <div class="row app-user d-flex justify-content-center">
         <div class="col-12 col-md-8 text-center mt-3 mt-md-5">
-            <h3 class="h3-responsive font-weight-stone-600">
+            <h3 class="h3-responsive font-weight-stone-600 text-dark">
                 Vous n'avez aucun avis.
             </h3>
         </div>

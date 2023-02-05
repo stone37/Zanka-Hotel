@@ -1,0 +1,160 @@
+{% import 'ui/Macro/money.html.twig' as money %}
+
+{% set hostel = favorite.hostel %}
+{% set data = config.booker.bookingData %}
+{% set startDate = date(data.duration.checkin) %}
+{% set endDate = date(data.duration.checkout) %}
+{% set room = hostel.room %}
+{% set night = app_booking_days_calculator(startDate, endDate) %}
+{% set room_nbr = data.roomNumber %}
+{% set booking_room_nbr = app_booking_room_nbr(room) %}
+{% set priceReduced = app_room_promotion(room) %}
+
+<div id="hostel_{{ hostel.id }}" class="card hostel-bulk mb-4">
+    <div class="row no-gutters py-0">
+        <div class="col-5 col-md-5 img-bulk">
+            <a href="{{ path('app_user_favorite_check', {'id': hostel.id}) }}" class="d-block">
+                {% if hostel.galleries|length > 0 %}
+                    {{ include('site/hostel/index/_carousel.html.twig') }}
+                {% else %}
+                    {% set img_url = asset('assets/img/no-image.png') %}
+                    <img src="{{ image_asset(img_url, 350, 350) }}" class="img-fluid" alt="Banner not image" />
+                {% endif %}
+
+                {% if priceReduced %}
+                    {% set promotion = app_room_promotion(room) %}
+                    <div class="promotion-banner">
+                        {% if promotion.action.type == 'percentage_discount' %}
+                            {{ app_room_promotion_data(promotion) }}
+                        {% else %}
+                            {{ money.convertAndFormat(app_room_promotion_data(promotion)) }}
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                {% if not is_granted('created', hostel) %}
+                    {% set has_favoris = app_has_favoris(hostel) %}
+                    <div data-id="{{ hostel.id }}" class="hostel-favorite-btn
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}connected{% endif %}
+                        {% if has_favoris %}activated{% endif %}">
+                        <i class="{% if has_favoris %}fas{% else %}far{% endif %} fa-heart"></i>
+                    </div>
+                {% endif %}
+            </a>
+        </div>
+        <div class="col-7 col-md-7 data-bulk">
+            <a href="{{ path('app_user_favorite_check', {'id': hostel.id}) }}" class="d-block">
+                <div class="card-body pl-0">
+                    <div class="header">
+                        <div class="d-flex justify-content-start align-content-center">
+                            <h4 class="h4-responsive font-weight-bold text-dark">{{ hostel.name|u.truncate(25, '...') }}</h4>
+                            {% if hostel.starNumber %}
+                                <div class="star-number d-none d-md-inline-block">
+                                    {% for i in 1..(hostel.starNumber) %}
+                                        <i class="fas fa-gem text-default"></i>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="location dark-grey-text">
+                            {% if hostel.location.town %}
+                                {{ hostel.location.town }}
+                            {% else %}
+                                {{ hostel.location.city }}
+                            {% endif %}
+                            {% if hostel.starNumber %}
+                                <div class="star-number d-inline-block d-md-none">
+                                    {% for i in 1..(hostel.starNumber) %}
+                                        <i class="fas fa-gem text-default"></i>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="data">
+                        {% if hostel.breakfast %}
+                            <div title="Petit-déjeuner proposé" data-toggle="tooltip">
+                                <i class="fas fa-coffee mr-md-1"></i> Petit-déjeuner
+                            </div>
+                        {% endif %}
+                        {% if hostel.parking %}
+                            <div title="Parking disponible" data-toggle="tooltip">
+                                <i class="fas fa-parking mr-md-1"></i> Parking
+                            </div>
+                        {% endif %}
+
+                        {% if hostel.parking %}
+                            <div class="d-none d-md-inline-block" title="Animaux domestiques acceptés" data-toggle="tooltip">
+                                <i class="fas fa-paw mr-md-1"></i> Animaux domestiques
+                            </div>
+                        {% endif %}
+
+                        {% if hostel.wifi %}
+                            <div title="Wifi disponible" data-toggle="tooltip">
+                                <i class="fas fa-wifi mr-md-1"></i> Wifi gratuit
+                            </div>
+                        {% endif %}
+
+                        {% if hostel.cancellationPolicy.state == 0 %}
+                            <div class="cancellation mb-0">Annulation GRATUITE</div>
+                        {% endif %}
+
+                        {% if booking_room_nbr %}
+                            {% set room_available = room.roomNumber - booking_room_nbr %}
+                            {% if room_available >= 1 and room_available <= 9 %}
+                                <div class="room-available mt-0 d-none d-md-inline-block">
+                                    Il reste plus que {{ room_available > 1 ? room_available ~ ' hébergements' : room_available ~ ' hébergement' }}
+                                    de ce type.
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                    <div class="footer d-md-flex justify-content-md-between">
+                        <div class="hostel-review">
+                            {% if hostel.averageRating %}
+                                <div class="number">
+                                    <span class="d-inline-block font-weight-bold">{{ hostel.averageRating }}</span>/10
+                                </div>
+                                <div class="title font-weight-bold text-primary">{{ app_review_observation(hostel.averageRating) }}</div>
+                                <div class="review-nbr">({{ hostel.reviews|length }} avis)</div>
+                            {% else %}
+                                <div class="no-data small-8 font-weight-stone-500 text-primary">Aucune note</div>
+                            {% endif %}
+                        </div>
+                        <div class="hostel-price text-right {% if room_nbr > 1 or night > 1 %}plus{% endif %}"> {# class "plus" s'il une +sieurs chambre ou jour de reservation #}
+                            <div class="d-flex justify-content-end">
+                                {% if priceReduced %}
+                                    <div class="price-promotion font-weight-stone-500">
+                                        {% set price = room.price + app_room_taxe(room) %}
+                                        <s>{{ money.convertAndFormat(price * night * room_nbr) }}</s>
+                                    </div>
+                                {% endif %}
+                                <div class="price">{{ money.convertAndFormat(app_room_total_price(room) * night * room_nbr) }}</div>
+                            </div>
+                            <div class="detail grey-text">
+                                {% if room_nbr > 1 or night > 1 %}
+                                    <div>
+                                        Pour {{ (room_nbr > 1) ? room_nbr ~ ' chambres' : 'une chambre' }} et
+                                        {{ (night > 1) ? night ~ ' nuits' : 'une nuit' }}
+                                    </div>
+                                {% else %}
+                                    <div>pour une nuit</div>
+                                {% endif %}
+
+                                {% if room_nbr > 1 or night > 1 %}
+                                    <div>{{ money.convertAndFormat(app_room_total_price(room) * room_nbr) }} par nuit</div>
+                                {% endif %}
+
+                                <div>Taxes et frais compris</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+

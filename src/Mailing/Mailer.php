@@ -12,26 +12,15 @@ class Mailer
 {
     private Environment $twig;
     private MailerInterface $mailer;
-    private $dkimKey;
+    private ?string $dkimKey;
 
-    public function __construct(
-        Environment $twig,
-        MailerInterface $mailer,
-        ?string $dkimKey = null
-    ) {
+    public function __construct(Environment $twig, MailerInterface $mailer, ?string $dkimKey = null)
+    {
         $this->twig = $twig;
         $this->mailer = $mailer;
         $this->dkimKey = $dkimKey;
     }
 
-    /**
-     * @param string $template
-     * @param array $data
-     * @return Email
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
-     */
     public function createEmail(string $template, array $data = []): Email
     {
         $this->twig->addGlobal('format', 'html');
@@ -40,24 +29,12 @@ class Mailer
         $text = $this->twig->render($template, array_merge($data, ['layout' => 'mails/base.text.twig']));
 
         return (new Email())
-            ->from('noreply@oblackmarket.com')
+            ->from('noreply@example.com')
             ->html($html)
             ->text($text);
     }
 
-    /**
-     * @param Email $email
-
     public function send(Email $email): void
-    {
-        $this->enqueue->enqueue(self::class, 'sendNow', [$email]);
-    }*/
-
-    /**
-     * @param Email $email
-     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
-     */
-    public function sendNow(Email $email): void
     {
         if ($this->dkimKey) {
             $dkimSigner = new DkimSigner("file://{$this->dkimKey}", 'hostel.com', 'default');

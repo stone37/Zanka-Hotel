@@ -1,0 +1,15 @@
+{% extends layout %}
+
+{% block body %}
+    {% apply markdown_email %}
+
+        Cher {{ hostel.owner.firstname }},
+        =================================
+
+        Nous sommes heureux de vous informer que votre établissement **{{ hostel.name }}** a été confirmé avec succès.
+        Il est maintenant visible notre site.
+
+        Nous espérons que vous apprécierez votre expérience sur notre plateforme.
+
+    {% endapply %}
+{% endblock %}

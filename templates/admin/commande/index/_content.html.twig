@@ -39,9 +39,11 @@
                         </td>
                         <td class="text-center">{{ order.createdAt|date('d/m/Y H:i:s') }}</td>
                         <td class="text-center">
-                            {% if order.user %}
-                                <div class="text-primary font-weight-500">{{ order.user.firstName|capitalize ~ ' ' ~ order.user.lastName|capitalize  }}</div>
-                                <div class="small">{{ order.user.email }}</div>
+                            {% if order.owner %}
+                                <div class="text-primary font-weight-500">
+                                    {{ order.owner.firstName|capitalize ~ ' ' ~ order.owner.lastName|capitalize  }}
+                                </div>
+                                <div class="small">{{ order.owner.email }}</div>
                             {% endif %}
                         </td>
                         <td class="text-center">
@@ -91,7 +93,7 @@
 {% else %}
     <div class="row app-user d-flex justify-content-center">
         <div class="col-12 col-md-8 text-center mt-3 mt-md-5">
-            <h3 class="h3-responsive font-weight-stone-600">
+            <h3 class="h3-responsive font-weight-stone-600 text-dark">
                 Vous n'avez aucune commande.
             </h3>
         </div>

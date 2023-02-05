@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Booking;
 use App\Entity\Payout;
 use App\Entity\User;
 use App\Model\Admin\PayoutSearch;
@@ -60,7 +61,7 @@ class PayoutRepository extends ServiceEntityRepository
             ->orderBy('p.createdAt', 'desc');
 
         if ($search->getHostel()) {
-            $qb->andWhere('commande.hostel = :hostel')->setParameter('hostel', (int) $search->getHostel());
+            $qb->andWhere('commande.hostel = :hostel')->setParameter('hostel', $search->getHostel());
         }
 
         return $qb;
@@ -73,15 +74,19 @@ class PayoutRepository extends ServiceEntityRepository
         $qb->leftJoin('p.commande', 'commande')
             ->leftJoin('p.owner', 'user')
             ->leftJoin('commande.hostel', 'hostel')
+            ->leftJoin('commande.booking', 'booking')
+            ->leftJoin('commande.payment', 'payment')
             ->addSelect('commande')
             ->addSelect('user')
             ->addSelect('hostel')
+            ->addSelect('booking')
+            ->addSelect('payment')
             ->where('p.owner = :owner')
             ->setParameter('owner', $user)
             ->orderBy('p.createdAt', 'desc');
 
         if ($search->getHostel()) {
-            $qb->andWhere('commande.hostel = :hostel')->setParameter('hostel', (int) $search->getHostel());
+            $qb->andWhere('commande.hostel = :hostel')->setParameter('hostel', $search->getHostel());
         }
 
         return $qb;
@@ -142,7 +147,7 @@ class PayoutRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getSentNumber()
+    public function getSentNumber(): int
     {
         $qb = $this->createQueryBuilder('p')
             ->select('count(p.id)')
@@ -152,7 +157,7 @@ class PayoutRepository extends ServiceEntityRepository
         return $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function getNewNumber()
+    public function getNewNumber(): int
     {
         $qb = $this->createQueryBuilder('p')
             ->select('count(p.id)')
@@ -169,10 +174,10 @@ class PayoutRepository extends ServiceEntityRepository
             ->where('p.state = :state')
             ->setParameter('state', Payout::PAYOUT_CANCEL);
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function totalSent(User $user = null)
+    public function totalSent(User $user = null): int
     {
         $qb = $this->createQueryBuilder('p')
             ->select('ROUND(SUM(p.amount)) as amount')
@@ -183,7 +188,7 @@ class PayoutRepository extends ServiceEntityRepository
             $qb = $this->hasPartner($qb, $user);
         }
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     public function totalCancel(User $user = null)
@@ -199,7 +204,7 @@ class PayoutRepository extends ServiceEntityRepository
             $qb = $this->hasPartner($qb, $user);
         }
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     private function aggregateRevenus(string $group, string $label, int $limit): array

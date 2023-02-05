@@ -8,8 +8,10 @@ use App\Form\Filter\AdminReviewType;
 use App\Form\ReviewAdminType;
 use App\Model\Admin\ReviewSearch;
 use App\Repository\ReviewRepository;
+use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -142,7 +144,7 @@ class ReviewController extends AbstractController
 
         $form = $this->deleteMultiForm();
 
-        if ($request->getMethod() == 'DELETE') {
+        if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -152,12 +154,16 @@ class ReviewController extends AbstractController
 
                 foreach ($ids as $id) {
                     $review = $this->repository->find($id);
-                    $this->dispatcher->dispatch(new AdminCRUDEvent($review), AdminCRUDEvent::PRE_DELETE);
+                    $event = new AdminCRUDEvent($review);
+
+                    $this->dispatcher->dispatch($event, AdminCRUDEvent::PRE_DELETE);
 
                     $this->repository->remove($review, false);
                 }
 
                 $this->repository->flush();
+
+                $this->dispatcher->dispatch($event, AdminCRUDEvent::POST_DELETE);
 
                 $this->addFlash('success', 'Les avis a été supprimé');
             } else {
@@ -180,7 +186,7 @@ class ReviewController extends AbstractController
             'form' => $form->createView(),
             'data' => $ids,
             'message' => $message,
-            'configuration' => $this->configuration(),
+            'configuration' => $this->configuration()
         ]);
 
         $response['html'] = $render->getContent();
@@ -188,21 +194,21 @@ class ReviewController extends AbstractController
         return new JsonResponse($response);
     }
 
-    private function deleteForm(Review $review)
+    private function deleteForm(Review $review): FormInterface
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('app_admin_review_delete', ['id' => $review->getId()]))
             ->getForm();
     }
 
-    private function deleteMultiForm()
+    private function deleteMultiForm(): FormInterface
     {
         return $this->createFormBuilder()
             ->setAction($this->generateUrl('app_admin_review_bulk_delete'))
             ->getForm();
     }
 
-    private function configuration()
+    #[ArrayShape(['modal' => "\string[][]"])] private function configuration(): array
     {
         return [
             'modal' => [

@@ -5,12 +5,10 @@
         <table class="table table-sm table-bordered table-responsive-sm table-responsive-md">
             <tbody>
             <tr>
-                <td class="table-dark text-center font-weight-normal">Id</td>
-                <td class="text-center font-weight-normal">{{ booking.id }}</td>
                 <td class="table-dark text-center font-weight-normal">Nom et prénom</td>
-                <td class="text-center font-weight-normal">{{ booking.lastName }} {{ booking.firstname }}</td>
+                <td colspan="2" class="text-center font-weight-normal">{{ booking.lastName }} {{ booking.firstname }}</td>
                 <td class="table-dark text-center font-weight-normal">Email</td>
-                <td class="text-center font-weight-normal">{{ booking.email }}</td>
+                <td colspan="2" class="text-center font-weight-normal">{{ booking.email }}</td>
                 <td class="table-dark text-center font-weight-normal">Téléphone</td>
                 <td class="text-center font-weight-normal">{{ booking.phone }}</td>
             </tr>
@@ -19,7 +17,7 @@
                 <td class="text-center font-weight-normal">{{ booking.checkin|format_datetime('medium', 'none', locale='fr') }}</td>
                 <td class="table-dark text-center font-weight-normal">Départ</td>
                 <td class="text-center font-weight-normal">{{ booking.checkout|format_datetime('medium', 'none', locale='fr') }}</td>
-                <td class="table-dark text-center">Hébergement</td>
+                <td class="table-dark text-center font-weight-normal">Hébergement</td>
                 <td class="text-center font-weight-normal">
                     <a href="{{ path('app_partner_room_show', {'id': booking.room.id}) }}" class="card-link">{{ booking.room.name }}</a>
                 </td>

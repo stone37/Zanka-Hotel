@@ -3,6 +3,7 @@
 namespace App\EventListener;
 
 use App\Context\ImmutableLocaleContext;
+use App\Context\StorageBasedLocaleContext;
 use App\Provider\LocaleProvider;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -11,9 +12,10 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class RequestLocaleSetter implements EventSubscriberInterface
 {
     private LocaleProvider $localeProvider;
-    private ImmutableLocaleContext $localeContext;
+    //private ImmutableLocaleContext $localeContext;
+    private StorageBasedLocaleContext $localeContext;
 
-    public function __construct(LocaleProvider $localeProvider, ImmutableLocaleContext $localeContext)
+    public function __construct(LocaleProvider $localeProvider, StorageBasedLocaleContext $localeContext /*ImmutableLocaleContext $localeContext*/)
     {
         $this->localeProvider = $localeProvider;
         $this->localeContext = $localeContext;
@@ -21,9 +23,7 @@ class RequestLocaleSetter implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return [
-            KernelEvents::REQUEST => 'onKernelRequest'
-        ];
+        return [KernelEvents::REQUEST => 'onKernelRequest'];
     }
 
     public function onKernelRequest(RequestEvent $event): void

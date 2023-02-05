@@ -2,11 +2,18 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\CommandeRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: CommandeRepository::class)]
+#[GetCollection]
+#[Post]
+#[Get]
 class Commande
 {
     use TimestampableTrait;
@@ -149,11 +156,6 @@ class Commande
 
     public function setPayment(Payment $payment): self
     {
-        // set the owning side of the relation if necessary
-        if ($payment->getCommande() !== $this) {
-            $payment->setCommande($this);
-        }
-
         $this->payment = $payment;
 
         return $this;
@@ -176,6 +178,10 @@ class Commande
         return $this->owner;
     }
 
+    /**
+     * @param User|UserInterface $owner
+     * @return $this
+     */
     public function setOwner(?User $owner): self
     {
         $this->owner = $owner;

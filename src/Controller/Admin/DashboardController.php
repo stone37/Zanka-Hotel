@@ -2,50 +2,73 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\User;
+use App\Controller\Traits\ControllerTrait;
 use App\Mailing\Mailer;
 use App\Repository\BookingRepository;
 use App\Repository\NewsletterDataRepository;
 use App\Repository\PaymentRepository;
+use App\Repository\PayoutRepository;
+use App\Repository\PlanRepository;
 use App\Repository\RoomRepository;
 use App\Repository\UserRepository;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-#[Route('/admin')]
+
 class DashboardController extends AbstractController
 {
+    use ControllerTrait;
+
     private UserRepository $userRepository;
     private PaymentRepository $paymentRepository;
+    private PayoutRepository $payoutRepository;
     private BookingRepository $bookingRepository;
     private RoomRepository $roomRepository;
     private NewsletterDataRepository $newsletterDataRepository;
+    private PlanRepository $planRepository;
+    private HttpClientInterface $client;
 
     public function __construct(
         UserRepository $userRepository,
         PaymentRepository $paymentRepository,
+        PayoutRepository $payoutRepository,
         BookingRepository $bookingRepository,
         RoomRepository $roomRepository,
-        NewsletterDataRepository $newsletterDataRepository
+        NewsletterDataRepository $newsletterDataRepository,
+        PlanRepository $planRepository,
+        HttpClientInterface $client,
     )
     {
         $this->userRepository = $userRepository;
         $this->paymentRepository = $paymentRepository;
+        $this->payoutRepository = $payoutRepository;
         $this->bookingRepository = $bookingRepository;
         $this->roomRepository = $roomRepository;
         $this->newsletterDataRepository = $newsletterDataRepository;
+        $this->planRepository = $planRepository;
+        $this->client = $client;
     }
 
-    #[Route(path: '/', name: 'app_admin_dashboard')]
-    public function index()
+    #[Route(path: '/admin', name: 'app_admin_index')]
+    public function index(): Response
     {
+        /*$sms = new SmsMessage('2250777061569', 'Hello World');
+        $sentMessage = $this->texter->send($sms);
+
+        dump($sentMessage);*/
+
         $taxe = $this->paymentRepository->totalTax();
         $reduction = $this->paymentRepository->totalReduction();
-        $revenus = $this->paymentRepository->totalRevenues();
+        $sales = $this->paymentRepository->totalRevenues();
+
+        $payment = $this->payoutRepository->totalSent();
+
+        $plan = $this->planRepository->findOneBy(['name' => 'standard', 'enabled' => true]);
 
         $bookingConfirmNumber = $this->bookingRepository->getConfirmNumber();
         $bookingCancelNumber = $this->bookingRepository->getCancelNumber();
@@ -73,13 +96,17 @@ class DashboardController extends AbstractController
             'months' => $this->paymentRepository->getMonthlyRevenues(),
             'days' => $this->paymentRepository->getDailyRevenues(),
             'orders' => $this->paymentRepository->getNumber(),
-            'revenus' => ($revenus - $taxe),
+            'sales' => ($sales - $taxe),
             'reduction' => $reduction,
+            'taxe' => $taxe,
+            'payment' => $payment,
+            'commission' => ((($sales - $taxe) * $plan->getPercent()) / 100),
             'roomTotal' => $roomTotal,
             'roomEnabledTotal' => $roomEnabledTotal,
             'roomBookingTotal' => $roomBookingTotal,
             'today' => $today,
-            'nextMonth' => $nextMonth
+            'nextMonth' => $nextMonth,
+            'sms_nbr' => $this->getSmsNbr()
         ]);
     }
 
@@ -94,22 +121,32 @@ class DashboardController extends AbstractController
         ])
             ->to($request->get('email'))
             ->subject('Hotel particulier | Confirmation du compte');
-        $mailer->sendNow($email);
+        $mailer->send($email);
 
         $this->addFlash('success', "L'email de test a bien été envoyé");
 
-        return $this->redirectToRoute('app_admin_dashboard');
+        return $this->redirectToRoute('app_admin_index');
     }
 
-    private function getUserOrThrow(): User
+    private function getSmsNbr(): int
     {
-        $user = $this->getUser();
+        $url = 'https://hsms.ci/api/check-sms/';
+        $headers = [
+            'Authorization' => 'Bearer ' . $this->getParameter('hsms_token'),
+            'Content-Type' => 'application/form-data'
+        ];
 
-        if (!($user instanceof User)) {
-            throw new AccessDeniedException();
-        }
+        $response = $this->client->request('POST', $url, [
+            'headers' => $headers,
+            'body' => [
+                'clientid' => $this->getParameter('hsms_client_id'),
+                'clientsecret' => $this->getParameter('hsms_client_secret')
+            ]
+        ]);
 
-        return $user;
+        $response = (array) json_decode($response->getContent());
+
+        return (int) $response[array_key_first($response)];
     }
 }
 

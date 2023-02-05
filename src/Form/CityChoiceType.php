@@ -3,11 +3,8 @@
 namespace App\Form;
 
 use App\Repository\CityRepository;
-use Symfony\Bridge\Doctrine\Form\DataTransformer\CollectionToArrayTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CityChoiceType extends AbstractType
@@ -19,19 +16,12 @@ class CityChoiceType extends AbstractType
         $this->cityRepository = $cityRepository;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        if ($options['multiple']) {
-            $builder->addModelTransformer(new CollectionToArrayTransformer());
-        }
-    }
-
     public function configureOptions(OptionsResolver $resolver): void
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
-            'choices' => fn(Options $options): array => $this->cityRepository->findBy(['enabled' => true], ['position' => 'asc']),
-            'choice_value' => 'id',
-            'choice_label' => 'name',
+            'choices' => $this->cityRepository->getWithData(),
             'choice_translation_domain' => false
         ]);
     }

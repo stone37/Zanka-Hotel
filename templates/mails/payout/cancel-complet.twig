@@ -1,0 +1,32 @@
+{% extends layout %}
+
+{% import "mails/macros.twig" as e %}
+{% import 'ui/Macro/money.html.twig' as money %}
+
+{% set settings = config.settings %}
+
+{% block body %}
+
+    {% apply markdown_email %}
+
+        Cher {{ payout.commande.booking.firstname }},
+        ============================================
+
+        Nous sommes désolés pour l'annulation de votre réservation et nous voulons vous informer que
+        le remboursement a été **effectué**. Veuillez trouver les détails de votre remboursement ci-dessous:
+
+        Numéro de réservation: **#{{ payout.commande.booking.reference }}**
+        Date d'annulation: **#{{ payout.commande.booking.cancelledAt|date('d/m/Y à H:i') }}**
+        Date de remboursement:  **#{{ payout.updatedAt|date('d/m/Y à H:i') }}**
+        Montant remboursé: **{{ money.convertAndFormat(payout.amount) }}**
+
+        Ce remboursement a été effectué sur le compte mobile money ou le compte bancaire que vous avez utilisé pour
+        effectuer la réservation. Veuillez vérifier avec votre institution financière pour connaître le délai
+        de traitement du remboursement.
+
+        Nous sommes désolés pour tout inconvénient causé et nous espérons pouvoir vous accueillir à nouveau dans
+        le futur. Si vous avez des questions concernant ce remboursement, n'hésitez pas à nous contacter.
+
+    {% endapply %}
+
+{% endblock %}

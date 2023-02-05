@@ -16,7 +16,7 @@ class CacheController extends AbstractController
         $this->addFlash('success', 'Le cache a bien été supprimé');
         $cache->clear();
 
-        return $this->redirectToRoute('app_admin_dashboard');
+        return $this->redirectToRoute('app_admin_index');
     }
 }
 

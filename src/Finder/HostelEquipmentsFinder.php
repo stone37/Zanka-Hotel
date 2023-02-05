@@ -10,11 +10,9 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 class HostelEquipmentsFinder
 {
     private GenericQueryBuilder $genericQueryBuilder;
-    private FinderInterface $equipmentsFinder;
     private ?string $positionPrefix;
 
     public function __construct(
-        FinderInterface $equipmentsFinder,
         GenericQueryBuilder $genericQueryBuilder,
         ParameterBagInterface $parameterBag
     ) {

@@ -369,16 +369,48 @@ $(document).ready(function() {
         $booking_booker_dropdown_content.addClass('d-none');
     });
 
-
     // Filter collapse
-    let $equipment_collapse = $('.hostel-list-filter .card .card-body .equipment-field .collapse');
+    let $equipment_collapse = $('.hostel-list-filter .card .card-body .equipment-field .collapse'),
+        $room_equipment_collapse = $('.hostel-list-filter .card .card-body .room-equipment-field .collapse'),
+        $equipment_mobile_collapse = $('.hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .equipment-field .collapse'),
+        $room_equipment_mobile_collapse = $('.hostel-list-mobile-filter .modal.hostel-mobile-filter-modal .modal-body .room-equipment-field .collapse');
 
     $equipment_collapse.on('hide.bs.collapse', function() {
         let $this = $(this);
         $this.siblings('.collapse-link').find('a').text('Afficher plus').blur();
     });
 
+    $room_equipment_collapse.on('hide.bs.collapse', function() {
+        let $this = $(this);
+        $this.siblings('.collapse-link').find('a').text('Afficher plus').blur();
+    });
+
+    $equipment_mobile_collapse.on('hide.bs.collapse', function() {
+        let $this = $(this);
+        $this.siblings('.collapse-link').find('a').text('Afficher plus').blur();
+    });
+
+    $room_equipment_mobile_collapse.on('hide.bs.collapse', function() {
+        let $this = $(this);
+        $this.siblings('.collapse-link').find('a').text('Afficher plus').blur();
+    });
+
     $equipment_collapse.on('show.bs.collapse', function() {
+        let $this = $(this);
+        $this.siblings('.collapse-link').find('a').text('Afficher moins').blur();
+    });
+
+    $room_equipment_collapse.on('show.bs.collapse', function() {
+        let $this = $(this);
+        $this.siblings('.collapse-link').find('a').text('Afficher moins').blur();
+    });
+
+    $equipment_mobile_collapse.on('show.bs.collapse', function() {
+        let $this = $(this);
+        $this.siblings('.collapse-link').find('a').text('Afficher moins').blur();
+    });
+
+    $room_equipment_mobile_collapse.on('show.bs.collapse', function() {
         let $this = $(this);
         $this.siblings('.collapse-link').find('a').text('Afficher moins').blur();
     });
@@ -414,7 +446,7 @@ $(document).ready(function() {
         }
     });
 
-    let $price_min_field = $('input#price_min_price'),
+   /* let $price_min_field = $('input#price_min_price'),
         $price_max_field = $('input#price_max_price'),
         $data = $('.multi-range-field input[type="range"]::-webkit-slider-thumb');
 
@@ -426,7 +458,7 @@ $(document).ready(function() {
 
     $( "input[type='text']" ).change(function() {
         console.log($price_min_field.val())
-    });
+    });*/
 
     /*$price_min_field.bind("change paste keyup", function() {
         console.log($(this).val());
@@ -440,6 +472,74 @@ $(document).ready(function() {
         alert($(this).val());
     });*/
 
+    /** Hostel gallery lightBox */
+    $('.skin-light .hostel-gallery .mdb-lightbox .lightbox-plus').click(function () {
+        $('#hostel-img-plus').trigger('click');
+    });
+
+    // Gestion des favoris
+    $('.hostel-favorite-btn').click(function(e){
+        e.preventDefault();
+
+        let $this = $(this);
+
+        if ($this.hasClass('connected')) {
+            if ($this.hasClass('activated')) {
+                $.ajax({
+                    url: Routing.generate('app_favorite_delete', {id: $(this).attr('data-id')}),
+                    type: 'GET',
+                    success: function(data){
+
+                        if (data.code === 200) {
+                            $this.removeClass('activated');
+                            $this.children('i').removeClass('fas').addClass('far');
+                            notification('', data.message, {'timeOut': '10000', 'closeButton': true}, 'success');
+                        } else {
+                            notification('', data.message, {'timeOut': '10000', 'closeButton': true}, 'error');
+                        }
+                    }
+                });
+            } else {
+                $.ajax({
+                    url: Routing.generate('app_favorite_add', {id: $this.attr('data-id')}),
+                    type: 'GET',
+                    success: function(data) {
+
+                        if (data.code === 200) {
+                            $this.addClass('activated');
+                            $this.children('i').removeClass('far').addClass('fas');
+                            notification('', data.message, {'timeOut': '10000', 'closeButton': true}, 'success');
+                        } else {
+                            notification('', data.message, {'timeOut': '10000', 'closeButton': true}, 'error');
+                        }
+                    }
+                });
+            }
+        } else {
+            let message = 'Vous devez vous connecter avant de pouvoir ajouter un établissement à vos favoris';
+            notification('', message, {'timeOut': '10000', 'closeButton': true}, 'info');
+        }
+    });
+
+    let $booking_form_btn = $('.hostel-list.hostel-show .search-form-data'),
+        $booking_form_close_btn = $('.hostel-list.hostel-show .search-form-close a'),
+        $booking_form = $('.hostel-list.hostel-show .booking-form');
+
+    $booking_form_btn.click(function (e) {
+        e.preventDefault();
+
+        $booking_form_btn.removeClass('d-block').addClass('d-none');
+        $booking_form.addClass('active');
+        $booking_form_close_btn.removeClass('d-none').addClass('d-block')
+    })
+
+    $booking_form_close_btn.click(function (e) {
+        e.preventDefault();
+
+        $booking_form_btn.removeClass('d-none').addClass('d-block');
+        $booking_form.removeClass('active');
+        $booking_form_close_btn.removeClass('d-block').addClass('d-none');
+    })
 
 
 

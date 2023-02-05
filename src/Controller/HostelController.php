@@ -11,23 +11,24 @@ use App\Entity\Hostel;
 use App\Entity\Settings;
 use App\Event\HostelListingEvent;
 use App\Event\HostelViewEvent;
+use App\Exception\CityNotFoundException;
 use App\Finder\HostelFinder;
 use App\Form\Filter\HostelsFilterType;
-use App\Form\Filter\HostelType;
 use App\Manager\SettingsManager;
 use App\Model\HostelSearch;
 use App\Repository\CityRepository;
 use App\Repository\HostelRepository;
+use App\Service\BookerService;
 use App\Storage\BookingStorage;
 use Knp\Component\Pager\PaginatorInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Routing\Annotation\Route;
 use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
-
 
 class HostelController extends AbstractController
 {
@@ -38,6 +39,9 @@ class HostelController extends AbstractController
     private PaginationDataHandler $paginationDataHandler;
     private BookingStorage $bookingStorage;
     private HostelFinder $hostelFinder;
+
+    private BookingStorage $storage;
+    private BookerService $booker;
 
     private HostelRepository $repository;
     private CityRepository $cityRepository;
@@ -52,7 +56,8 @@ class HostelController extends AbstractController
         PaginationDataHandler $paginationDataHandler,
         BookingStorage $bookingStorage,
         HostelFinder $hostelFinder,
-
+        BookingStorage $storage,
+        BookerService $booker,
         HostelRepository $repository,
         CityRepository $cityRepository,
         Breadcrumbs $breadcrumbs,
@@ -66,7 +71,8 @@ class HostelController extends AbstractController
         $this->paginationDataHandler = $paginationDataHandler;
         $this->bookingStorage = $bookingStorage;
         $this->hostelFinder = $hostelFinder;
-
+        $this->storage = $storage;
+        $this->booker = $booker;
         $this->repository = $repository;
         $this->cityRepository = $cityRepository;
         $this->paginator = $paginator;
@@ -83,7 +89,9 @@ class HostelController extends AbstractController
 
         $search = new HostelSearch();
         $form = $this->createForm(HostelsFilterType::class, $search);
+        $form_mobile = $this->createForm(HostelsFilterType::class, $search);
         $form->handleRequest($request);
+        $form_mobile->handleRequest($request);
 
         $requestData = array_merge(
             array_merge($search->toArray(), $this->hydrate()),
@@ -98,44 +106,71 @@ class HostelController extends AbstractController
             $requestData = $this->clearInvalidEntries($form, $requestData);
         }
 
+        if ($form_mobile->isSubmitted() &&
+            !$form_mobile->isValid() &&
+            !$request->query->has('order_by') &&
+            !$request->query->has('sort') &&
+            !$request->query->has('limit')) {
+            $requestData = $this->clearInvalidEntries($form, $requestData);
+        }
+
         $data = array_merge(
             $this->hostelListDataHandler->retrieveData($requestData),
             $this->hostelSortDataHandler->retrieveData($requestData),
             $this->paginationDataHandler->retrieveData($requestData)
         );
 
-        $hostels = $this->hostelFinder->find($data);
+        $hostels = $this->paginator->paginate(
+            $this->repository->getTotalEnabled($data),
+            $request->query->getInt('page', $data[PaginationDataHandler::PAGE_INDEX]),
+            $data[PaginationDataHandler::LIMIT_INDEX]);
 
         return $this->render('site/hostel/index.html.twig', [
             'hostels' => $hostels,
             'city' => $data['city'],
-            'form' => $form->createView()
+            'country' => $data['country'],
+            'form' => $form->createView(),
+            'form_mobile' => $form_mobile->createView(),
+            'search' => $search
         ]);
     }
 
     #[Route(path: '/hostels/{slug}', name: 'app_hostel_show')]
-    public function show(string $slug)
+    public function show(string $slug): Response
     {
-        $hostel = $this->repository->getBySlug($slug);
-        $this->showBreadcrumbs($hostel);
+        $data = $this->bookingStorage->getBookingData();
+        $hostel = $this->repository->getEnabledBySlug($data, $slug);
+        $this->showBreadcrumbs($hostel, $data);
 
         $this->dispatcher->dispatch(new HostelViewEvent($hostel));
 
+        /*$data = $this->storage->getBookingData();
+
+        $form = $this->createForm(BookingDataType::class, $data, [
+            'action' => $this->generateUrl('app_hostel_show', ['slug' => $slug])
+        ]);*/
+
+        $city = $this->cityRepository->getByName($data->location);
+
+        if (null === $city) {
+            throw new CityNotFoundException();
+        }
+
+        /*$form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data->location = (string) $hostel->getLocation()->getCity();
+            $this->booker->add($data);
+
+            return $this->redirectToRoute('app_hostel_show', ['slug' => $slug]);
+        }*/
+
         return $this->render('site/hostel/show.html.twig', [
-            'settings' => $this->settings,
             'hostel' => $hostel,
+            //'form' => $form->createView(),
+            'city' => $city->getName(),
+            'country' => $city->getCountry()
         ]);
-    }
-
-    private function showBreadcrumbs(Hostel $hostel)
-    {
-        $this->breadcrumbs->addItem('Accueil', $this->generateUrl('app_home'))
-            ->addItem('Hôtels', $this->generateUrl('app_hostel_index'))
-            ->addItem($hostel->getCategory()->getName(), $this->generateUrl('app_hostel_index', ['type' => $hostel->getCategory()->getName()]))
-            //->addItem($hostel->getCity()->getName(), $this->generateUrl('app_hostel_index', ['city' => $hostel->getCity()->getName()]))
-            ->addItem('Les offres de l\'établissement '. $hostel->getName());
-
-        return $this->breadcrumbs;
     }
 
     private function breadcrumbs(Request $request)
@@ -148,6 +183,21 @@ class HostelController extends AbstractController
                 ->addItem($request->query->has('city'), $this->generateUrl('app_hostel_index', ['city' => $request->query->get('city')]))
                 ->addItem('Résultats de votre recherche');
         }
+
+        return $this->breadcrumbs;
+    }
+
+    private function showBreadcrumbs(Hostel $hostel, BookingData $data)
+    {
+        $this->breadcrumbs->addItem('Accueil', $this->generateUrl('app_home'))
+            ->addItem('Hôtels à ' . strtolower($data->location), $this->generateUrl('app_hostel_index', [
+                'adult' => $data->adult,
+                'children' => $data->children,
+                'checkin' => $data->duration['checkin'],
+                'checkout' => $data->duration['checkout'],
+                'location' => $data->location,
+            ]))
+            ->addItem('Les offres d\'hébergement '. $hostel->getName() . ' ('. $hostel->getCategory()->getName() .')');
 
         return $this->breadcrumbs;
     }
@@ -178,23 +228,3 @@ class HostelController extends AbstractController
         return $requestData;
     }
 }
-
-/*$this->breadcrumbs($request);
-        $this->dispatcher->dispatch(new HostelListingEvent($request));
-
-        $search = new HostelSearch();
-        $search = $this->hydrate($request, $search);
-
-        $form = $this->createForm(HostelType::class, $search);
-        $form->handleRequest($request);
-
-        $qb = $this->repository->getTotalEnabled($search);
-        $hostels = $this->paginator->paginate($qb, $request->query->getInt('page', 1), 30);
-
-        return $this->render('site/hostel/index.html.twig', [
-            'settings' => $this->settings,
-            'hostels' => $hostels,
-            'city' => $this->cityRepository->getByName($request->query->get('location')),
-            'form' => $form->createView()
-        ]);*/
-

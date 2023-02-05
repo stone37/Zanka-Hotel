@@ -467,13 +467,13 @@
 
   .datepicker__close-button {
     background-color: transparent;
-    font-size: 1.12rem;
-    color: #bdbdbd;
+    font-size: 1.1rem;
+    color: #ff3547;
   }
 
   .datepicker__close-button:hover {
     background-color: #d6dae5;
-    color: #9da6b8;
+    color: #ff3547;
   }
 }
 

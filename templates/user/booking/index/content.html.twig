@@ -1,0 +1,29 @@
+<section class="container">
+    {{ include('ui/_flashes_message.html.twig') }}
+</section>
+<section class="container booking-list mb-5">
+    {% if bookings|length > 0 %}
+        <div class="row">
+            {% for booking in bookings %}
+                <div class="col-12 col-md-6 col-lg-3">
+                    {{ include('user/booking/_box.html.twig') }}
+                </div>
+            {% endfor %}
+            <div class="col-12 d-flex justify-content-center mt-2">
+                {{ knp_pagination_render(bookings, 'ui/_pagination.html.twig') }}
+            </div>
+        </div>
+    {% else %}
+        <div class="row d-flex justify-content-center mb-5">
+            <div class="col-12 col-md-8 text-center mt-5 mt-md-5">
+                <h4 class="h4-responsive font-weight-bold text-dark">
+                    Vous n'avez aucune reservation.
+                </h4>
+                <p>
+                    C'est ici que vous verrez toutes vos nouvelles réservations c'est à dire vos reservation non
+                    confirmer.
+                </p>
+            </div>
+        </div>
+    {% endif %}
+</section>

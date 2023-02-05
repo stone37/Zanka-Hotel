@@ -1,0 +1,106 @@
+{% import 'ui/Macro/money.html.twig' as money %}
+
+<section>
+    <div class="card booking-data-info mb-4">
+        <div class="card-body p-3">
+            {{ include('site/booking/index/_room_info.html.twig') }}
+
+            <div class="row booking-detail mt-4">
+                <div class="col-12">
+                    <h5 class="font-weight-stone-600 h5-responsive text-dark mb-3">Les détails de votre reservation</h5>
+                    <div>
+                        <div class="d-flex justify-content-between checkin mb-2">
+                            <div class="title font-weight-stone-500 small-9">Arrivée</div>
+                            <div class="data font-weight-stone-600 text-dark">{{ booking.duration.checkin|format_datetime(pattern="EE dd MMM yyyy") }}</div>
+                        </div>
+                        <div class="d-flex justify-content-between checkout mb-2">
+                            <div class="title font-weight-stone-500 small-9">Départ</div>
+                            <div class="data font-weight-stone-600 text-dark">{{ booking.duration.checkout|format_datetime(pattern="EE dd MMM yyyy") }}</div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="font-weight-stone-500 small-9">Durée totale du séjour:</div>
+                        <div class="font-weight-stone-600 text-dark mt-1">
+                            {{ booking.night > 1 ? booking.night ~ ' nuits' : booking.night ~ ' nuit' }}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="mb-3 room-select">
+                        <div class="font-weight-stone-500 title small-9">Vous avez sélectionnée:</div>
+                        <div class="font-weight-stone-600 text-dark mt-1 room">
+                            {{ booking.roomNumber }} <span class="small-8">X</span> {{ room.name }}
+                        </div>
+                    </div>
+                    <div class="mb-3 room-occupant">
+                        <div class="font-weight-stone-500 small-9">Pour</div>
+                        <div class="font-weight-stone-600 text-dark occupant">
+                            {% if booking.children %}
+                                {{ booking.adult > 1 ? booking.adult ~ ' adultes' : booking.adult ~ ' adulte' }} et
+                                {{ booking.children > 1 ? booking.children ~ ' enfants' : booking.children ~ ' enfant' }} par chambre
+                            {% else %}
+                                {{ booking.adult > 1 ? booking.adult ~ ' adultes' : booking.adult ~ ' adulte' }} par chambre
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="small-8 font-weight-stone-600 info-data">
+                        <span class=""><i class="fas fa-check"></i></span> Cette option est tout à fait adaptée pour vous !
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card booking-price mb-4">
+        <div class="card-body p-0">
+            <div class="px-3 pt-3">
+                <h5 class="font-weight-stone-600 h5-responsive text-dark mb-3">Récapitulatif du montant</h5>
+                <div class="d-flex justify-content-between font-weight-stone-500 small-9 mb-2">
+                    <div>{{ booking.roomNumber }} chambres</div>
+                    <div class="font-weight-stone-600">{{ money.convertAndFormat(booking.amount-booking.taxeAmount) }}</div>
+                </div>
+
+                {% if priceReduced %}
+                    <div class="d-flex justify-content-between font-weight-stone-500 small-9 mb-2">
+                        <div>
+                            {% set promotion = priceReduced %}
+                            {% if promotion.action.type == 'percentage_discount' %}{{ app_room_promotion_data(promotion) }}
+                            {% else %}{{ money.convertAndFormat(app_room_promotion_data(promotion)) }}{% endif %}
+                            de remise
+                        </div>
+                        <div class="font-weight-stone-600">{{ money.convertAndFormat(booking.discountAmount) }}</div>
+                    </div>
+                {% endif %}
+
+                {% if commande.discount %}
+                    <div class="d-flex justify-content-between font-weight-stone-500 small-9 mb-2">
+                        <div>Reduction</div>
+                        <div class="font-weight-stone-600">{{ money.convertAndFormat(commande.discount) }}</div>
+                    </div>
+                {% endif %}
+
+                {% for taxe in room.taxes %}
+                    <div class="d-flex justify-content-between font-weight-stone-500 small-9 mb-2">
+                        <div>{{ taxe.value }} % de {{ taxe.name|upper }}</div>
+                        <div class="font-weight-stone-600">{{ money.convertAndFormat(commande.taxeAmount) }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="p-3">
+                <div class="d-flex align-items-center justify-content-between mb-0">
+                    <div class="font-weight-stone-600 text-dark price-title">Montant total</div>
+                    <div class="font-weight-bold text-danger text-right price">{{ money.convertAndFormat(commande.amountPaid) }}</div>
+                </div>
+                <div class="font-weight-stone-500 grey-text text-right price-info">
+                    pour {{ booking.roomNumber }} chambres,
+                    {{ (booking.adult + booking.children)*booking.roomNumber }} personnes,
+                    {{ booking.night }} nuits
+                </div>
+                <div class="text-right mt-1">
+                    <div class="badge badge-default font-weight-stone-500" style="font-size: .66rem;">Aucune surprise ! <span class="font-weight-normal">Prix final</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+

@@ -135,7 +135,7 @@ class PaymentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getNumber(User $user = null)
+    public function getNumber(User $user = null): int
     {
         $qb = $this->createQueryBuilder('p')
             ->select('count(p.id)');
@@ -144,10 +144,10 @@ class PaymentRepository extends ServiceEntityRepository
             $qb = $this->hasPartner($qb, $user);
         }
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function totalRevenues(User $user = null)
+    public function totalRevenues(User $user = null): int
     {
         $qb =  $this->createQueryBuilder('p')
             ->select('ROUND(SUM(p.price)) as amount')
@@ -157,10 +157,10 @@ class PaymentRepository extends ServiceEntityRepository
             $qb = $this->hasPartner($qb, $user);
         }
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function totalTax(User $user = null)
+    public function totalTax(User $user = null): int
     {
         $qb = $this->createQueryBuilder('p')
             ->select('ROUND(SUM(p.taxe)) as taxe')
@@ -170,10 +170,10 @@ class PaymentRepository extends ServiceEntityRepository
             $qb = $this->hasPartner($qb, $user);
         }
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
-    public function totalReduction(User $user = null)
+    public function totalReduction(User $user = null): int
     {
         $qb = $this->createQueryBuilder('p')
             ->select('ROUND(SUM(p.discount)) as discount')
@@ -183,7 +183,7 @@ class PaymentRepository extends ServiceEntityRepository
             $qb = $this->hasPartner($qb, $user);
         }
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     private function aggregateRevenus(string $group, string $label, int $limit): array
@@ -247,9 +247,9 @@ class PaymentRepository extends ServiceEntityRepository
             ->addSelect('commande')
             ->addSelect('booking')
             ->addSelect('room')
-            ->where('commande.user = :user')
+            ->where('commande.owner = :owner')
             ->orderBy('p.createdAt', 'DESC')
-            ->setParameter('user', $user)
+            ->setParameter('owner', $user)
             ->getQuery()
             ->getResult();
     }
@@ -263,9 +263,9 @@ class PaymentRepository extends ServiceEntityRepository
             ->addSelect('commande')
             ->addSelect('booking')
             ->addSelect('room')
-            ->where('commande.user = :user')
+            ->where('commande.owner = :owner')
             ->andWhere('p.id = :id')
-            ->setParameter('user', $user)
+            ->setParameter('owner', $user)
             ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult();

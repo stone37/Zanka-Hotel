@@ -1,0 +1,182 @@
+#resources:
+#    App\Entity\User:
+#        operations:
+#            ApiPlatform\Metadata\GetCollection:
+#                security: 'is_granted("ROLE_ADMIN")'
+#                paginationClientItemsPerPage: true
+#                normalizationContext:
+#                    groups: [ 'user:read' ]
+#                openapiContext:
+#                    summary: Recupère tous utilisateurs
+#                    security:
+#                        - bearerAuth: []
+#            ApiPlatform\Metadata\Post:
+#                normalizationContext:
+#                    groups: [ 'user:read' ]
+#                denormalizationContext:
+#                    groups: [ 'user:write' ]
+#                    swaggerDefinitionName: 'UserCreated'
+#                openapiContext:
+#                    summary: Créer un nouveau utilisateur
+#                validationContext:
+#                    groups: [ 'Default', 'Registration', 'Api' ]
+#            ApiPlatform\Metadata\Get:
+#                security: 'is_granted("ROLE_USER")'
+#                normalizationContext:
+#                    groups: [ 'user:read' ]
+#                openapiContext:
+#                    summary: Recupère un utilisateur
+#                    security:
+#                        - bearerAuth: [ ]
+#            ApiPlatform\Metadata\Put:
+#                security: 'is_granted("ROLE_USER")'
+#                normalizationContext:
+#                    groups: [ 'user:read' ]
+#                denormalizationContext:
+#                    groups: [ 'user:edit' ]
+#                openapiContext:
+#                    summary: Met à jour un utilisateur
+#                    security:
+#                        - bearerAuth: [ ]
+#                validationContext:
+#                    groups: [ 'Registration', 'Profile' ]
+#            get_owner:
+#                security: 'is_granted("ROLE_USER")'
+#                normalizationContext:
+#                    groups: [ 'user:read' ]
+#                    skipNullValues: false
+#                class: ApiPlatform\Metadata\GetCollection
+#                method: GET
+#                uriTemplate: /users/enabled
+#                controller: App\Api\Controller\UserAccount
+#                openapiContext:
+#                    summary: Recupère d'utilisateur connecter
+#                    security:
+#                        - bearerAuth: [ ]
+#            social_regidter:
+#                normalizationContext:
+#                    groups: [ 'user:read' ]
+#                denormalizationContext:
+#                    groups: [ 'user:write' ]
+#                    swaggerDefinitionName: 'UserCreated'
+#                class: ApiPlatform\Metadata\Post
+#                method: POST
+#                uriTemplate: /users/social/register
+#                controller: App\Api\Controller\UserSocialCreated
+#                openapiContext:
+#                    summary: Créer un nouveau utilisateur à partie des reseaux sociaux
+#            soft_delete:
+#                security: 'is_granted("ROLE_USER")'
+#                normalizationContext:
+#                    groups: ['user:read']
+#                denormalizationContext:
+#                    groups: [ 'user:delete' ]
+#                class: ApiPlatform\Metadata\Patch
+#                method: PATCH
+#                uriTemplate: /users/{id}/delete
+#                requirements:
+#                    id: \d+
+#                controller: App\Api\Controller\UserAccountDelete
+#                openapiContext:
+#                    summary: Retire un utilisateur
+#                    security:
+#                        - bearerAuth: [ ]
+#            soft_delete_cancel:
+#                security: 'is_granted("ROLE_USER")'
+#                normalizationContext:
+#                    groups: [ 'user:read' ]
+#                denormalizationContext:
+#                    groups: [ 'user:cancel' ]
+#                    skipNullValues: false
+#                class: ApiPlatform\Metadata\Put
+#                method: PUT
+#                uriTemplate: /users/{id}/delete/cancel
+#                requirements:
+#                    id: \d+
+#                controller: App\Api\Controller\UserAccountCancel
+#                openapiContext:
+#                    summary: Annule le suppression d'un utilisateur
+#                    security:
+#                        - bearerAuth: [ ]
+#            change_password:
+#                security: 'is_granted("ROLE_USER")'
+#                normalizationContext:
+#                    groups: [ 'user:read' ]
+#                denormalizationContext:
+#                    groups: [ 'user:delete' ]
+#                class: ApiPlatform\Metadata\Patch
+#                method: PATCH
+#                uriTemplate: /users/{id}/password-change
+#                requirements:
+#                    id: \d+
+#                controller: App\Api\Controller\UserAccountChangePassword
+#                openapiContext:
+#                    summary: Modifie le mot de passe d'un utilisateur
+#                    security:
+#                        - bearerAuth: [ ]
+#            profil_photo:
+#                security: 'is_granted("ROLE_USER")'
+#                normalizationContext:
+#                    groups: [ 'user:read' ]
+#                class: ApiPlatform\Metadata\Post
+#                method: POST
+#                uriTemplate: /users/{id}/profil-photo
+#                requirements:
+#                    id: \d+
+#                controller: App\Api\Controller\UserAccountProfilPhoto
+#                openapiContext:
+#                    summary: Modifie la photo de profil d'utilisateur
+#                    security:
+#                        - bearerAuth: [ ]
+#                    requestBody:
+#                        content:
+#                            multipart/form-data:
+#                                schema:
+#                                    type: object
+#                                    properties:
+#                                        file:
+#                                            type: string
+#                                            format: binary
+#
+#    App\Entity\Hostel:
+#        operations:
+#            ApiPlatform\Metadata\GetCollection: ~
+#            ApiPlatform\Metadata\Get: ~
+#    App\Entity\Booking:
+#        operations:
+#            ApiPlatform\Metadata\GetCollection: ~
+#            ApiPlatform\Metadata\Get: ~
+#            ApiPlatform\Metadata\Post: ~
+#    App\Entity\Commande:
+#        operations:
+#            ApiPlatform\Metadata\GetCollection: ~
+#            ApiPlatform\Metadata\Get: ~
+#            ApiPlatform\Metadata\Post: ~
+#    App\Entity\City:
+#        operations:
+#            ApiPlatform\Metadata\GetCollection: ~
+#            ApiPlatform\Metadata\Get: ~
+#    App\Entity\Favorite:
+#        operations:
+#            ApiPlatform\Metadata\GetCollection: ~
+#            ApiPlatform\Metadata\Get: ~
+#            ApiPlatform\Metadata\Post: ~
+#    App\Entity\Review:
+#        operations:
+#            ApiPlatform\Metadata\GetCollection: ~
+#            ApiPlatform\Metadata\Post: ~
+#    App\Entity\Currency:
+#        operations:
+#            ApiPlatform\Metadata\GetCollection: ~
+#    App\Entity\Locale:
+#        operations:
+#            ApiPlatform\Metadata\GetCollection: ~
+#    App\Entity\ExchangeRate:
+#        operations:
+#            ApiPlatform\Metadata\Get: ~
+#    App\Entity\Settings:
+#        operations:
+#            ApiPlatform\Metadata\Get: ~
+#
+#
+#

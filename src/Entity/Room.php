@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -23,40 +24,51 @@ class Room
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $id = null;
 
     #[Assert\NotBlank(message: "Veuillez sélectionner un type d'hébergement.")]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $type = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $name = null;
 
     #[Gedmo\Slug(fields: ['name'], unique: true)]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $slug = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $perfectName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $specification = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $feature = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $amenities = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $description = null;
 
     #[Assert\NotBlank(message: "Veuillez indiquer le nombre d'hébergement.")]
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $roomNumber = null;
 
     #[Assert\NotBlank(message: "Veuillez indiquer le prix de cet type d'hébergement.")]
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $price = null;
 
     #[ORM\Column(nullable: true)]
@@ -64,25 +76,32 @@ class Room
 
     #[Assert\NotBlank]
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $smoker = null;
 
     #[Assert\NotBlank(message: "Veuillez indiquer le nombre d'occupant max.")]
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $occupant = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $area = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $dataRoomNumber = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $dataLivingRoomNumber = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $dataBathroomNumber = null;
 
     #[ORM\ManyToMany(targetEntity: RoomEquipment::class, inversedBy: 'rooms')]
+    #[Groups(['hostel:read'])]
     private Collection $equipments;
 
     #[Assert\NotBlank(message: "Veuillez sélectionner un établissement.")]
@@ -92,22 +111,28 @@ class Room
 
     #[ORM\OneToMany(mappedBy: 'room', targetEntity: RoomGallery::class, orphanRemoval: true, cascade: ['ALL'])]
     #[ORM\OrderBy(['position' => 'ASC'])]
+    #[Groups(['hostel:read', 'booking:read'])]
     private Collection $galleries;
 
     #[ORM\ManyToMany(targetEntity: Supplement::class, inversedBy: 'rooms')]
+    #[Groups(['hostel:read', 'booking:read'])]
     private Collection $supplements;
 
     #[ORM\OneToMany(mappedBy: 'room', targetEntity: Booking::class)]
     private Collection $bookings;
 
     #[ORM\ManyToMany(targetEntity: Promotion::class, mappedBy: 'rooms')]
+    #[ORM\OrderBy(['createdAt' => 'asc'])]
+    #[Groups(['hostel:read', 'booking:read'])]
     private Collection $promotions;
 
     #[Assert\Valid]
     #[ORM\OneToMany(mappedBy: 'room', targetEntity: Bedding::class, orphanRemoval: true, cascade: ['ALL'])]
+    #[Groups(['hostel:read', 'booking:read'])]
     private Collection $beddings;
 
     #[ORM\ManyToMany(targetEntity: Taxe::class, inversedBy: 'rooms')]
+    #[Groups(['hostel:read', 'booking:read'])]
     private Collection $taxes;
 
     public function __construct()
@@ -529,5 +554,10 @@ class Room
         $this->taxes->removeElement($tax);
 
         return $this;
+    }
+
+    public function isPriceReduced(): bool
+    {
+        return $this->originalPrice > $this->price;
     }
 }

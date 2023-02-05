@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\BeddingRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BeddingRepository::class)]
@@ -15,14 +16,17 @@ class Bedding
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $id = null;
 
     #[Assert\NotBlank]
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?string $name = null;
 
     #[Assert\NotBlank(message: "Veuillez sélectionner le nombres de lit.")]
     #[ORM\Column(nullable: true)]
+    #[Groups(['hostel:read', 'booking:read'])]
     private ?int $number = null;
 
     #[ORM\ManyToOne(inversedBy: 'beddings')]

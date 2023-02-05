@@ -1,0 +1,27 @@
+{% extends layout %}
+
+{% import "mails/macros.twig" as e %}
+
+{% set settings = config.settings %}
+
+{% block body %}
+
+    {% apply markdown_email %}
+
+        Cher {{ booking.hostel.name }},
+        ==============================
+
+        Nous vous informons que le client a malheureusement annuler sa réservation chez vous.
+        Les détails de la réservation sont les suivants:
+
+        Numéro de réservation: **{{ booking.reference }}**
+        Date d'arrivée: **{{ booking.checkin|format_datetime(pattern="EE dd MMM yyyy") }}**
+        Date de depart: **{{ booking.checkout|format_datetime(pattern="EE dd MMM yyyy") }}**
+        Nombre de personnes: **{{ booking.adult + booking.children }}**
+        Nombre de chambres: **{{ booking.roomNumber }}**
+
+        Un remboursement sera fais selon vos les conditions d'annulation de votre établissement.
+    {% endapply %}
+
+    {{ e.button('Voir la réservation annuler', url('app_partner_booking_show', {id: booking.id, type: 3})) }}
+{% endblock %}
